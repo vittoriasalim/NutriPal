@@ -1,5 +1,5 @@
 # ELEC5620
-FitnessCoach
+
 
 **NutriPal** is an AI-powered app designed to be your ultimate companion in achieving a balanced and healthy diet. Whether you're looking to lose weight, gain muscle, or simply maintain a nutritious lifestyle, NutriPal provides personalized meal plan recommendations tailored to your unique preferences, dietary restrictions, and health goals. 
 
