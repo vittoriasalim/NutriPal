@@ -19,6 +19,26 @@ module.exports = function(sequelize, DataTypes) {
     password: {
       type: DataTypes.STRING(100),
       allowNull: false
+    },
+    sex: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    first_name: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    last_name: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    date_of_birth: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    user_type: {
+      type: DataTypes.ENUM("CLIENT","NUTRITIONIST"),
+      allowNull: false
     }
   }, {
     sequelize,

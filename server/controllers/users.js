@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
 // Create a new user
 exports.createUser = async (req, res) => {
   try {
-    const { email, mobile, password } = req.body;
+    const { email, mobile, password, sex, first_name, last_name, date_of_birth} = req.body;
     // Basic validation
     if (!email || !mobile || !password) {
       return res.status(400).json({ message: 'Email, mobile, and password are required' });
@@ -59,7 +59,7 @@ exports.createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // Save the user with the hashed password
-    const newUser = await users.create({ email, mobile, password: hashedPassword });
+    const newUser = await users.create({ email, mobile, password: hashedPassword, sex, first_name, last_name, date_of_birth, user_type: "CLIENT"});
 
     res.status(201).json(newUser);
   } catch (error) {

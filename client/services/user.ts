@@ -5,13 +5,21 @@ interface User {
   id: number;
   email: string;
   mobile: string;
-  password:string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  date_of_birth: Date;
+  user_type: 'CLIENT' | 'NUTRITIONIST';
 }
 
 export interface RegisterUserData {
   email: string;
   mobile: string;
   password: string;
+  first_name: string;
+  last_name: string;
+  date_of_birth: Date;
+  user_type: 'CLIENT' | 'NUTRITIONIST';
 }
 
 
@@ -44,6 +52,7 @@ export const registerUser = async (
     // Return the newly created user object
     return response;
   } catch (error) {
+    console.log(userData);
     console.error('Error registering new user', error);
     throw error; // Re-throw to be handled by calling code
   }

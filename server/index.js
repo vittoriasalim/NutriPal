@@ -2,12 +2,12 @@ const express = require('express');
 const app = express();
 
 const userRoutes = require('./routes/users');
-const healthRoutes = require('./routes/health');
+const clientRoutes = require('./routes/clients');
 
 app.use(express.json()); // To parse JSON request bodies
 
 app.use('/users', userRoutes);
-app.use('/health', healthRoutes);
+app.use('/clients', clientRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
