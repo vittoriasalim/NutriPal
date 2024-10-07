@@ -1,72 +1,56 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('clients', {
+  return sequelize.define('daily_meal_plans', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    userId: {
+    clientId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'users',
+        model: 'clients',
         key: 'id'
       }
     },
-    reportId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'health_progress_reports',
-        key: 'id'
-      }
-    },
-    dailyNutritionId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'daily_nutrition',
-        key: 'id'
-      }
-    },
-    weight: {
-      type: DataTypes.DOUBLE,
+    day: {
+      type: DataTypes.STRING(255),
       allowNull: false
     },
-    height: {
-      type: DataTypes.DOUBLE,
-      allowNull: false
-    },
-    healthGoals: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: true
-    },
-    dietaryPreferences: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: true
-    },
-    nutritionalNeeds: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: true
-    },
-    pantryId: {
+    breakfastMealPlan: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'pantries',
+        model: 'meals',
+        key: 'id'
+      }
+    },
+    lunchMealPlan: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'meals',
+        key: 'id'
+      }
+    },
+    dinnerMealPlan: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'meals',
         key: 'id'
       }
     }
   }, {
     sequelize,
-    tableName: 'clients',
+    tableName: 'daily_meal_plans',
     schema: 'nutripal',
     timestamps: true,
     indexes: [
       {
-        name: "clients_pkey",
+        name: "daily_meal_plans_pkey",
         unique: true,
         fields: [
           { name: "id" },

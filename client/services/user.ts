@@ -2,25 +2,14 @@
 import { apiService } from './api';
 
 interface User {
-  id: number;
+  firstName: string; // Updated to camelCase to match input
+  lastName: string;  // Updated to camelCase to match input
   email: string;
-  mobile: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  date_of_birth: Date;
-  user_type: 'CLIENT' | 'NUTRITIONIST';
+  password:string
+  sex: string; // Added to support sex field
+  userType: string; // Added 'ADMIN' for user
 }
 
-export interface RegisterUserData {
-  email: string;
-  mobile: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  date_of_birth: Date;
-  user_type: 'CLIENT' | 'NUTRITIONIST';
-}
 
 
 export const getUserProfile = async (userId: number): Promise<User> => {
@@ -43,11 +32,11 @@ export const updateUserProfile = async (userId: number, userData: Partial<User>)
   }
 };
 export const registerUser = async (
-  userData: RegisterUserData
-): Promise<RegisterUserData> => {
+  userData: User
+): Promise<User> => {
   try {
     // POST request to your API's registration endpoint
-    const response = await apiService.postData<RegisterUserData>('/users', userData);
+    const response = await apiService.postData<User>('/users', userData);
     
     // Return the newly created user object
     return response;

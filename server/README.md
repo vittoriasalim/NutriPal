@@ -45,9 +45,19 @@
 ├── package.json        # Project metadata and dependencies
 └── server.js           # Entry point of the application
 
-```
-npx sequelize-auto -o "./models" -d nutripal -h localhost -u yourusername -p 5432 -x yourpassword -e postgres -s nutripal
+# Create Migration File
+npx sequelize-cli migration:generate --name migration_name
 
+# Run Migration
+npx sequelize-cli db:migrate
 
-npx sequelize-auto -o "./models" -d nutripal -h localhost -u postgres -p 5432 -x "" -e postgres -s nutripal
-```
+# Rollback most recent Migration 
+npx sequelize-cli db:migrate:undo
+
+# Rollback all migration
+npx sequelize-cli db:migrate:undo:all
+
+# Generate Models
+npx sequelize-auto -o "./models" -d your_database_name -h localhost -u your_postgres_username -p 5432 -x your_postgres_password -e postgres
+
+npx sequelize-auto -o "./models" -d nutripal -h localhost -u postgres -p 5432 -x  -e postgres
