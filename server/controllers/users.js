@@ -38,34 +38,58 @@ exports.login = async (req, res) => {
   }
 };
 
-// Create a new user
+
+
+// Controller function to create a new user
 exports.createUser = async (req, res) => {
   try {
-    const { email, mobile, password } = req.body;
-    // Basic validation
-    if (!email || !mobile || !password) {
-      return res.status(400).json({ message: 'Email, mobile, and password are required' });
-    }
+    const { firstName, lastName, email, sex, userType, password } = req.body;
 
+    // Validate required fields
+    if (!firstName || !lastName || !sex | !email || !userType || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
     // Check if user already exists
     const existingUser = await users.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: 'User with this email already exists' });
     }
-
+    // Validate userType is either 'client' or 'nutritionist'
+    const allowedUserTypes = ['client', 'nutritionist'];
+    if (!allowedUserTypes.includes(userType.toLowerCase())) {
+      return res.status(400).json({ message: 'Invalid user type. Must be either "client" or "nutritionist"' });
+    }
+    
 
     // Hash the password
-    const saltRounds = 10; // Number of salt rounds to generate the salt (higher is more secure but slower)
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save the user with the hashed password
-    const newUser = await users.create({ email, mobile, password: hashedPassword });
+    // Create the new user
+    const newUser = await users.create({
+      firstName,
+      lastName,
+      email,
+      sex,
+      userType,
+      password: hashedPassword, // Store the hashed password
+    });
 
-    res.status(201).json(newUser);
+    // Return the new user (without password)
+    return res.status(201).json({
+      id: newUser.id,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email:newUser.email,
+      sex: newUser.sex,
+      userType: newUser.userType,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error creating new user:', error);
+    return res.status(500).json({ message: 'Server error' });
   }
 };
+
+
 
 // Get all users
 exports.getAllUsers = async (req, res) => {

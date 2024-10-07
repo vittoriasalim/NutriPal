@@ -1,44 +1,44 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('users', {
+  return sequelize.define('meals', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    firstName: {
+    mealName: {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    lastName: {
+    description: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     },
-    email: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+    calorie: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
     },
-    sex: {
-      type: DataTypes.STRING(10),
-      allowNull: false
+    protein: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
     },
-    userType: {
-      type: DataTypes.STRING(50),
-      allowNull: false
+    fats: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
     },
-    password: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+    carbohydrate: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'users',
+    tableName: 'meals',
     schema: 'nutripal',
     timestamps: true,
     indexes: [
       {
-        name: "users_pkey",
+        name: "meals_pkey",
         unique: true,
         fields: [
           { name: "id" },

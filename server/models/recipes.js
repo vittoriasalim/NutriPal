@@ -1,44 +1,48 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('health', {
+  return sequelize.define('recipes', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'users',
-        key: 'id'
-      }
+    recipeName: {
+      type: DataTypes.STRING(255),
+      allowNull: false
     },
-    current_weight: {
-      type: DataTypes.DECIMAL,
+    description: {
+      type: DataTypes.STRING(255),
       allowNull: true
     },
-    current_height: {
-      type: DataTypes.DECIMAL,
+    steps: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true
     },
-    target_weight: {
-      type: DataTypes.DECIMAL,
+    calorie: {
+      type: DataTypes.DOUBLE,
       allowNull: true
     },
-    target_calories: {
-      type: DataTypes.DECIMAL,
+    protein: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
+    fats: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
+    carbohydrate: {
+      type: DataTypes.DOUBLE,
       allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'health',
+    tableName: 'recipes',
     schema: 'nutripal',
     timestamps: true,
     indexes: [
       {
-        name: "health_pkey",
+        name: "recipes_pkey",
         unique: true,
         fields: [
           { name: "id" },
