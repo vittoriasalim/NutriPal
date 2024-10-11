@@ -5,6 +5,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Home from './Home';
+import ClientProfileScreen from './ClientProfileScreen';
+import NutritionistProfileScreen from './NutritionistProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -99,7 +101,7 @@ export default function HomeScreen() {
         <Tab.Screen name="Plans" component={Home} />
         <Tab.Screen name="Add" component={Home} />
         <Tab.Screen name="Progress" component={Home} />
-        <Tab.Screen name="Profile" component={Home} />
+        <Tab.Screen name="Profile" component={NutritionistProfileScreen} />
       </Tab.Navigator>
  
   );
