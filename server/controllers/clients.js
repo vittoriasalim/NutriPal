@@ -1,70 +1,113 @@
 const sequelize = require('../config/database'); // Adjust the path as necessary
-const { clients } = require('../models/init-models')(sequelize); // Adjust the path as necessary
+const { clients } = require('../models/init-models')(sequelize);  // Import the clients model (adjust path as needed)
 
-// Create a new client record
-exports.createClientRecord = async (req, res) => {
+// Create a new client
+exports.createClient = async (req, res) => {
   try {
-    const { user_id, current_weight, current_height, target_weight, target_calories } = req.body;
-    const newClientRecord = await clients.create({ user_id, current_weight, current_height, target_weight, target_calories });
-    res.status(201).json(newClientRecord);
+    const {
+      userId,
+      weight,
+      height,
+      healthGoals,
+      dietaryPreferences,
+      nutritionalNeeds,
+      pantryId
+    } = req.body;
+
+    // Create a new client record
+    const newClient = await clients.create({
+      userId,
+      weight,
+      height,
+      healthGoals,
+      dietaryPreferences,
+      nutritionalNeeds,
+      pantryId
+    });
+
+    res.status(201).json(newClient);  // Respond with the newly created client
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message || 'Something went wrong while creating the client.' });
   }
 };
 
-// Get all client records
-exports.getAllClientRecords = async (req, res) => {
+// Get all clients
+exports.getAllClients = async (req, res) => {
   try {
-    const allClientRecords = await clients.findAll();
-    res.status(200).json(allClientsRecords);
+    const allClients = await clients.findAll();
+    res.status(200).json(allClients);  // Respond with all client records
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message || 'Something went wrong while fetching the clients.' });
   }
 };
 
-// Get a clients record by ID
-exports.getClientRecordById = async (req, res) => {
+// Get a specific client by ID
+exports.getClientById = async (req, res) => {
   try {
-    const record = await clients.findByPk(req.params.id);
-    if (record) {
-      res.status(200).json(record);
-    } else {
-      res.status(404).json({ message: 'Client record not found' });
+    const { id } = req.params;
+
+    const client = await clients.findByPk(id);
+
+    if (!client) {
+      return res.status(404).json({ error: 'Client not found.' });
     }
+
+    res.status(200).json(client);  // Respond with the client record
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message || 'Something went wrong while fetching the client.' });
   }
 };
 
-// Update a client record by ID
-exports.updateClientRecord = async (req, res) => {
+// Update a specific client by ID
+exports.updateClientById = async (req, res) => {
   try {
-    const { current_weight, current_height, target_weight, target_calories } = req.body;
-    const [updated] = await clients.update(
-      { current_weight, current_height, target_weight, target_calories },
-      { where: { id: req.params.id } }
-    );
-    if (updated) {
-      const updatedRecord = await clients.findByPk(req.params.id);
-      res.status(200).json(updatedRecord);
-    } else {
-      res.status(404).json({ message: 'Client record not found' });
+    const { id } = req.params;
+    const {
+      weight,
+      height,
+      healthGoals,
+      dietaryPreferences,
+      nutritionalNeeds,
+      pantryId
+    } = req.body;
+
+    const client = await clients.findByPk(id);
+
+    if (!client) {
+      return res.status(404).json({ error: 'Client not found.' });
     }
+
+    // Update the client record
+    client.weight = weight || client.weight;
+    client.height = height || client.height;
+    client.healthGoals = healthGoals || client.healthGoals;
+    client.dietaryPreferences = dietaryPreferences || client.dietaryPreferences;
+    client.nutritionalNeeds = nutritionalNeeds || client.nutritionalNeeds;
+    client.pantryId = pantryId || client.pantryId;
+
+    await client.save();  // Save the updated client information
+
+    res.status(200).json(client);  // Respond with the updated client record
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message || 'Something went wrong while updating the client.' });
   }
 };
 
-// Delete a client record by ID
-exports.deleteClientRecord = async (req, res) => {
+// Delete a client by ID
+exports.deleteClientById = async (req, res) => {
   try {
-    const deleted = await clients.destroy({ where: { id: req.params.id } });
-    if (deleted) {
-      res.status(204).send();
-    } else {
-      res.status(404).json({ message: 'Client record not found' });
+    const { id } = req.params;
+
+    const client = await clients.findByPk(id);
+
+    if (!client) {
+      return res.status(404).json({ error: 'Client not found.' });
     }
+
+    await client.destroy();  // Delete the client record
+
+    res.status(200).json({ message: 'Client deleted successfully.' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message || 'Something went wrong while deleting the client.' });
   }
 };
