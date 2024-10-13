@@ -8,3 +8,11 @@ export type RootStackParamList = {
     ProfileScreen: { userId: string }; // Example with parameters
     // Add other screens as needed
   };
+
+  // types.ts or navigation/types.ts
+export type ProgressStackParamList = {
+  ProgressScreen: undefined;
+  NutritionManagementScreen: undefined;
+
+  // Add other screens as needed
+};

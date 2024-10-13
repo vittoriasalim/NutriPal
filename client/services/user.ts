@@ -17,7 +17,7 @@ export const getUserProfile = async (userId: number): Promise<User> => {
     const response = await apiService.fetchData<User>(`/users/${userId}`);
     return response;
   } catch (error) {
-    console.error('Error fetching user profile', error);
+    
     throw error;
   }
 };
@@ -27,7 +27,7 @@ export const updateUserProfile = async (userId: number, userData: Partial<User>)
     const response = await apiService.putData<User>(`/users/${userId}`, userData);
     return response;
   } catch (error) {
-    console.error('Error updating user profile', error);
+   
     throw error;
   }
 };
@@ -41,9 +41,8 @@ export const registerUser = async (
     // Return the newly created user object
     return response;
   } catch (error) {
-    console.log(userData);
-    console.error('Error registering new user', error);
-    throw error; // Re-throw to be handled by calling code
+  
+    throw error
   }
 };
 

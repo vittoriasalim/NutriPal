@@ -27,6 +27,7 @@ export default function App() {
         <Stack.Screen name="OnboardScreen" component={OnboardScreen} />
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
+       
 
 
    

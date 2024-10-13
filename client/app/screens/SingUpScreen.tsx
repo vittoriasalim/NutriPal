@@ -46,7 +46,7 @@ const SignUpScreen = () => {
       // Navigate to another screen, e.g., the login screen
     } catch (err) {
       setError('Failed to register user. Please try again.');
-      console.error('Failed to register user:', err);
+  
     } finally {
       setLoading(false);
     }
@@ -241,7 +241,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'Poppins-Bold',
     color: '#333333',
-    marginBottom: 0,
+    marginTop:5,
+    marginBottom: 5
   },
   subtitle: {
     fontSize: 16,
