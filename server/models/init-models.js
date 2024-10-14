@@ -40,18 +40,18 @@ function initModels(sequelize) {
 
   daily_meal_plans.belongsTo(clients, { as: "client", foreignKey: "clientId"});
   clients.hasMany(daily_meal_plans, { as: "daily_meal_plans", foreignKey: "clientId"});
+  daily_nutrition.belongsTo(clients, { as: "client", foreignKey: "clientId"});
+  clients.hasMany(daily_nutrition, { as: "daily_nutritions", foreignKey: "clientId"});
+  health_progress_reports.belongsTo(clients, { as: "client", foreignKey: "clientId"});
+  clients.hasMany(health_progress_reports, { as: "health_progress_reports", foreignKey: "clientId"});
   nutritionist_clients.belongsTo(clients, { as: "client", foreignKey: "clientId"});
   clients.hasMany(nutritionist_clients, { as: "nutritionist_clients", foreignKey: "clientId"});
   breakfast_meals.belongsTo(daily_nutrition, { as: "dailyNutrition", foreignKey: "dailyNutritionId"});
   daily_nutrition.hasMany(breakfast_meals, { as: "breakfast_meals", foreignKey: "dailyNutritionId"});
-  clients.belongsTo(daily_nutrition, { as: "dailyNutrition", foreignKey: "dailyNutritionId"});
-  daily_nutrition.hasMany(clients, { as: "clients", foreignKey: "dailyNutritionId"});
   dinner_meals.belongsTo(daily_nutrition, { as: "dailyNutrition", foreignKey: "dailyNutritionId"});
   daily_nutrition.hasMany(dinner_meals, { as: "dinner_meals", foreignKey: "dailyNutritionId"});
   lunch_meals.belongsTo(daily_nutrition, { as: "dailyNutrition", foreignKey: "dailyNutritionId"});
   daily_nutrition.hasMany(lunch_meals, { as: "lunch_meals", foreignKey: "dailyNutritionId"});
-  clients.belongsTo(health_progress_reports, { as: "report", foreignKey: "reportId"});
-  health_progress_reports.hasMany(clients, { as: "clients", foreignKey: "reportId"});
   pantry_ingredients.belongsTo(ingredients, { as: "ingredient", foreignKey: "ingredientId"});
   ingredients.hasMany(pantry_ingredients, { as: "pantry_ingredients", foreignKey: "ingredientId"});
   recipe_ingredients.belongsTo(ingredients, { as: "ingredient", foreignKey: "ingredientId"});

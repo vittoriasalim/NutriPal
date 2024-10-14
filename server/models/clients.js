@@ -15,22 +15,6 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    reportId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'health_progress_reports',
-        key: 'id'
-      }
-    },
-    dailyNutritionId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'daily_nutrition',
-        key: 'id'
-      }
-    },
     weight: {
       type: DataTypes.DOUBLE,
       allowNull: false

@@ -23,13 +23,17 @@ const LoginScreen = () => {
         index: 0,
         routes: [{ name: 'HomeScreen' }],
       });
+      console.log(response)
 
       // If successful, navigate to the next screen
     } catch (error) {
+      
       setErrorMessage('Invalid email or password');
+   
     } finally {
       setIsLoading(false);
     }
+    
   };
 
 

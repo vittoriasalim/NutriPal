@@ -10,6 +10,14 @@ module.exports = function(sequelize, DataTypes) {
     dailyNutritionAnalysisList: {
       type: DataTypes.JSON,
       allowNull: true
+    },
+    clientId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'clients',
+        key: 'id'
+      }
     }
   }, {
     sequelize,

@@ -26,6 +26,14 @@ module.exports = function(sequelize, DataTypes) {
     totalCarbohydrate: {
       type: DataTypes.DOUBLE,
       allowNull: true
+    },
+    clientId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'clients',
+        key: 'id'
+      }
     }
   }, {
     sequelize,

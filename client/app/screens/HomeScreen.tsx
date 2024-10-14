@@ -5,8 +5,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Home from './Home';
-import ClientProfileScreen from './ClientProfileScreen';
-import NutritionistProfileScreen from './NutritionistProfileScreen';
+import Progress from './Progress';
+import NutritionManagement from './NutritionManagement';
+import ProgressDetail from './ProgressDetail';
 
 const Tab = createBottomTabNavigator();
 
@@ -14,7 +15,7 @@ const Tab = createBottomTabNavigator();
 function CustomTabBar({ state , descriptors, navigation }) {
   return (
     <View style={styles.tabContainer}>
-      {state.routes.map((route, index) => {
+      {state.routes.map((route: { key: string | number; name: React.Key | null | undefined; }, index: any) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel !== undefined
           ? options.tabBarLabel
@@ -100,8 +101,9 @@ export default function HomeScreen() {
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="Plans" component={Home} />
         <Tab.Screen name="Add" component={Home} />
-        <Tab.Screen name="Progress" component={Home} />
-        <Tab.Screen name="Profile" component={NutritionistProfileScreen} />
+        <Tab.Screen name="Progress" component={ProgressDetail} />
+        <Tab.Screen name="Profile" component={Home} />
+
       </Tab.Navigator>
  
   );
