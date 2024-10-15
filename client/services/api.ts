@@ -38,7 +38,7 @@ class ApiService {
       const response: ApiResponse<T> = await this.api.get(endpoint, { params });
       return response.data;
     } catch (error) {
-      
+      console.log("API error", error);
       throw error;
     }
   }

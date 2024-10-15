@@ -33,6 +33,7 @@ exports.createClient = async (req, res) => {
 
 // Get all clients
 exports.getAllClients = async (req, res) => {
+  console.log("Get All clients in controller")
   try {
     const allClients = await clients.findAll();
     res.status(200).json(allClients);  // Respond with all client records
@@ -47,6 +48,26 @@ exports.getClientById = async (req, res) => {
     const { id } = req.params;
 
     const client = await clients.findByPk(id);
+
+    if (!client) {
+      return res.status(404).json({ error: 'Client not found.' });
+    }
+
+    res.status(200).json(client);  // Respond with the client record
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Something went wrong while fetching the client.' });
+  }
+};
+
+// Get a specific client by userId
+exports.getClientByUserId = async (req, res) => {
+  try {
+
+    console.log('TRYING getClientByUserId');
+    console.log('Received query:', req.query);
+    const { userId } = req.query; // Use query parameters to get userId
+
+    const client = await clients.findOne({ where: { userId } });
 
     if (!client) {
       return res.status(404).json({ error: 'Client not found.' });

@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { CheckBox } from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons'; // Ensure you have @expo/vector-icons installed
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getClientProfile, updateClientById } from '@/services/client';
 
 const HealthGoalsSelection = () => {
+  // State to store user data
+  const [userData, setUserData] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const [currentWeight, setCurrentWeight] = useState('');
+  const [currentHeight, setCurrentHeight] = useState('');
   const [selectedGoals, setSelectedGoals] = useState([]);
   const [weightLossAmount, setWeightLossAmount] = useState('');
   const [allergyManagement, setAllergyManagement] = useState(false);
@@ -84,7 +93,49 @@ const HealthGoalsSelection = () => {
     setCustomAllergies((prev) => prev.filter(item => item !== allergy));
   };
 
-  const handleSubmit = () => {
+  // Function to retrieve user data from AsyncStorage
+  const getUserData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('user');
+      if (jsonValue !== null) {
+        const user = JSON.parse(jsonValue);  // Parse the JSON string into an object
+        console.log('Health Profile - User data retrieved:', user);
+        setUserData(user);  // Set user data in state
+      } else {
+        console.log('No user data found');
+      }
+    } catch (error) {
+      console.error('Error retrieving user data:', error);
+    }
+  };
+
+  // useEffect to load user data when the component mounts
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const checkClientProfile = async () => {
+    setLoading(true);
+    setError(null);
+
+    console.log("USER DATA", userData)
+
+    try {
+      console.log("FETCHING FOR", userData.id);
+      // const clientProfile = await getClientProfile(userData.userId)
+      const clientProfile = await getClientProfile(userData.id);;
+      console.log('User has existing health profile:', clientProfile);
+      return clientProfile;
+      // Navigate to another screen, e.g., the login screen
+    } catch (err) {
+      setError('User has no health profile');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleSubmit = async () => {
     console.log('Selected Goals:', selectedGoals);
     if (selectedGoals.includes('Weight Loss')) {
       console.log('Target Weight Loss:', weightLossAmount);
@@ -92,6 +143,24 @@ const HealthGoalsSelection = () => {
     if (allergyManagement) {
       console.log('Selected Allergies:', Object.keys(allergies).filter(allergy => allergies[allergy]));
       console.log('Custom Allergies:', customAllergies);
+    }
+
+      const updatedData = {
+        // weight: newWeight, // Assume newWeight is managed in state
+        // height: newHeight, // Assume newHeight is managed in state
+        healthGoals: selectedGoals,
+        dietaryPreferences: [], // Fill this based on your form
+        nutritionalNeeds: [], // Fill this based on your form
+    };
+
+    console.log("Checking if user has client profile")
+    const clientProfile = await checkClientProfile();
+
+    if (clientProfile) {
+      console.log('Client ID:', clientProfile.id);
+      await updateClientById(userData.id, updatedData);
+    } else {
+      console.log('No existing client profile found.');
     }
   };
 
