@@ -2,18 +2,9 @@ import React from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import Svg, { Rect, Defs, LinearGradient, Stop } from 'react-native-svg';
 
-const data = [
-  { day: 'Mon', value: 30 },
-  { day: 'Tue', value: 50 },
-  { day: 'Wed', value: 40 },
-  { day: 'Thu', value: 80 },
-  { day: 'Fri', value: 60 },
-  { day: 'Sat', value: 70 },
-  { day: 'Sun', value: 40 },
-];
 
-const BarChartWithGradient = () => {
-  const maxValue = Math.max(...data.map(item => item.value));
+const BarChartWithGradient = ({nutritionData}) => {
+  const maxValue = Math.max(...nutritionData.map(item => item.totalCalorie));
 
   return (
     <View style={{ padding: 20}}>
@@ -26,7 +17,7 @@ const BarChartWithGradient = () => {
         Your daily calorie Burn chart
       </Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        {data.map((item, index) => (
+        {nutritionData.map((item, index) => (
           <View key={index} style={{ alignItems: 'center' }}>
             <Svg height="180" width="20">
               <Defs>
@@ -37,9 +28,9 @@ const BarChartWithGradient = () => {
               </Defs>
               <Rect
                 x="0"
-                y={180 - (item.value / maxValue) * 180}
+                y={item.totalCalorie === 0 ? 180 : 180 - (item.totalCalorie / maxValue) * 180} 
                 width="20"
-                height={(item.value / maxValue) * 180}
+                height={item.totalCalorie === 0 ? 0 : (item.totalCalorie / maxValue) * 180} // Height 0 for zero calories
                 fill="url(#grad)"
                 rx="10" // Increased to make rounding more noticeable
                 ry="10" // Increased to make rounding more noticeable

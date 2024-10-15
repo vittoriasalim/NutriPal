@@ -41,7 +41,7 @@ const SignUpScreen = () => {
         userType:user_type});
 
 
-      console.log('User registered successfully:', newUser);
+  
       navigation.navigate("LoginScreen");
       // Navigate to another screen, e.g., the login screen
     } catch (err) {

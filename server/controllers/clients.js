@@ -11,7 +11,8 @@ exports.createClient = async (req, res) => {
       healthGoals,
       dietaryPreferences,
       nutritionalNeeds,
-      pantryId
+      pantryId,
+      recommendationCal
     } = req.body;
 
     // Create a new client record
@@ -22,7 +23,8 @@ exports.createClient = async (req, res) => {
       healthGoals,
       dietaryPreferences,
       nutritionalNeeds,
-      pantryId
+      pantryId,
+      recommendationCal
     });
 
     res.status(201).json(newClient);  // Respond with the newly created client
@@ -59,15 +61,13 @@ exports.getClientById = async (req, res) => {
   }
 };
 
-// Get a specific client by userId
+// Controller function to get a client by userId
 exports.getClientByUserId = async (req, res) => {
   try {
+    const { id } = req.params;  // Get userId from request parameters
 
-    console.log('TRYING getClientByUserId');
-    console.log('Received query:', req.query);
-    const { userId } = req.query; // Use query parameters to get userId
-
-    const client = await clients.findOne({ where: { userId } });
+    // Find the client by the userId
+    const client = await clients.findOne({ where: { id } });
 
     if (!client) {
       return res.status(404).json({ error: 'Client not found.' });
