@@ -46,7 +46,7 @@ exports.createBreakfastMeal = async (req, res) => {
       // Step 3: Respond with the newly created breakfast meal and associated meal details
       res.status(201).json(newBreakfastMeal);
     } catch (error) {
-      console.error('Error creating breakfast meal:', error);
+      throw('Error creating breakfast meal:', error);
       res.status(500).json({ error: error.message || 'An error occurred while creating the breakfast meal.' });
     }
   };

@@ -41,7 +41,7 @@ const DailyMeter: React.FC<{ nutriDay: number, recommendationCal:number, update:
       setConsumedKcal(kcal);
       setPercentage((kcal / recommendationCal) * 100);
     } catch (error) {
-      console.error('Error fetching daily nutrition:', error);
+      console.log('Error fetching daily nutrition:', error);
     } 
   };
 

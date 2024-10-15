@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Bar } from 'react-native-progress';
 import CalorieBurnChart from '@/components/CalorieBurnChart'
@@ -8,6 +8,7 @@ import CaloriesSummary from '@/components/CaloriesSummary';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDailyNutritionFortnightly } from '@/services/daily_nutrition';
 import { getClientByUserId } from '@/services/clients';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 interface DailyNutrition {
@@ -41,6 +42,8 @@ const Progress = () => {
   const [todayNutrition, setTodayNutrition] = useState<DailyNutrition | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+
+
   // Function to retrieve user data from AsyncStorage and fetch related data
   const getUserData = async () => {
     try {
@@ -54,7 +57,7 @@ const Progress = () => {
         setLoading(false); // No data found, stop loading
       }
     } catch (error) {
-      console.error('Error retrieving user data:', error);
+      console.log('Error retrieving user data:', error);
       setLoading(false);
     }
   };
@@ -67,7 +70,7 @@ const Progress = () => {
       setClientData(client); // Set client data
       await fetchNutritionData(client.id); // Fetch nutrition data after client is fetched
     } catch (error) {
-      console.error('Error fetching client data:', error);
+      console.log('Error fetching client data:', error);
       setLoading(false);
     }
   };
@@ -81,15 +84,22 @@ const Progress = () => {
       setTodayNutrition(data[data.length - 1]); // Set today's nutrition
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching nutrition data:', error);
+      console.log('Error fetching nutrition data:', error);
       setLoading(false);
     }
   };
 
   // useEffect to load user data when the component mounts
-  useEffect(() => {
-    getUserData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      // Call getUserData every time the screen comes into focus
+      getUserData();
+
+      return () => {
+        // Clean-up logic if needed
+      };
+    }, []) // Add dependencies like 'update' to trigger re-render when it changes
+  );
  
   return (
     <View style={styles.container}>

@@ -76,6 +76,7 @@ const NutritionManagement = (props) => {
         <WeekDays
           nutritionData={nutritionData}
           recommendationCal={clientData.recommendationCal}
+
         />
       )}
       

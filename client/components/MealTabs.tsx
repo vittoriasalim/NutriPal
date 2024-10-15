@@ -23,7 +23,6 @@ interface BreakfastMealResponse {
   meal: Meal;
 }
 
-
 const MealTabs = ({dailyNutritionId}) => {
   const [selectedTab, setSelectedTab] = useState('Breakfast');
   const [meals, setMeals] = useState<BreakfastMealResponse[]>([]);
@@ -43,7 +42,12 @@ const MealTabs = ({dailyNutritionId}) => {
       } else {
         throw new Error('Invalid tab selected');
       }
-      setMeals(response);
+      if (!response) {
+        setMeals([]); // If the response is null, set meals to an empty array
+      } else {
+        setMeals(response); // Set meals to the response if valid
+      }
+      
 
     } catch (error) {
       setMeals([]);
