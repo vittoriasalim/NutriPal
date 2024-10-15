@@ -124,7 +124,7 @@ const HealthGoalsSelection = () => {
     try {
       console.log("FETCHING FOR", userData.id);
       // const clientProfile = await getClientProfile(userData.userId)
-      const clientProfile = await getClientProfile(userData.id);;
+      const clientProfile = await getClientProfile(userData.id);
       console.log('User has existing health profile:', clientProfile);
       return clientProfile;
       // Navigate to another screen, e.g., the login screen
