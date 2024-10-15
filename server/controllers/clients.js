@@ -98,6 +98,17 @@ exports.updateClientById = async (req, res) => {
       return res.status(404).json({ error: 'Client not found.' });
     }
 
+    console.log("+++++++++++++++++++++++++")
+
+    console.log("UPDATING IN CONTROLLER");
+
+    console.log(weight,
+      height,
+      healthGoals,
+      dietaryPreferences,
+      nutritionalNeeds,
+      pantryId)
+
     // Update the client record
     client.weight = weight || client.weight;
     client.height = height || client.height;

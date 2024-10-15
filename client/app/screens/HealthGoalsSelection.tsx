@@ -7,6 +7,7 @@ import { getClientProfile, updateClientById } from '@/services/client';
 
 const HealthGoalsSelection = () => {
   // State to store user data
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -136,107 +137,190 @@ const HealthGoalsSelection = () => {
   }
 
   const handleSubmit = async () => {
-    console.log('Selected Goals:', selectedGoals);
-    if (selectedGoals.includes('Weight Loss')) {
-      console.log('Target Weight Loss:', weightLossAmount);
-    }
-    if (allergyManagement) {
-      console.log('Selected Allergies:', Object.keys(allergies).filter(allergy => allergies[allergy]));
-      console.log('Custom Allergies:', customAllergies);
-    }
+    const allergiesList = Object.keys(allergies).filter(allergy => allergies[allergy]);
+    const combinedAllergiesList = [...allergiesList, ...customAllergies];
 
-      const updatedData = {
-        // weight: newWeight, // Assume newWeight is managed in state
-        // height: newHeight, // Assume newHeight is managed in state
-        healthGoals: selectedGoals,
-        dietaryPreferences: [], // Fill this based on your form
-        nutritionalNeeds: [], // Fill this based on your form
+    const healthGoals = [];
+    const dietaryPreferences = [];
+
+    for (let i in selectedGoals) {
+      if (selectedGoals[i] === 'Weight Loss' || selectedGoals[i] === 'Allergy Management') {
+        if (selectedGoals[i] === 'Weight Loss') {
+          healthGoals.push(selectedGoals[i] + ':' + weightLossAmount);
+        } else {
+          for (let j in combinedAllergiesList) {
+            dietaryPreferences.push('Allergic to ' + combinedAllergiesList[j]);
+          }
+        } 
+      } else {
+        healthGoals.push(selectedGoals[i]);
+      }
+    }
+    
+    const updatedData = {
+      weight: currentWeight,
+      height: currentHeight,
+      healthGoals: healthGoals,
+      dietaryPreferences: dietaryPreferences,
+      nutritionalNeeds: [],
+      pantryId: 0,
     };
 
-    console.log("Checking if user has client profile")
+    console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
+
+    console.log("NEW DATA", updatedData);
+
+    console.log("Checking if user has client profile");
     const clientProfile = await checkClientProfile();
 
     if (clientProfile) {
       console.log('Client ID:', clientProfile.id);
+      updatedData.pantryId = clientProfile.pantryId;
+
+      // Update client profile
       await updateClientById(userData.id, updatedData);
+
+      // Update local storage
+      await AsyncStorage.setItem('healthGoals', JSON.stringify(updatedData.healthGoals));
+      await AsyncStorage.setItem('dietaryPreferences', JSON.stringify(updatedData.dietaryPreferences));
+      await AsyncStorage.setItem('weight', JSON.stringify(updatedData.weight));
+      await AsyncStorage.setItem('height', JSON.stringify(updatedData.height));
+
+      // Fetch the updated client profile again
+      const updatedClientProfile = await checkClientProfile();
+      console.log('Updated Client Profile:', updatedClientProfile);
     } else {
       console.log('No existing client profile found.');
     }
   };
 
+  const handleNext = () => {
+    if (currentSlide < 1) {
+      setCurrentSlide(currentSlide + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Select Your Health Goals</Text>
-      <Text style={styles.subtitle}>By selecting your health goals, we can offer you personalised services!</Text>
-      <SafeAreaView style={styles.secondContainer}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          {sections.map((section, sectionIndex) => (
-            <View key={sectionIndex} style={styles.section}>
-              <Text style={styles.sectionTitle}>{section.title}</Text>
-              {section.goals.map((goal, index) => (
-                <View key={index}>
-                  <CheckBox
-                    title={goal}
-                    checked={selectedGoals.includes(goal)}
-                    onPress={() => toggleGoal(goal)}
-                    containerStyle={styles.checkbox}
-                  />
-                  {goal === 'Weight Loss' && selectedGoals.includes(goal) && (
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Enter amount to lose (in kg)"
-                      keyboardType="numeric"
-                      value={weightLossAmount}
-                      onChangeText={setWeightLossAmount}
-                    />
-                  )}
-                  {goal === 'Allergy Management' && allergyManagement && (
-                    <View style={styles.allergySection}>
-                      <Text style={styles.subTitle}>Please select your allergies:</Text>
-                      {Object.keys(allergies).map((allergy) => (
-                        <CheckBox
-                          key={allergy}
-                          title={allergy.charAt(0).toUpperCase() + allergy.slice(1)}
-                          checked={allergies[allergy]}
-                          onPress={() => handleAllergyChange(allergy)}
-                          containerStyle={styles.checkbox}
-                        />
-                      ))}
-                      <View style={styles.customAllergyContainer}>
+      {currentSlide === 0 ? (
+        <View style={styles.slide}>
+          <Text style={styles.title}>Build Your Health Profile</Text>
+          <Text style={styles.subtitle}>Start building your health profile by telling us your current weight and height.</Text>
+          <View style={styles.firstSlide}>
+            <View style={styles.simpleInput}>
+              <Text style={styles.label}>Weight (kg)</Text>
+              <TextInput
+                style={styles.firstInput}
+                placeholder="Weight (kg)"
+                keyboardType="numeric"
+                value={currentWeight}
+                onChangeText={setCurrentWeight}
+              />
+            </View>
+            <View style={styles.simpleInput}>
+              <Text style={styles.label}>Height (cm)</Text>
+              <TextInput
+                style={styles.firstInput}
+                placeholder="Height (cm)"
+                keyboardType="numeric"
+                value={currentHeight}
+                onChangeText={setCurrentHeight}
+              />
+            </View>
+          </View>
+        </View>
+      ) : (
+        <View style={styles.slide}>
+          <Text style={styles.title}>Select Your Health Goals</Text>
+          <Text style={styles.subtitle}>By selecting your health goals, we can offer you personalised services!</Text>
+          <SafeAreaView style={styles.secondContainer}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+              {sections.map((section, sectionIndex) => (
+                <View key={sectionIndex} style={styles.section}>
+                  <Text style={styles.sectionTitle}>{section.title}</Text>
+                  {section.goals.map((goal, index) => (
+                    <View key={index}>
+                      <CheckBox
+                        title={goal}
+                        checked={selectedGoals.includes(goal)}
+                        onPress={() => toggleGoal(goal)}
+                        containerStyle={styles.checkbox}
+                      />
+                      {goal === 'Weight Loss' && selectedGoals.includes(goal) && (
                         <TextInput
-                          style={styles.allergenInput}
-                          placeholder="Other allergies"
-                          value={otherAllergy}
-                          onChangeText={setOtherAllergy}
+                          style={styles.input}
+                          placeholder="Enter amount to lose (in kg)"
+                          keyboardType="numeric"
+                          value={weightLossAmount}
+                          onChangeText={setWeightLossAmount}
                         />
-                        <TouchableOpacity onPress={addCustomAllergy}>
-                          <Ionicons name="add-circle" size={30} color="#91C788" />
-                        </TouchableOpacity>
-                      </View>
-                      {customAllergies.length > 0 && (
-                        <View style={styles.customAllergyList}>
-                          <Text style={styles.customAllergyTitle}>Custom Allergies:</Text>
-                          {customAllergies.map((item, idx) => (
-                            <View key={idx} style={styles.customAllergyItemContainer}>
-                              <Text style={styles.customAllergyItem}>{item}</Text>
-                              <TouchableOpacity onPress={() => removeCustomAllergy(item)}>
-                                <Ionicons name="trash" size={20} color="red" />
-                              </TouchableOpacity>
-                            </View>
+                      )}
+                      {goal === 'Allergy Management' && allergyManagement && (
+                        <View style={styles.allergySection}>
+                          <Text style={styles.subTitle}>Please select your allergies:</Text>
+                          {Object.keys(allergies).map((allergy) => (
+                            <CheckBox
+                              key={allergy}
+                              title={allergy.charAt(0).toUpperCase() + allergy.slice(1)}
+                              checked={allergies[allergy]}
+                              onPress={() => handleAllergyChange(allergy)}
+                              containerStyle={styles.checkbox}
+                            />
                           ))}
+                          <View style={styles.customAllergyContainer}>
+                            <TextInput
+                              style={styles.allergenInput}
+                              placeholder="Other allergies"
+                              value={otherAllergy}
+                              onChangeText={setOtherAllergy}
+                            />
+                            <TouchableOpacity onPress={addCustomAllergy}>
+                              <Ionicons name="add-circle" size={30} color="#91C788" />
+                            </TouchableOpacity>
+                          </View>
+                          {customAllergies.length > 0 && (
+                            <View style={styles.customAllergyList}>
+                              <Text style={styles.customAllergyTitle}>Custom Allergies:</Text>
+                              {customAllergies.map((item, idx) => (
+                                <View key={idx} style={styles.customAllergyItemContainer}>
+                                  <Text style={styles.customAllergyItem}>{item}</Text>
+                                  <TouchableOpacity onPress={() => removeCustomAllergy(item)}>
+                                    <Ionicons name="trash" size={20} color="red" />
+                                  </TouchableOpacity>
+                                </View>
+                              ))}
+                            </View>
+                          )}
                         </View>
                       )}
                     </View>
-                  )}
+                  ))}
                 </View>
               ))}
-            </View>
-          ))}
-        </ScrollView>
-      </SafeAreaView>
-      <TouchableOpacity style={styles.buttonContainer} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
+            </ScrollView>
+          </SafeAreaView>
+        </View>
+      )}
+      {currentSlide === 0 ? (
+        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+          <Text style={styles.buttonText}>Next</Text>
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.previousButton} onPress={handlePrevious}>
+            <Text style={styles.buttonText}>Previous</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -248,6 +332,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingBottom: 120,
     backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
   },
   secondContainer: {
     flex: 1,
@@ -304,6 +398,34 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 20,
   },
+  label: {
+    fontSize: 16,
+    marginVertical: 5, // Space between label and input
+    alignSelf: 'center', // Center the label
+  },
+  firstSlide: {
+    paddingHorizontal: 20,
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: 10,
+  },
+  simpleInput: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: 5,
+  },
+  firstInput: {
+    minHeight: 40, // Reduce the height
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingLeft: 5, // Decrease padding
+    borderRadius: 5,
+    marginTop: 5,
+    flex: 1,
+    marginHorizontal: 20,
+    maxWidth: 200, // Set a max width for the input
+    alignSelf: 'center', // Center the input horizontally
+  },
   allergenInput: {
     height: 40,
     borderColor: 'gray',
@@ -339,7 +461,7 @@ const styles = StyleSheet.create({
   customAllergyItem: {
     marginVertical: 4,
   },
-  buttonContainer: {
+  nextButton: {
     backgroundColor: '#91C788',
     borderRadius: 16,
     marginTop: 16,
@@ -348,6 +470,25 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 17,
     fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: 20,
+    gap: 5,
+    marginTop: 16,
+  },
+  previousButton: {
+    backgroundColor: '#D3D3D3',
+    padding: 20,
+    borderRadius: 16,
+    flex: 1,
+  },
+  submitButton: {
+    backgroundColor: '#91C788',
+    padding: 20,
+    borderRadius: 16,
+    flex: 1,
   },
   buttonText: {
     color: '#FFFFFF',

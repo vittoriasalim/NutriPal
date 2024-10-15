@@ -39,16 +39,19 @@ export const getAllClients = async (): Promise<Client[]> => {
     }
 };
 
+export const updateUserProfile = async (userId: number, userData: Partial<User>): Promise<User> => {
+    try {
+      const response = await apiService.putData<User>(`/users/${userId}`, userData);
+      return response;
+    } catch (error) {
+     
+      throw error;
+    }
+  };
+
 export const updateClientById = async (id: number, clientData: Partial<Client>): Promise<Client> => {
     try {
-        const response = await apiService.fetchData<Client>(`/clients/${id}`, {
-            method: 'PUT', // Specify the HTTP method
-            body: JSON.stringify(clientData), // Convert client data to JSON
-            headers: {
-                'Content-Type': 'application/json', // Set content type to JSON
-            },
-        });
-
+        const response = await apiService.putData<Client>(`/clients/${id}`, clientData);
         console.log('Client updated successfully:', response);
         return response; // Return the updated client data
     } catch (error) {
