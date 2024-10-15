@@ -11,7 +11,8 @@ exports.createClient = async (req, res) => {
       healthGoals,
       dietaryPreferences,
       nutritionalNeeds,
-      pantryId
+      pantryId,
+      recommendationCal
     } = req.body;
 
     // Create a new client record
@@ -22,7 +23,8 @@ exports.createClient = async (req, res) => {
       healthGoals,
       dietaryPreferences,
       nutritionalNeeds,
-      pantryId
+      pantryId,
+      recommendationCal
     });
 
     res.status(201).json(newClient);  // Respond with the newly created client
@@ -47,6 +49,24 @@ exports.getClientById = async (req, res) => {
     const { id } = req.params;
 
     const client = await clients.findByPk(id);
+
+    if (!client) {
+      return res.status(404).json({ error: 'Client not found.' });
+    }
+
+    res.status(200).json(client);  // Respond with the client record
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Something went wrong while fetching the client.' });
+  }
+};
+
+// Controller function to get a client by userId
+exports.getClientByUserId = async (req, res) => {
+  try {
+    const { id } = req.params;  // Get userId from request parameters
+
+    // Find the client by the userId
+    const client = await clients.findOne({ where: { id } });
 
     if (!client) {
       return res.status(404).json({ error: 'Client not found.' });

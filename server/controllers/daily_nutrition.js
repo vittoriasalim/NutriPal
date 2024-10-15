@@ -1,6 +1,16 @@
 const sequelize = require('../config/database'); // Adjust the path as necessary
 const { daily_nutrition } = require('../models/init-models')(sequelize);  // Import the models (adjust path as needed)
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
+
+
+// Helper function to get the day of the week from a date (Mon, Tue, etc.)
+const getDayOfWeek = (date) => {
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dayIndex = new Date(date).getDay();  // Get the day index (0 = Sunday, 6 = Saturday)
+  return daysOfWeek[dayIndex];  // Return the day abbreviation
+};
+
+
 
 // Helper function to generate an array of the last 14 dates
 const getLast14Days = () => {
@@ -24,19 +34,24 @@ exports.getDailyNutritionLast14Days = async (req, res) => {
   
       // Get the last 14 days
       const last14Days = getLast14Days();
+
   
       // Find records in the database for the last 14 days and for the specified clientId
       const existingRecords = await daily_nutrition.findAll({
         where: {
-          date: {
-            [Op.in]: last14Days
-          },
-          clientId  // Ensure it's filtering for the right client
+          [Op.and]: [
+            Sequelize.where(Sequelize.cast(Sequelize.col('date'), 'DATE'), {
+              [Op.in]: last14Days,
+            }),
+            { clientId }
+          ]
         }
       });
   
+  
       // Extract the dates that already have records
       const existingDates = existingRecords.map(record => record.date.toISOString().split('T')[0]);
+  
   
       // Find the missing dates (those that don't have records yet)
       const missingDates = last14Days.filter(date => !existingDates.includes(date));
@@ -59,15 +74,22 @@ exports.getDailyNutritionLast14Days = async (req, res) => {
       const allRecords = [...existingRecords, ...newRecords];
   
       // Sort by date in descending order (most recent first)
-      allRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+      allRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+      // Add the day of the date to each record in the response
+      const formattedRecords = allRecords.map(record => ({
+        id:record.id,
+        date: record.date.toISOString().split('T')[0],  // Keep date in YYYY-MM-DD format
+        day: getDayOfWeek(record.date),  // Add the day (1-31)
+        totalCalorie: record.totalCalorie,
+        totalProtein: record.totalProtein,
+        totalFats: record.totalFats,
+        totalCarbohydrate: record.totalCarbohydrate,
+        clientId: record.clientId
+      }));
   
-      // Return the combined records with the clientId included
-      const response = {
-        clientId,  // Include the clientId in the response
-        dailyNutritionRecords: allRecords  // Return the records
-      };
+    
   
-      res.status(200).json(response);
+      res.status(200).json(formattedRecords);
     } catch (error) {
       res.status(500).json({ error: error.message || 'Something went wrong while fetching or creating records.' });
     }
@@ -129,19 +151,17 @@ exports.getDailyNutritionById = async (req, res) => {
 exports.updateDailyNutrition = async (req, res) => {
   try {
     const id = req.params.id;
-    const { date, totalCalorie, totalProtein, totalFats, totalCarbohydrate } = req.body;
+    const { totalCalorie, totalProtein, totalFats, totalCarbohydrate } = req.body;
 
     const dailyNutrition = await daily_nutrition.findByPk(id);
     if (!dailyNutrition) {
       return res.status(404).json({ error: 'Record not found.' });
     }
-
     // Update the record
-    dailyNutrition.date = date || dailyNutrition.date;
-    dailyNutrition.totalCalorie = totalCalorie || dailyNutrition.totalCalorie;
-    dailyNutrition.totalProtein = totalProtein || dailyNutrition.totalProtein;
-    dailyNutrition.totalFats = totalFats || dailyNutrition.totalFats;
-    dailyNutrition.totalCarbohydrate = totalCarbohydrate || dailyNutrition.totalCarbohydrate;
+    dailyNutrition.totalCalorie = totalCalorie + dailyNutrition.totalCalorie;
+    dailyNutrition.totalProtein = totalProtein + dailyNutrition.totalProtein;
+    dailyNutrition.totalFats = totalFats + dailyNutrition.totalFats;
+    dailyNutrition.totalCarbohydrate = totalCarbohydrate + dailyNutrition.totalCarbohydrate;
 
     await dailyNutrition.save();
     res.status(200).json(dailyNutrition);

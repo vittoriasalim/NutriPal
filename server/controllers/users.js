@@ -88,7 +88,8 @@ exports.createUser = async (req, res) => {
         {
           userId: newUser.id,  // Link the client to the newly created user
           weight:0,
-          height:0
+          height:0,
+          recommendationCal:1500
    
         },
         { transaction }

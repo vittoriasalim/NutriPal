@@ -12,13 +12,13 @@ export default function Home() {
       const jsonValue = await AsyncStorage.getItem('user');
       if (jsonValue !== null) {
         const user = JSON.parse(jsonValue);  // Parse the JSON string into an object
-        console.log('User data retrieved:', user);
+      
         setUserData(user);  // Set user data in state
       } else {
         console.log('No user data found');
       }
     } catch (error) {
-      console.error('Error retrieving user data:', error);
+      console.log('Error retrieving user data:', error);
     }
   };
 

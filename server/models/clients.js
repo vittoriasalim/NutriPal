@@ -42,6 +42,11 @@ module.exports = function(sequelize, DataTypes) {
         model: 'pantries',
         key: 'id'
       }
+    },
+    recommendationCal: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0
     }
   }, {
     sequelize,
