@@ -16,19 +16,7 @@ class ApiService {
       baseURL: BASE_API_URL,
       timeout: 10000, // timeout in milliseconds
     });
-    // // Add a request interceptor
-    // this.api.interceptors.request.use(
-    //   async (config: AxiosRequestConfig) => {  // Type the `config` parameter
-    //     const token = await AsyncStorage.getItem('token');
-    //     if (token && config.headers) {  // Ensure headers exist before modifying them
-    //       config.headers['Authorization'] = `Bearer ${token}`;
-    //     }
-    //     return config;
-    //   },
-    //   (error: AxiosError) => {
-    //     return Promise.reject(error);
-    //   }
-    // );
+
   }
   
 

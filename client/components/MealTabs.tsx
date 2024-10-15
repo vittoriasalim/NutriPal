@@ -1,49 +1,112 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import FoodCard from './FoodCard';
+import { getBreakfastById } from '@/services/breakfast_meals';
+import { getLunchById } from '@/services/lunch_meals';
+import { getDinnerById } from '@/services/dinner_meals';
 
-const MealTabs = () => {
+interface Meal {
+  mealName: string;
+  description: string;
+  calorie: number;
+  protein: number;
+  fats: number;
+  carbohydrate: number;
+}
+
+interface BreakfastMealResponse {
+  dailyNutritionId: number;
+  mealId: number;
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  meal: Meal;
+}
+
+
+const MealTabs = ({dailyNutritionId}) => {
   const [selectedTab, setSelectedTab] = useState('Breakfast');
+  const [meals, setMeals] = useState<BreakfastMealResponse[]>([]);
+ 
+  // Function to fetch meals based on the selected tab
+  const fetchMeals = async () => {
+    try {
+     
+      let response: BreakfastMealResponse[];
+
+      if (selectedTab === 'Breakfast') {
+        response = await getBreakfastById(dailyNutritionId);
+      } else if (selectedTab === 'Lunch') {
+        response = await getLunchById(dailyNutritionId);
+      } else if (selectedTab === 'Dinner') {
+        response = await getDinnerById(dailyNutritionId);
+      } else {
+        throw new Error('Invalid tab selected');
+      }
+      setMeals(response);
+
+    } catch (error) {
+      setMeals([]);
+      throw error;
+    }
+  };
+
+  // Fetch meals whenever selectedTab or dailyNutritionId changes
+  useEffect(() => {
+   
+    fetchMeals();
+  });
+
 
   return (
-    <View style={styles.container}>
-      {/* Breakfast Tab */}
-      <TouchableOpacity
-        style={[
-          styles.tab,
-          selectedTab === 'Breakfast' && styles.activeTab, // Conditional styling for active tab
-          { borderRadius: 20 }, // Left rounded border
-        ]}
-        onPress={() => setSelectedTab('Breakfast')}
-      >
-        <Text style={[styles.tabText, selectedTab === 'Breakfast' && styles.activeTabText]}>
-          Breakfast
-        </Text>
-      </TouchableOpacity>
+    <View>
+      <View style={styles.container}>
+        {/* Breakfast Tab */}
+        <TouchableOpacity
+          style={[
+            styles.tab,
+            selectedTab === 'Breakfast' && styles.activeTab, // Conditional styling for active tab
+            { borderRadius: 20 }, // Left rounded border
+          ]}
+          onPress={() => setSelectedTab('Breakfast')}
+        >
+          <Text style={[styles.tabText, selectedTab === 'Breakfast' && styles.activeTabText]}>
+            Breakfast
+          </Text>
+        </TouchableOpacity>
 
-      {/* Lunch Tab */}
-      <TouchableOpacity
-        style={[
-          styles.tab,
-          selectedTab === 'Lunch' && styles.activeTab, // Conditional styling for active tab
-        ]}
-        onPress={() => setSelectedTab('Lunch')}
-      >
-        <Text style={[styles.tabText, selectedTab === 'Lunch' && styles.activeTabText]}>Lunch</Text>
-      </TouchableOpacity>
+        {/* Lunch Tab */}
+        <TouchableOpacity
+          style={[
+            styles.tab,
+            selectedTab === 'Lunch' && styles.activeTab, // Conditional styling for active tab
+          ]}
+          onPress={() => setSelectedTab('Lunch')}
+        >
+          <Text style={[styles.tabText, selectedTab === 'Lunch' && styles.activeTabText]}>Lunch</Text>
+        </TouchableOpacity>
 
-      {/* Dinner Tab */}
-      <TouchableOpacity
-        style={[
-          styles.tab,
-          selectedTab === 'Dinner' && styles.activeTab, // Conditional styling for active tab
-          {borderRadius: 20 }, // Right rounded border
-        ]}
-        onPress={() => setSelectedTab('Dinner')}
-      >
-        <Text style={[styles.tabText, selectedTab === 'Dinner' && styles.activeTabText]}>
-          Dinner
-        </Text>
-      </TouchableOpacity>
+        {/* Dinner Tab */}
+        <TouchableOpacity
+          style={[
+            styles.tab,
+            selectedTab === 'Dinner' && styles.activeTab, // Conditional styling for active tab
+            { borderRadius: 20 }, // Right rounded border
+          ]}
+          onPress={() => setSelectedTab('Dinner')}
+        >
+          <Text style={[styles.tabText, selectedTab === 'Dinner' && styles.activeTabText]}>
+            Dinner
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+      {meals.map((mealData) => (
+        <FoodCard
+          meal={mealData.meal}
+        />
+      ))}
+
     </View>
   );
 };
@@ -67,7 +130,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
-    borderRadius: 20 ,
+    borderRadius: 20,
     elevation: 2, // Elevation for Android shadow
   },
   tabText: {

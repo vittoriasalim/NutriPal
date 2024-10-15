@@ -6,8 +6,12 @@ import { ProgressStackParamList } from '@/types/navigation';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 
+interface CaloriesSummaryProps {
+    recommendationCal: number;
+    totalCalorie: number;
+}
 
-const CaloriesCard = () => {
+const CaloriesCard: React.FC<CaloriesSummaryProps> = ({ recommendationCal, totalCalorie }) => {
     const navigation = useNavigation<NavigationProp<ProgressStackParamList>>();
 
     const handleIntakeCard = () => {
@@ -25,7 +29,7 @@ const CaloriesCard = () => {
                     <Icon name="info-outline" type="material" color="#80D3EA" size={23} />
                 </View>
                 <Text style={styles.title}>Daily Calories Intake</Text>
-                <Text style={styles.subtitle}>Eat upto 2070.99 calories</Text>
+                <Text style={styles.subtitle}>Eat upto {recommendationCal.toFixed(2)} calories</Text>
             </Card>
             </TouchableOpacity> 
             <TouchableOpacity style={{flex:1}} onPress={handleIntakeCard}>
@@ -36,7 +40,7 @@ const CaloriesCard = () => {
                     </View>
                     {/* Make sure the text is wrapped in Text component */}
                     <Text style={styles.title}>Today's Calorie Intake</Text>
-                    <Text style={styles.subtitle}>Today's eaten calories 1670.09</Text>
+                    <Text style={styles.subtitle}>Today's eaten calories {totalCalorie.toFixed(2)}</Text>
                 </Card>
             </TouchableOpacity>
 

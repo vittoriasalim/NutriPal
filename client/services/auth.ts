@@ -28,14 +28,14 @@ export const login = async (email: string, password: string): Promise<{ token: s
     console.log('Sending request to:', email, password);
     const response = await apiService.postData<{ token: string , user:User}>('/users/auth/login', { email, password });
    
-    console.log('Response received:', response);
+
     const jsonValue = JSON.stringify(response.user);
     await AsyncStorage.setItem( "token",response.token);
     await AsyncStorage.setItem( "user",jsonValue);
-    console.log('Token stored successfully');
+
     return response;  // Adjust based on whether you need this or not
   } catch (error) {
-    console.log(error)
+
     throw error
    
     

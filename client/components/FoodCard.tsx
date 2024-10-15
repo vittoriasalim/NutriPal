@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { ProgressBar } from 'react-native-paper'; // You can use other progress bar libraries too.
 
-const FoodCard = () => {
+const FoodCard = ({meal}) => {
   return (
     <View style={styles.card}>
       {/* Top Row: Food image, Title and Calorie info, and Menu icon */}
@@ -15,9 +15,9 @@ const FoodCard = () => {
         />
         {/* Title and Calories */}
         <View style={styles.textContainer}>
-          <Text style={styles.title}>Salad with eggs</Text>
+          <Text style={styles.title}>{meal.mealName}</Text>
           <View style={styles.calorieContainer}>
-            <Text style={styles.calories}>🔥 294 kcal - 100g</Text>
+            <Text style={styles.calories}>🔥 {meal.calorie} kcal</Text>
           </View>
         </View>
         {/* Three-dot Menu Icon */}
@@ -30,20 +30,20 @@ const FoodCard = () => {
       <View style={styles.nutrientContainer}>
         {/* Protein */}
         <View style={styles.nutrientItem}>
-          <ProgressBar progress={0.3} color="#72BF44" style={styles.progressBar} />
-          <Text style={styles.nutrientValue}>12g</Text>
+          <ProgressBar progress={meal.protein/100} color="#72BF44" style={styles.progressBar} />
+          <Text style={styles.nutrientValue}>{meal.protein}g</Text>
           <Text style={styles.nutrientLabel}>Protein</Text>
         </View>
         {/* Fats */}
         <View style={styles.nutrientItem}>
-          <ProgressBar progress={0.5} color="#E96A6A" style={styles.progressBar} />
-          <Text style={styles.nutrientValue}>22g</Text>
+          <ProgressBar progress={meal.fats/100} color="#E96A6A" style={styles.progressBar} />
+          <Text style={styles.nutrientValue}>{meal.fats}g</Text>
           <Text style={styles.nutrientLabel}>Fats</Text>
         </View>
         {/* Carbs */}
         <View style={styles.nutrientItem}>
-          <ProgressBar progress={0.8} color="#FFD700" style={styles.progressBar} />
-          <Text style={styles.nutrientValue}>42g</Text>
+          <ProgressBar progress={meal.fats/100} color="#FFD700" style={styles.progressBar} />
+          <Text style={styles.nutrientValue}>{meal.carbohydrate}g</Text>
           <Text style={styles.nutrientLabel}>Carbs</Text>
         </View>
       </View>
