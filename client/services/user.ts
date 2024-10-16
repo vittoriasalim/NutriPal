@@ -11,7 +11,6 @@ interface User {
 }
 
 
-
 export const getUserProfile = async (userId: number): Promise<User> => {
   try {
     const response = await apiService.fetchData<User>(`/users/${userId}`);

@@ -3,33 +3,83 @@ import DailyMeter from '@/components/DailyMeter';
 import FoodCard from '@/components/FoodCard';
 import MealTabs from '@/components/MealTabs';
 import WeekDays from '@/components/WeekDays';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
-import { Text, View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { useState, useEffect } from 'react';
+import { Text, View, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native';
+import { getDailyNutritionFortnightly } from '../../services/daily_nutrition'; 
+import { getClientByUserId } from '@/services/clients';
 
-interface NutritionManagementProps { }
+const NutritionManagement = (props) => {
+  const [userData, setUserData] = useState(null);
+  const [clientData, setClientData] = useState();
+  const [nutritionData, setNutritionData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-const NutritionManagement = (props: NutritionManagementProps) => {
+  const handleNutrition = (item) => {
+    setSelectedNutrition(item);
+  };
+
+  const getUserData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('user');
+      if (jsonValue) {
+        const user = JSON.parse(jsonValue);
+        setUserData(user);
+        await fetchClientData(user.id);
+      } else {
+       
+        setLoading(false);
+      }
+    } catch (error) {
+    
+      setLoading(false);
+    }
+  };
+
+  const fetchClientData = async (userId) => {
+    try {
+      const client = await getClientByUserId(userId);
+      setClientData(client);
+      await fetchNutritionData(client.id);
+    } catch (error) {
+
+      setLoading(false);
+    }
+  };
+
+  const fetchNutritionData = async (clientId) => {
+    try {
+      const data = await getDailyNutritionFortnightly(clientId);
+
+      console.log(data); 
+      setNutritionData(data);
+
+      setLoading(false);
+    } catch (error) {
+
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
   return (
     <View style={styles.container}>
-
       <Text style={styles.header}>Daily Nutrition</Text>
+
+     
       <View style={{ marginBottom: 20 }}></View>
-      <DailyMeter></DailyMeter>
-      <View style={{ marginBottom: 20 }}></View>
-      <WeekDays></WeekDays>
-      <View style={{ marginBottom: 0 }}></View>
-      <SafeAreaView style={styles.secondContainer}>
-        {/* Scrollable section */}
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <AddMealCard images={require("../../assets/images/bfast.png")} categories="Breakfast" />
-          <AddMealCard images={require("../../assets/images/meal.png")} categories="Lunch" />
-          <AddMealCard images={require("../../assets/images/meal.png")} categories="Dinner" />
-          <MealTabs />
-          <FoodCard></FoodCard>
-          <FoodCard></FoodCard>
-       
-        </ScrollView>
-      </SafeAreaView>
+      {clientData && (
+        <WeekDays
+          nutritionData={nutritionData}
+          recommendationCal={clientData.recommendationCal}
+
+        />
+      )}
+      
 
 
     </View>
@@ -47,17 +97,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Poppins-Regular',
     marginTop: 60,
-
   },
   secondContainer: {
-    flex: 1, // Ensure it takes the full height of the screen
-
+    flex: 1,
   },
-  scrollContent: {
-    // padding: 10, // Optional: add padding to the scroll content
+  scrollContent: {},
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginVertical: 10,
   },
-
-
 });
 
 export default NutritionManagement;

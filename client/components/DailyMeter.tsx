@@ -1,4 +1,5 @@
-import React from 'react';
+import { getDailyNutritionByID } from '@/services/daily_nutrition';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
@@ -27,13 +28,33 @@ const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
   };
 };
 
-const DailyMeter = () => {
-  const totalKcal = 2213;
-  const consumedKcal = 1721;
-  const percentage = (consumedKcal / totalKcal) * 100;
+const DailyMeter: React.FC<{ nutriDay: number, recommendationCal:number, update:number}> = ({ nutriDay,recommendationCal, update}) => {
+  const [today, setDailyNutrition] = useState<DailyNutrition | null>(null);  // State to store fetched data 
+  const [consumedKcal, setConsumedKcal] = useState(0);
+  const [percentage, setPercentage] = useState(0);
+  const fetchDailyNutrition = async () => {
+    try {
+      // Fetch data from the API
+      const data = await getDailyNutritionByID(nutriDay);
+      setDailyNutrition(data);  // Update the state with the fetched data
+      const kcal = data.totalCalorie;  
+      setConsumedKcal(kcal);
+      setPercentage((kcal / recommendationCal) * 100);
+    } catch (error) {
+      console.log('Error fetching daily nutrition:', error);
+    } 
+  };
+
+  // useEffect with an async function to fetch daily nutrition by ID
+  useEffect(() => {
+    
+    fetchDailyNutrition();
+    console.log("render here again");
+    console.log(update);
+  }, [nutriDay, recommendationCal,update]);  // Add dependencies to avoid unnecessary re-renders
   
   // Adjust the angle calculation for smooth transition from left to right.
-  const endAngle = 180 - ((percentage / 100) * 180); // Left to right, starting at 180 degrees
+  const endAngle = 180 + (percentage * 1.8); // Left to right, starting at 180 degrees
 
   return (
     <View style={styles.container}>
@@ -50,43 +71,45 @@ const DailyMeter = () => {
           />
           {/* Progress Arc */}
           <Path
-            d={describeArc(100, 100, 90, 180, 320)} // Progress arc based on calories
+            d={describeArc(100, 100, 90, 180, endAngle)} // Progress arc based on calories
             fill="none"
             stroke="#72BF44" // Progress color
             strokeWidth="15"
             strokeLinecap="round" // Smooth arc ends
           />
         </Svg>
-        <Text style={styles.kcalText}>{`${consumedKcal} Kcal`}</Text>
-        <Text style={styles.totalKcalText}>{`of ${totalKcal} kcal`}</Text>
+        <Text style={styles.kcalText}>{`${consumedKcal.toFixed(1)} Kcal`}</Text>
+        <Text style={styles.totalKcalText}>{`of ${recommendationCal.toFixed(1)} kcal`}</Text>
       </View>
 
       {/* Macronutrient Section */}
-      <View style={styles.macronutrients}>
-        <View style={styles.nutrient}>
-          <Text style={styles.nutrientLabel}>Protein</Text>
-          <View style={styles.nutrientBarContainer}>
-            <View style={[styles.nutrientBar, { width: `${(78 / 90) * 100}%`, backgroundColor: '#72BF44' }]} />
+      {today && (
+        <View style={styles.macronutrients}>
+          <View style={styles.nutrient}>
+            <Text style={styles.nutrientLabel}>Protein</Text>
+            <View style={styles.nutrientBarContainer}>
+              <View style={[styles.nutrientBar, { width: `${(today.totalProtein / 90) * 100}%`, backgroundColor: '#72BF44' }]} />
+            </View>
+            <Text style={styles.nutrientText}>{today.totalProtein}g</Text>
           </View>
-          <Text style={styles.nutrientText}>78/90g</Text>
-        </View>
 
-        <View style={styles.nutrient}>
-          <Text style={styles.nutrientLabel}>Fats</Text>
-          <View style={styles.nutrientBarContainer}>
-            <View style={[styles.nutrientBar, { width: `${(45 / 70) * 100}%`, backgroundColor: '#E96A6A' }]} />
+          <View style={styles.nutrient}>
+            <Text style={styles.nutrientLabel}>Fats</Text>
+            <View style={styles.nutrientBarContainer}>
+              <View style={[styles.nutrientBar, { width: `${(today.totalFats / 70) * 100}%`, backgroundColor: '#E96A6A' }]} />
+            </View>
+            <Text style={styles.nutrientText}>{today.totalFats}g</Text>
           </View>
-          <Text style={styles.nutrientText}>45/70g</Text>
-        </View>
 
-        <View style={styles.nutrient}>
-          <Text style={styles.nutrientLabel}>Carbs</Text>
-          <View style={styles.nutrientBarContainer}>
-            <View style={[styles.nutrientBar, { width: `${(95 / 110) * 100}%`, backgroundColor: '#FFD700' }]} />
+          <View style={styles.nutrient}>
+            <Text style={styles.nutrientLabel}>Carbs</Text>
+            <View style={styles.nutrientBarContainer}>
+              <View style={[styles.nutrientBar, { width: `${(today.totalCarbohydrate / 110) * 100}%`, backgroundColor: '#FFD700' }]} />
+            </View>
+            <Text style={styles.nutrientText}>{today.totalCarbohydrate}g</Text>
           </View>
-          <Text style={styles.nutrientText}>95/110g</Text>
         </View>
-      </View>
+      )}
     </View>
   );
 };

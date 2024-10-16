@@ -1,0 +1,16 @@
+mealName,description,calorie,protein,fats,carbohydrate
+Salad with Eggs,"A healthy salad with boiled eggs, lettuce, and avocado.",294.0,12.0,22.0,42.0
+Grilled Chicken,"Grilled chicken breast with mixed vegetables.",500.0,40.0,20.0,30.0
+Oatmeal with Berries,"Oatmeal cooked with almond milk and topped with mixed berries.",350.0,10.0,15.0,55.0
+Pasta Carbonara,"Creamy pasta with bacon, eggs, and parmesan.",750.0,25.0,50.0,60.0
+Fruit Smoothie,"A refreshing smoothie made with bananas, strawberries, and yogurt.",180.0,5.0,2.0,35.0
+Steak and Potatoes,"Grilled steak with mashed potatoes and green beans.",700.0,50.0,40.0,60.0
+Vegetable Stir-fry,"Mixed vegetables stir-fried with tofu and soy sauce.",350.0,15.0,10.0,45.0
+Chicken Caesar Salad,"Classic Caesar salad with grilled chicken and parmesan.",600.0,30.0,40.0,30.0
+Beef Tacos,"Soft shell tacos with ground beef, cheese, and salsa.",450.0,20.0,25.0,45.0
+Spaghetti Bolognese,"Spaghetti pasta with rich bolognese sauce and parmesan.",800.0,35.0,55.0,65.0
+Avocado Toast,"Whole grain toast topped with mashed avocado and poached egg.",300.0,12.0,20.0,30.0
+Chicken Burrito,"Burrito filled with chicken, beans, rice, and salsa.",600.0,40.0,15.0,70.0
+Quinoa Salad,"Quinoa salad with mixed greens, chickpeas, and feta cheese.",400.0,18.0,15.0,55.0
+Fish and Chips,"Fried fish with crispy fries and tartar sauce.",700.0,35.0,45.0,50.0
+Mushroom Risotto,"Creamy risotto with mushrooms and parmesan.",550.0,12.0,35.0,60.0

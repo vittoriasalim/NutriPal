@@ -17,8 +17,8 @@ interface Client {
 export const getClientProfile = async (userId: number): Promise<Client> => {
     try {
       console.log("GET CLIENT PROFILE")
-      console.log("Fetching from API:", `/clients/user?userId=${userId}`);
-      const response = await apiService.fetchData<Client>(`/clients/user?userId=${userId}`);
+      console.log("Fetching from API:", `/clients/user/${userId}`);
+      const response = await apiService.fetchData<Client>(`/clients/user/${userId}`);
 
       console.log('Response received:', response);
       return response;

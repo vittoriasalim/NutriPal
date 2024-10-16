@@ -2,7 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Svg, Rect, Defs, LinearGradient, Stop } from 'react-native-svg';
 
-const CaloriesSummary = () => {
+interface CaloriesSummaryProps {
+  recommendationCal: number;
+  totalCalorie: number;
+}
+
+const CaloriesSummary: React.FC<CaloriesSummaryProps> = ({ recommendationCal, totalCalorie }) => {
   const barData = [50, 80, 65, 90, 100, 85, 80,60,70,30]; // Heights of the bars in percentage
 
   return (
@@ -10,11 +15,11 @@ const CaloriesSummary = () => {
       <View style={styles.header}>
         <View style={styles.labelContainer}>
           <Text style={styles.label}>Daily calories</Text>
-          <Text style={styles.value}>2070.99</Text>
+          <Text style={styles.value}>{recommendationCal.toFixed(2)}</Text>
         </View>
         <View style={styles.labelContainer}>
           <Text style={styles.label}>Calories to eat</Text>
-          <Text style={styles.value}>400.90</Text>
+          <Text style={styles.value}>{(recommendationCal-totalCalorie).toFixed(2)}</Text>
         </View>
       </View>
 
