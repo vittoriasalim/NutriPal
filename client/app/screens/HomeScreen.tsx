@@ -8,6 +8,9 @@ import Home from './Home';
 import Progress from './Progress';
 import NutritionManagement from './NutritionManagement';
 import ProgressDetail from './ProgressDetail';
+import HealthProfileLanding from './HealthProfileLanding'
+import HealthProfileScreen from './HealthProfile';
+import HealthGoalsSelection from './HealthGoalsSelection';
 
 const Tab = createBottomTabNavigator();
 
@@ -102,7 +105,7 @@ export default function HomeScreen() {
         <Tab.Screen name="Plans" component={Home} />
         <Tab.Screen name="Add" component={Home} />
         <Tab.Screen name="Progress" component={ProgressDetail} />
-        <Tab.Screen name="Profile" component={Home} />
+        <Tab.Screen name="Profile" component={HealthProfileLanding} />
 
       </Tab.Navigator>
  

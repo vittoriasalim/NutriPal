@@ -27,10 +27,8 @@ export default function App() {
         <Stack.Screen name="OnboardScreen" component={OnboardScreen} />
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
-       
-
-
-   
+        {/* <Stack.Screen name="HealthProfileScreen" component={HealthProfileScreen} /> 
+        <Stack.Screen name="HealthGoalsSelection" component={HealthGoalsSelection} /> */}
     </Stack.Navigator>
 
   );
