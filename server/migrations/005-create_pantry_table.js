@@ -10,6 +10,7 @@ module.exports = {
           type: Sequelize.INTEGER,
           primaryKey: true,
           allowNull: false,
+          autoIncrement: true
         },
         createdAt: {
           type: Sequelize.DATE,
@@ -36,6 +37,12 @@ module.exports = {
           },
           onUpdate: 'CASCADE',
           onDelete: 'CASCADE',
+        },
+        id: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          allowNull: false,
+          autoIncrement: true
         },
         ingredientId: {
           type: Sequelize.INTEGER,
