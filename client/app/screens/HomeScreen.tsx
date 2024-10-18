@@ -6,6 +6,9 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import Home from './Home';
 import ProgressDetail from './ProgressDetail';
 import PantryStackNavigator from './PantryStackNavigator';
+import HealthProfileLanding from './HealthProfileLanding'
+import HealthProfileScreen from './HealthProfile';
+import HealthGoalsSelection from './HealthGoalsSelection';
 
 const Tab = createBottomTabNavigator();
 
@@ -99,7 +102,7 @@ export default function HomeScreen() {
       <Tab.Screen name="Plans" component={Home} />
       <Tab.Screen name="Pantry" component={PantryStackNavigator} />
       <Tab.Screen name="Progress" component={ProgressDetail} />
-      <Tab.Screen name="Profile" component={Home} />
+      <Tab.Screen name="Profile" component={HealthProfileLanding} />
     </Tab.Navigator>
   );
 }

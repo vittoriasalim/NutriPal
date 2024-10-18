@@ -35,6 +35,7 @@ exports.createClient = async (req, res) => {
 
 // Get all clients
 exports.getAllClients = async (req, res) => {
+  console.log("Get All clients in controller")
   try {
     const allClients = await clients.findAll();
     res.status(200).json(allClients);  // Respond with all client records
@@ -96,6 +97,17 @@ exports.updateClientById = async (req, res) => {
     if (!client) {
       return res.status(404).json({ error: 'Client not found.' });
     }
+
+    console.log("+++++++++++++++++++++++++")
+
+    console.log("UPDATING IN CONTROLLER");
+
+    console.log(weight,
+      height,
+      healthGoals,
+      dietaryPreferences,
+      nutritionalNeeds,
+      pantryId)
 
     // Update the client record
     client.weight = weight || client.weight;
