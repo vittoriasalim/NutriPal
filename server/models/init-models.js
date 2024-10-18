@@ -84,6 +84,8 @@ function initModels(sequelize) {
   users.hasMany(clients, { as: "clients", foreignKey: "userId"});
   nutritionists.belongsTo(users, { as: "user", foreignKey: "userId"});
   users.hasMany(nutritionists, { as: "nutritionists", foreignKey: "userId"});
+  pantries.belongsTo(users, { as: "user", foreignKey: "userId"});
+  users.hasMany(pantries, { as: "pantries", foreignKey: "userId"});
 
   return {
     SequelizeMeta,

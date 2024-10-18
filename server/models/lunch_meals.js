@@ -16,6 +16,12 @@ module.exports = function(sequelize, DataTypes) {
         model: 'meals',
         key: 'id'
       }
+    },
+    id: {
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
     }
   }, {
     sequelize,
