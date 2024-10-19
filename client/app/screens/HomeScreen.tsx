@@ -50,7 +50,9 @@ function CustomTabBar({ state , descriptors, navigation }) {
             ? 'utensils'
             : route.name === 'Progress'
               ? 'chart-bar'
-              : 'user';
+              : route.name === "Add"
+                ? 'shopping-bag'
+              : "user";
 
         if (route.name === 'Pantry') {
           return (
