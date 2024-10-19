@@ -21,3 +21,30 @@ exports.createNewPair = async (req, res) => {
         res.status(500).json({ error: dbError.message || 'Failed to create pairing in database.' });
     }
 };
+
+exports.getPairingByClientId = async (req, res) => {
+  console.log("Get pairing by client id");
+  try {
+    const { clientId } = req.params;
+
+    console.log("Finding pairing for", clientId);
+
+    const currentPair = await nutritionist_clients.findOne({
+      where: {
+        clientId: clientId,
+      },
+    });
+
+    console.log("FOUND PAIRING", currentPair);
+
+    if (currentPair) {
+      console.log("Sending this pairing");
+      res.status(200).json(currentPair);
+    } else {
+      console.log("Not sending the new pair")
+      res.status(200).json(null);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Something went wrong while fetching the nutritionist_clients.' });
+  }
+};

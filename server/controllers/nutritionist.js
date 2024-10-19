@@ -27,7 +27,7 @@ exports.createNutritionist = async (req, res) => {
 
 // Get all nutritionists
 exports.getAllNutritionists = async (req, res) => {
-  console.log("GETTING NUTRITIONISTS")
+  console.log("GETTING NUTRITIONISTS 123")
   try {
     const allNutritionists = await nutritionists.findAll();
     res.status(200).json(allNutritionists);  // Respond with all nutritionist records
@@ -38,6 +38,8 @@ exports.getAllNutritionists = async (req, res) => {
 
 // Get a specific nutritionist by ID
 exports.getNutritionistById = async (req, res) => {
+
+  console.log("FETCHING NUTRITIONIST", req);
   try {
     const { id } = req.params;
 

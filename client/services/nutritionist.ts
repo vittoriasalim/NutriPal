@@ -20,3 +20,17 @@ export const getAllNutritionists = async (): Promise<Nutritionist[]> => {
         throw error; // Propagate the error for further handling
     }
 };
+
+export const getNutritionistById = async (id: number): Promise<Nutritionist> => {
+    console.log("Services Get Nutritionist", id);
+    try {
+        const response = await apiService.fetchData<Nutritionist>(`/nutritionists/${id}`);
+
+        console.log("Nutritionist Response", response);
+
+        return response;
+    } catch (error) {
+        console.log("Nutritionist Error:", error);
+        throw error;
+    }
+};

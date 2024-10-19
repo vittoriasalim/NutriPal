@@ -5,6 +5,7 @@ import HealthProfile from './HealthProfile'; // Import your HealthProfileScreen
 import HealthGoalsSelection from './HealthGoalsSelection';
 import HealthProfileView from './HealthProfileView';
 import NutritionistMatch from './NutritionistMatch';
+import HealthGoalsSelectionSuccess from './HealthGoalsSelectionSuccess';
 import { HealthStackParamList } from '@/types/navigation';
 
 const HealthStack = createNativeStackNavigator<HealthStackParamList>();
@@ -16,6 +17,7 @@ const HealthProfileStackNavigator = () => {
       <HealthStack.Screen name="HealthProfileViewScreen" component={HealthProfileView} />
       <HealthStack.Screen name="HealthGoalsSelection" component={HealthGoalsSelection} />
       <HealthStack.Screen name="NutritionistMatchScreen" component={NutritionistMatch} />
+      <HealthStack.Screen name="HealthGoalsSelectionSuccess" component={HealthGoalsSelectionSuccess} />
     </HealthStack.Navigator>
   );
 };

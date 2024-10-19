@@ -22,4 +22,5 @@ export type HealthStackParamList = {
   HealthProfileViewScreen: undefined,
   HealthGoalsSelection: undefined; // No parameters needed
   NutritionistMatchScreen: undefined,
+  HealthGoalsSelectionSuccess: undefined
 };

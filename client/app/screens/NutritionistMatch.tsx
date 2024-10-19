@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { getAllNutritionists } from '@/services/nutritionist';
 import { getUserProfile } from '@/services/user';
 import { getClientProfile } from '@/services/client';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, FontAwesome6 } from '@expo/vector-icons';
 import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 import { createNewPair } from '@/services/nutritionist_clients';
+import { getPairingByClientId } from '@/services/nutritionist_clients';
+import { getNutritionistById } from '@/services/nutritionist';
 
 interface Nutritionist {
+  id: number,
+  userId: number,
+  specialisation: string[],
+  qualifications: string[],
+  availability: number
+}
+
+interface NutritionistData {
   availability: number;
   createdAt: string;
   id: number;
@@ -38,10 +48,12 @@ interface Client {
 const NutritionistMatch = () => {
   const [userData, setUserData] = useState(null);
   const [clientData, setClientData] = useState(null);
-  const [nutritionists, setNutritionists] = useState<Nutritionist[]>([]);
+  const [nutritionists, setNutritionists] = useState<NutritionistData[]>([]);
   const [recommendedNutritionists, setRecommendedNutritionists] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentPairData, setCurrentPairData] = useState(null);
+  const [currentNutritionist, setCurrentNutritionist] = useState<NutritionistData | null>(null);
   const navigation = useNavigation();
 
   // Function to retrieve user data from AsyncStorage
@@ -73,6 +85,34 @@ const NutritionistMatch = () => {
 
   const fetchNutritionists = async () => {
     try {
+      const clientProfile = await getClientProfile(userData.id);
+      const currentPair = await getPairingByClientId(clientProfile.id);
+      
+      if (currentPair) {
+        console.log("----------HAVE PAIR")
+        const nutritionistId = currentPair.nutritionistId;
+        console.log("Current nutritionist id", nutritionistId);
+        const nutritionistData = await getNutritionistById(nutritionistId);
+        const moreNutritionistData = await getUserProfile(nutritionistData.userId);
+        console.log("Current nutritionist", nutritionistData);
+        setCurrentNutritionist({
+          availability:  nutritionistData.availability,
+          createdAt: '',
+          id: nutritionistData.id,
+          qualifications: nutritionistData.qualifications,
+          specialisation: nutritionistData.specialisation,
+          updatedAt: '',
+          userId: nutritionistData.userId,
+          firstName: moreNutritionistData.firstName,
+          lastName: moreNutritionistData.lastName,
+          sex: moreNutritionistData.sex
+        });
+
+        console.log("currentNutritionist", currentNutritionist);
+      } else {
+        console.log("----------NO PAIR")
+      }
+      
       const nutritionistsData = await getAllNutritionists();
       setNutritionists(nutritionistsData as Nutritionist[]); // Cast if needed
 
@@ -88,7 +128,7 @@ const NutritionistMatch = () => {
             firstName: nutritionist_user_data.firstName,
             lastName: nutritionist_user_data.lastName,
             sex: nutritionist_user_data.sex,
-          } as Nutritionist; // Cast to Nutritionist type
+          } as NutritionistData; // Cast to Nutritionist type
         } catch (err) {
           console.error('Error retrieving nutritionist user data:', err);
           return nutr; // Return the original nutritionist
@@ -131,7 +171,12 @@ const NutritionistMatch = () => {
       .filter(n => n.score > 0 && n.availability >= 1)
       .sort((a, b) => b.score - a.score);
 
-    return sortedNutritionists.slice(0, 5).map(n => n.nutritionist);
+    // Filter out the current nutritionist
+    const filteredSortedNutritionists = sortedNutritionists.filter(
+      n => n.nutritionist.id !== (currentNutritionist?.id)
+    );
+
+    return filteredSortedNutritionists.slice(0, 3).map(n => n.nutritionist);
   };
 
   const selectNutritionist = async (nutritionistId) => {
@@ -147,45 +192,79 @@ const NutritionistMatch = () => {
   }
 
   return (
+    <SafeAreaView>
+    <ScrollView>
     <View style={styles.container}>
+      <Text style={styles.title}>Your Current Nutritionist</Text>
+      {currentNutritionist ? (
+        <View style={styles.currentNutritionistContainer}>
+        <View style={styles.nutritionistCard}>
+          <View style={styles.iconCircle}>
+            <MaterialCommunityIcons
+              name={currentNutritionist.sex === 'female' ? 'face-woman' : 'face-man'}
+              size={60}
+              color='#6f9468'
+            />
+          </View>
+          <View>
+            <Text style={styles.nutritionistTitle}>
+              {currentNutritionist.firstName} {currentNutritionist.lastName}
+            </Text>
+            <Text style={styles.specialisationText}>
+              Specialisations: {currentNutritionist.specialisation.join(', ')}
+            </Text>
+            <Text style={styles.specialisationText}>
+              Qualifications: {currentNutritionist.qualifications.join(', ')}
+            </Text>
+          </View>
+          <FontAwesome6 name="handshake-simple" size={40} color="#6f9468" />
+        </View>
+        </View>
+      ) : (
+        <Text style={styles.subtitle}>No current nutritionist assigned.</Text>
+      )}
       <Text style={styles.title}>Nutritionist Matching</Text>
-      <Text style={styles.subtitle}>We picked the nutritionists whose 
-        specialisations can help you achieve your health goals!
-        Please select a nutritionist.
+      <Text style={styles.subtitle}>These are nutritionists who we recommend based on your health goals.
       </Text>
       {loading && <Text>Loading nutritionists...</Text>}
       {error && <Text>{error}</Text>}
-      <View style={styles.nutritionistsContainer}>
-        {recommendedNutritionists.length > 0 ? (
-          recommendedNutritionists.map((nutr, index) => (
-            <View key={index} style={styles.nutritionistCard}>
-              {/* Conditional rendering for the icon */}
-              <View style={styles.iconCircle}>
-                <MaterialCommunityIcons
-                  name={nutr.sex === 'female' ? 'face-woman' : 'face-man'} // Example icon names
-                  size={60}
-                  color='#6f9468'
-                />
+       <View style={styles.nutritionistsContainer}>
+          {recommendedNutritionists.length > 0 ? (
+            recommendedNutritionists.map((nutr, index) => (
+              <View key={index} style={styles.nutritionistCard}>
+                {/* Conditional rendering for the icon */}
+                <View style={styles.iconCircle}>
+                  <MaterialCommunityIcons
+                    name={nutr.sex === 'female' ? 'face-woman' : 'face-man'} // Example icon names
+                    size={60}
+                    color='#6f9468'
+                  />
+                </View>
+                <View>
+                  <Text style={styles.nutritionistTitle}>
+                    {nutr.firstName} {nutr.lastName}
+                  </Text>
+                  <Text style={styles.specialisationText}>
+                    Specialisation: {nutr.specialisation.join(', ')}
+                  </Text>
+                  <Text style={styles.specialisationText}>
+                    Qualifications: {nutr.qualifications.join(', ')}
+                  </Text>
+                </View>
+                <TouchableOpacity onPress={() => selectNutritionist(nutr.id)}>
+                  <Ionicons name="add-circle" size={40} color="#6f9468" />
+                </TouchableOpacity>
               </View>
-              <View>
-                <Text style={styles.nutritionistTitle}>
-                  {nutr.firstName} {nutr.lastName}
-                </Text>
-                <Text style={styles.specialisationText}>
-                  Specialisation: {nutr.specialisation.join(', ')}
-                </Text>
-              </View>
-              <TouchableOpacity onPress={() => selectNutritionist(nutr.id)}>
-                <Ionicons name="add-circle" size={40} color="#6f9468" />
-              </TouchableOpacity>
-            </View>
-          ))
-        ) : (
-          <Text>No matching nutritionists found.</Text>
-        )}
+            ))
+          ) : (
+            <Text>No matching nutritionists found.</Text>
+          )}
       </View>
-      <Button title="Back to Health Profile" onPress={() => navigation.goBack()} />
+      {/* <Button title="Back to Health Profile" onPress={() => navigation.goBack()} /> */}
+      <Button title="Back to Health Profile" onPress={() => navigation.navigate('HealthProfileScreen')} />
     </View>
+    </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -234,6 +313,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   specialisationText: {
+    flex: 1,
     flexWrap: 'wrap',
   },
   iconCircle: {
@@ -243,6 +323,9 @@ const styles = StyleSheet.create({
     // width: 90,
     // padding: 20,
     // textAlign: 'center',
+  },
+  currentNutritionistContainer: {
+    paddingHorizontal: 40,
   }
 });
 

@@ -18,3 +18,13 @@ try {
     throw error
 }
 };
+
+export const getPairingByClientId = async (clientId: number): Promise<NutritionistClients> => {
+    try {
+        const response = await apiService.fetchData<NutritionistClients>(`/nutritionist_clients/clientId/${clientId}`);
+        console.log("GET PARIING BY CLIENT ID", response);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
