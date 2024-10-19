@@ -53,24 +53,11 @@ function CustomTabBar({ state , descriptors, navigation }) {
             ? 'utensils'
             : route.name === 'Progress'
               ? 'chart-bar'
-              : 'user';
+              : route.name === "Add"
+                ? 'shopping-bag'
+              : "user";
 
-        if (route.name === 'Add') {
-          return (
-            <TouchableOpacity
-              key={route.name}
-              accessibilityRole="button"
-              accessibilityState={isFocused ? { selected: true } : {}}
-              accessibilityLabel={options.tabBarAccessibilityLabel}
-              testID={options.tabBarTestID}
-              onPress={onPress}
-              onLongPress={onLongPress}
-              style={styles.customAddButton}
-            >
-              <FontAwesome5 name="plus" size={15} color="white" />
-            </TouchableOpacity>
-          );
-        }
+  
 
         return (
           <TouchableOpacity

@@ -19,7 +19,16 @@ export type ProgressStackParamList = {
 
 export type HealthStackParamList = {
   HealthProfileScreen: undefined; // No parameters needed
+  AccountProfileScreen: undefined;
   HealthProfileViewScreen: undefined,
   HealthGoalsSelection: undefined; // No parameters needed
   NutritionistMatchScreen: undefined,
+
+  Consultation:undefined;
+};
+export type ProfileStackParamList = {
+
+  AccountProfileScreen: undefined;
+  Consultation:undefined;
+  
 };
