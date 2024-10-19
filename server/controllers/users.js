@@ -1,5 +1,5 @@
 const sequelize = require('../config/database'); // Adjust the path as necessary
-const { users, clients, nutritionists } = require('../models/init-models')(sequelize);  // Import the models (adjust path as needed)
+const { users, clients, nutritionists, pantries } = require('../models/init-models')(sequelize);  // Import the models (adjust path as needed)
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 

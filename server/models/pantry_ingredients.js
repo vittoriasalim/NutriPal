@@ -9,6 +9,12 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    id: {
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
+    },
     ingredientId: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -16,11 +22,33 @@ module.exports = function(sequelize, DataTypes) {
         model: 'ingredients',
         key: 'id'
       }
+    },
+    expiryDate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    price: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+      defaultValue: 0
+    },
+    quantity: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
     }
   }, {
     sequelize,
     tableName: 'pantry_ingredients',
     schema: 'nutripal',
-    timestamps: true
+    timestamps: true,
+    indexes: [
+      {
+        name: "pantry_ingredients_pkey",
+        unique: true,
+        fields: [
+          { name: "id" },
+        ]
+      },
+    ]
   });
 };
