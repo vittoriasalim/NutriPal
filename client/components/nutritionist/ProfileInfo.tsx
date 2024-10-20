@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome for icons
 
-const ProfileInfo = ({user, client}) => {
-  const [showGoals, setShowGoals] = useState(false); // State to toggle health goals
+const ProfileInfo = ({user, nutritionist}) => {
+  const [showSpec, setShowSpec] = useState(false); // State to toggle health goals
+  const [showQual, setShowQual] = useState(false); // State to toggle health goals
+  console.log(user);
 
   return (
     <ScrollView style={styles.container}>
@@ -26,42 +28,66 @@ const ProfileInfo = ({user, client}) => {
       </View>
 
       <View style={styles.detailRow}>
-        <Text style={styles.label}>Weight</Text>
-        <Text style={styles.value}>{client.weight} kg</Text>
+        <Text style={styles.label}>Availability</Text>
+        <Text style={styles.value}>{nutritionist.availability} clients</Text>
       </View>
 
-      <View style={styles.detailRow}>
-        <Text style={styles.label}>Height</Text>
-        <Text style={styles.value}>{client.maxHeight} cm</Text>
-      </View>
 
       {/* Health Goals Section with Icon */}
       <View style={styles.healthGoalsToggle}>
-        <Text style={styles.label}>Health Goals</Text>
-        <TouchableOpacity onPress={() => setShowGoals(!showGoals)}>
+        <Text style={styles.label}>Specialization</Text>
+        <TouchableOpacity onPress={() => setShowSpec(!showSpec)}>
           <FontAwesome
-            name={showGoals ? 'chevron-up' : 'chevron-down'} // Toggle icon between up and down
+            name={showSpec ? 'chevron-up' : 'chevron-down'} // Toggle icon between up and down
             size={20}
             color="#91C788"
           />
         </TouchableOpacity>
       </View>
 
+
       {/* Health Goals section - Only visible when the icon is clicked */}
-      {showGoals && (
+      {showSpec && (
         <View style={styles.healthGoalsSection}>
         <View style={styles.goalsContainer}>
-        {client?.healthGoals?.map((goal, index) => {
-        // Check if the goal contains a colon (:) to split the text and number
-        const [goalText, goalValue] = goal.includes(':') ? goal.split(':') : [goal, null];
-        
-        return (
-            <View key={index} style={goalValue ? styles.detailRow2 : undefined}>
-            <Text style={styles.goalItem}>{goalText}</Text>
-            {goalValue && <Text style={styles.goalItem}>{goalValue} kg</Text>}
-            </View>
-        );
-        })}
+          {nutritionist?.specialisation?.map((goal, index) => {
+            // Check if the goal contains a colon (:) to split the text and number
+            const [goalText, goalValue] = goal.split(':');
+            
+            return (
+              <View key={index} style={goalValue ? styles.detailRow2 : undefined}>
+                <Text style={styles.goalItem}>{goalText}</Text>
+                {goalValue && <Text style={styles.goalItem}>{goalValue} kg</Text>}
+              </View>
+            );
+          })}
+        </View>
+      </View>
+      )}
+      <View style={styles.healthGoalsToggle}>
+        <Text style={styles.label}>Qualifications</Text>
+        <TouchableOpacity onPress={() => setShowQual(!showQual)}>
+          <FontAwesome
+            name={showSpec ? 'chevron-up' : 'chevron-down'} // Toggle icon between up and down
+            size={20}
+            color="#91C788"
+          />
+        </TouchableOpacity>
+      </View>
+      {showQual && (
+        <View style={styles.healthGoalsSection}>
+        <View style={styles.goalsContainer}>
+          {nutritionist?.qualifications?.map((goal, index) => {
+            // Check if the goal contains a colon (:) to split the text and number
+            const [goalText, goalValue] = goal.split(':');
+            
+            return (
+              <View key={index} style={goalValue ? styles.detailRow2 : undefined}>
+                <Text style={styles.goalItem}>{goalText}</Text>
+                {goalValue && <Text style={styles.goalItem}>{goalValue} kg</Text>}
+              </View>
+            );
+          })}
         </View>
       </View>
       )}
