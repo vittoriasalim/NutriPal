@@ -100,13 +100,16 @@ const ChatScreen = () => {
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
+        {nutri && (
      
         <View style={styles.headerTextContainer}>
-        {nutri && (
+      
         <Text style={styles.userName}>{nutri.firstName} {nutri.lastName}</Text>
-        )}
-          <Text style={styles.userStatus}>{nutri.email}</Text>
+        <Text style={styles.userStatus}>{nutri.email}</Text>
+       
+
         </View>
+         )}
       </View>
 
       {/* Messages List */}

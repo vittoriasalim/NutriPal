@@ -44,7 +44,7 @@ exports.createUser = async (req, res) => {
   const transaction = await sequelize.transaction();  // Start a transaction to ensure atomicity
 
   try {
-    const { firstName, lastName, email, sex, userType, password, weight, height, specialisation, qualifications, availability } = req.body;
+    const { firstName, lastName, email, sex, userType, password } = req.body;
 
     // Validate required fields
     if (!firstName || !lastName || !sex || !email || !userType || !password) {
@@ -104,7 +104,7 @@ exports.createUser = async (req, res) => {
           userId: newUser.id,  // Link the nutritionist to the newly created user
           specialisation: [],
           qualifications:[],
-          availability,
+          availability:0,
         },
         { transaction }
       );
