@@ -1,39 +1,94 @@
+import { getConversation, sendMessage } from '@/services/message';
+import { getNutritionistByClientId } from '@/services/nutritionist_clients';
 import { ProfileStackParamList } from '@/types/navigation';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import { NavigationProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import React, { useCallback, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList } from 'react-native';
 
 const ChatScreen = () => {
+  const route = useRoute();
   const navigation = useNavigation<NavigationProp<ProfileStackParamList>>();
-  const [messages, setMessages] = useState([
-    { id: '1', text: 'Hi', time: '9:12 PM', type: 'sent' },
-    { id: '2', text: 'How are you', time: '9:15 PM', type: 'received' },
-    { id: '3', text: "Fine! What's your email?", time: '9:16 PM', type: 'sent' },
-    { id: '4', text: 'christinapearson@gmail.com', time: '9:21 PM', type: 'received' },
-    { id: '5', text: 'Good Night', time: '11:18 PM', type: 'sent' },
-  ]);
+  const { clientId } = route.params;  // Access the parameters passed
+  const [messages, setMessages] = useState([]);
+
+  const [nutri, setNutri] = useState();
 
   const [inputText, setInputText] = useState('');
 
-  const handleSend = () => {
+  
+  const handleSend = async () => {
     if (inputText.trim()) {
       const newMessage = {
-        id: (messages.length + 1).toString(),
-        text: inputText,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        type: 'sent',
+        clientId, // Assuming clientId is passed as a prop or available in state
+        nutritionistId:nutri?.nutritionistId, // Assuming nutritionistId is passed as a prop or available in state
+        message: inputText,
+        isNutriSender:false,  // Set this depending on whether the sender is the nutritionist
       };
-      setMessages([...messages, newMessage]);
-      setInputText('');
+      try {
+        // Send the message to the backend and save it to the database
+        const savedMessage = await sendMessage(newMessage);
+        console.log(savedMessage);
+      
+      
+        // After the message is saved, update the messages state to display it
+        setMessages([...messages, savedMessage]);
+        
+        // Clear the input field
+        setInputText('');
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+        const fetchMessages = async (nutriID, clientID) => {
+        try {
+            const response = await getConversation(nutriID, clientID);
+            console.log(response);
+            console.log(response);
+            setMessages(response);
+        } catch (err) {
+            throw err;
+        }
+        };
+      const getNutri = async (clientID: number) => {
+        try {
+          // Make the API call to fetch nutritionists by clientId
+          const response = await getNutritionistByClientId(clientID);  // Uncomment when API is available
+          console.log(response);
+          if (response && response.length > 0) {
+            setNutri(response[0]);
+            console.log(response[0].nutritionistId);
+            await fetchMessages(response[0].nutritionistId, clientId);
+          }
+          // You can set the nutritionist state here if needed
+          // setNutritionists(response.data);
+        } catch (err) {
+          console.error('Error fetching nutritionist:', err);
+        }
+      };
+   
+  
+      // Ensure clientId is correctly logged and available
+      console.log('Client ID:', clientId);
+  
+      // Call the async function to fetch nutritionists
+      getNutri(clientId);
+  
+      return () => {
+        // Clean-up logic if needed
+      };
+  
+    }, [clientId])
+  );
   const renderMessageItem = ({ item }) => {
     return (
-      <View style={[styles.messageContainer, item.type === 'sent' ? styles.sentMessage : styles.receivedMessage]}>
-        <Text style={styles.messageText}>{item.text}</Text>
-        <Text style={styles.timeText}>{item.time}</Text>
+      <View style={[styles.messageContainer, !item.isNutriSender ? styles.sentMessage : styles.receivedMessage]}>
+        <Text style={styles.messageText}>{item.message}</Text>
+        <Text style={styles.timeText}>{item.createdAt}</Text>
       </View>
     );
   };
@@ -47,8 +102,10 @@ const ChatScreen = () => {
         </TouchableOpacity>
      
         <View style={styles.headerTextContainer}>
-          <Text style={styles.userName}>Debra Nguyen</Text>
-          <Text style={styles.userStatus}>online</Text>
+        {nutri && (
+        <Text style={styles.userName}>{nutri.firstName} {nutri.lastName}</Text>
+        )}
+          <Text style={styles.userStatus}>{nutri.email}</Text>
         </View>
       </View>
 
@@ -58,7 +115,7 @@ const ChatScreen = () => {
         renderItem={renderMessageItem}
         keyExtractor={(item) => item.id}
         style={styles.messagesList}
-        inverted // Inverts the list to show the latest messages at the bottom
+
       />
 
       {/* Input Section */}
@@ -120,6 +177,9 @@ const styles = StyleSheet.create({
   messagesList: {
     paddingHorizontal: 10,
     paddingVertical: 20,
+
+
+   
   },
   messageContainer: {
     maxWidth: '75%',
@@ -172,3 +232,5 @@ const styles = StyleSheet.create({
 });
 
 export default ChatScreen;
+
+

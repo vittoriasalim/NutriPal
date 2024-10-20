@@ -1,21 +1,21 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, Button } from 'react-native';
 import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
-import ProfileCard from '@/components/ProfileCard';
-import ProfileInfo from '@/components/ProfileInfo';
+import ProfileCard from '@/components/nutritionist/ProfileCard';
+import ProfileInfo from '@/components/nutritionist/ProfileInfo';
 import { HealthStackParamList, ProfileStackParamList, RootStackParamList } from '@/types/navigation';
 import { getClientByUserId } from '@/services/clients';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getNutritionistsByUserID } from '@/services/nutritionist';
 
-const AccountProfileScreen = () => {
+const Profile = () => {
   const navigation = useNavigation<NavigationProp<HealthStackParamList>>();
   const navigation2 = useNavigation<NavigationProp<RootStackParamList>>();
   const [isModalVisible, setModalVisible] = useState(false); // State to handle modal visibility
   const [modalContent, setModalContent] = useState(''); // State to track modal content
   const [userData, setUserData] = useState<any>(null);
-  const [clientData, setClientData] = useState<Client | null>(null);
-  const [nutritionData, setNutritionData] = useState<DailyNutrition[]>([]);
-  const [todayNutrition, setTodayNutrition] = useState<DailyNutrition | null>(null);
+  const [nutritionistData, setnutritionistData] = useState(null);
+
   const [loading, setLoading] = useState<boolean>(true);
 
 
@@ -29,7 +29,7 @@ const AccountProfileScreen = () => {
         console.log(user);
         setUserData(user); // Set user data
 
-        await fetchClientData(user.id); // Fetch client data
+        await fetchNutritionistData(user.id); // Fetch client data
       } else {
 
         setLoading(false); // No data found, stop loading
@@ -41,12 +41,12 @@ const AccountProfileScreen = () => {
   };
 
   // Fetch client data by userId
-  const fetchClientData = async (userId: number) => {
+  const fetchNutritionistData = async (userId: number) => {
     try {
-      const client = await getClientByUserId(userId);
-      console.log(client);
+      const nutritionist = await getNutritionistsByUserID(userId)
+      console.log(nutritionist);
 
-      setClientData(client); // Set client data
+      setnutritionistData(nutritionist); // Set client data
     
     } catch (error) {
       console.log('Error fetching client data:', error);
@@ -94,20 +94,14 @@ const AccountProfileScreen = () => {
         ) : (
         <Text>Missing user data</Text>
         )}
-       {userData && clientData ? (
-        <ProfileInfo user={userData} client={clientData} />
+       {userData && nutritionistData ? (
+        <ProfileInfo user={userData} nutritionist={nutritionistData} />
         ) : (
         <Text>Loading user and client data...</Text>
         )}
 
         <View style={styles.optionsContainer}>
-          <TouchableOpacity style={styles.optionItem} onPress={() => navigation.navigate("NutritionistMatchScreen")}>
-            <Text style={styles.optionText}>Find Nutritionist</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.optionItem} onPress={() => navigation.navigate("Consultation", { clientId: clientData.id})}>
-            <Text style={styles.optionText}>View Consultation</Text>
-          </TouchableOpacity>
-
+ 
           {/* Privacy Policy with Modal */}
           <TouchableOpacity style={styles.optionItem} onPress={() => toggleModal('privacy')}>
             <Text style={styles.optionText}>Privacy Policy</Text>
@@ -369,4 +363,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AccountProfileScreen;
+export default Profile;
