@@ -6,5 +6,7 @@ const nutritionistController = require('../controllers/nutritionist');
 router.get('/', nutritionistController.getAllNutritionists);
 
 router.get('/:id', nutritionistController.getNutritionistById);
+router.patch('/incrementAvailability/:id', nutritionistController.incrementAvailability);
+router.patch('/decrementAvailability/:id', nutritionistController.decrementAvailability);
 
 module.exports = router;

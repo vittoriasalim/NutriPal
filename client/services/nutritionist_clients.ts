@@ -28,3 +28,24 @@ export const getPairingByClientId = async (clientId: number): Promise<Nutritioni
         throw error;
     }
 };
+
+export const deletePairingByClientId = async (clientId: number): Promise<number> => {
+    try {
+        // First, fetch the pairing to get the nutritionistId
+        const pairing = await getPairingByClientId(clientId);
+        
+        if (!pairing) {
+            throw new Error("No pairing found for the given client ID.");
+        }
+
+        console.log("Deleting pairing for client ID", clientId);
+        
+        // Now delete the pairing
+        await apiService.deleteData(`/nutritionist_clients/delete/${clientId}`);
+        
+        // Return the nutritionistId of the deleted pair
+        return pairing.nutritionistId;
+    } catch (error) {
+        throw error;
+    }
+};

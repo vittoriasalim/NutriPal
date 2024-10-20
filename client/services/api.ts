@@ -80,6 +80,15 @@ class ApiService {
       return this.handleError(error);
     }
   }
+
+  async patchData<T>(endpoint: string, data: any): Promise<T> {
+    try {
+      const response: ApiResponse<T> = await this.api.patch(endpoint, data);
+      return response.data;
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
 }
 
 export const apiService = new ApiService();

@@ -104,3 +104,45 @@ exports.deleteNutritionistById = async (req, res) => {
     res.status(500).json({ error: error.message || 'Something went wrong while deleting the nutritionist.' });
   }
 };
+
+exports.incrementAvailability = async (req, res) => {
+  try {
+      const { id } = req.params;
+
+      // Find the nutritionist by ID
+      const nutritionist = await nutritionists.findByPk(id);
+      if (!nutritionist) {
+          return res.status(404).json({ error: 'Nutritionist not found.' });
+      }
+
+      // Increment the availability
+      nutritionist.availability += 1;
+      await nutritionist.save();
+
+      res.status(200).json(nutritionist); // Respond with the updated nutritionist
+  } catch (error) {
+      console.error('Error incrementing availability:', error);
+      res.status(500).json({ error: error.message || 'Failed to increment availability.' });
+  }
+};
+
+exports.decrementAvailability = async (req, res) => {
+  try {
+      const { id } = req.params;
+
+      // Find the nutritionist by ID
+      const nutritionist = await nutritionists.findByPk(id);
+      if (!nutritionist) {
+          return res.status(404).json({ error: 'Nutritionist not found.' });
+      }
+
+      // Decrement the availability
+      nutritionist.availability -= 1;
+      await nutritionist.save();
+
+      res.status(200).json(nutritionist); // Respond with the updated nutritionist
+  } catch (error) {
+      console.error('Error incrementing availability:', error);
+      res.status(500).json({ error: error.message || 'Failed to increment availability.' });
+  }
+};

@@ -34,3 +34,21 @@ export const getNutritionistById = async (id: number): Promise<Nutritionist> => 
         throw error;
     }
 };
+
+export const incrementNutritionistAvailability = async (nutritionistId: number): Promise<Nutritionist> => {
+    try {
+        const response = await apiService.patchData<Nutritionist>(`/nutritionists/incrementAvailability/${nutritionistId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const decrementNutritionistAvailability = async (nutritionistId: number): Promise<Nutritionist> => {
+    try {
+        const response = await apiService.patchData<Nutritionist>(`/nutritionists/decrementAvailability/${nutritionistId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
