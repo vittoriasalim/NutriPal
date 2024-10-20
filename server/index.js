@@ -11,6 +11,7 @@ const lunchRoutes = require('./routes/lunch_meals');
 const dinnerRoutes = require('./routes/dinner_meals');
 const mealRoutes = require('./routes/meals');
 const pantryRoutes = require('./routes/pantry');
+const messageRoutes = require('./routes/messages');
 
 
 app.use(express.json()); // To parse JSON request bodies
@@ -25,7 +26,7 @@ app.use('/dinner_meals', dinnerRoutes);
 app.use('/lunch_meals', lunchRoutes);
 app.use('/meals', mealRoutes);
 app.use('/pantry', pantryRoutes);
-
+app.use('/message', messageRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
