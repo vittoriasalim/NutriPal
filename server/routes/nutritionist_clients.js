@@ -5,4 +5,7 @@ const nutritionistClientsController = require('../controllers/nutritionist_clien
 router.post('/', nutritionistClientsController.createNewPair);
 router.get('/clients/:nutritionistId', nutritionistClientsController.getClientsByNutritionistId);
 router.get('/nutri/:clientId', nutritionistClientsController.getNutritionistsByClientId);
+router.get('/clientId/:clientId',nutritionistClientsController.getPairingByClientId);
+router.delete('/delete/:clientId', nutritionistClientsController.deletePairingByClientId);
+
 module.exports = router;
