@@ -7,7 +7,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/cereal.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         lunch: {
             name: 'Avocado Salad',
@@ -16,7 +17,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/salad.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         dinner: {
             name: 'Steak with Potato',
@@ -25,7 +27,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/steak.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
     },
     tuesday: {
@@ -36,7 +39,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/cereal.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         lunch: {
             name: 'Pad See Ew',
@@ -45,7 +49,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/salad.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         dinner: {
             name: 'Meat Pie',
@@ -54,7 +59,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/steak.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
     },
     wednesday: {
@@ -65,7 +71,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/cereal.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         lunch: {
             name: 'Pad Thai',
@@ -74,7 +81,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/salad.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         dinner: {
             name: 'KBBQ',
@@ -83,7 +91,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/steak.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
     },
     thursday: {
@@ -94,7 +103,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/cereal.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         lunch: {
             name: 'Chicken Sandwich',
@@ -103,7 +113,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/salad.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         dinner: {
             name: 'Fish Salad',
@@ -112,7 +123,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/steak.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
     },
     friday: {
@@ -123,7 +135,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/cereal.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         lunch: {
             name: 'Avocado Salad',
@@ -132,7 +145,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/salad.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         dinner: {
             name: 'Steak with Potato',
@@ -141,7 +155,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/steak.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
     },
     saturday: {
@@ -152,7 +167,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/cereal.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         lunch: {
             name: 'Avocado Salad',
@@ -161,7 +177,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/salad.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         dinner: {
             name: 'Steak with Potato',
@@ -170,7 +187,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/steak.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
     },
     sunday: {
@@ -181,7 +199,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/cereal.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         lunch: {
             name: 'Avocado Salad',
@@ -190,7 +209,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/salad.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
         dinner: {
             name: 'Steak with Potato',
@@ -199,7 +219,8 @@ export let mealPlan = {
             fat: 5,
             carbohydrate: 5,
             image: '../../assets/images/mockMealPlan/steak.jpg',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+            longDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         },
     },
 }

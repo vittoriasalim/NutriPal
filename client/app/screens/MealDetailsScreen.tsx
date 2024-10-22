@@ -14,7 +14,13 @@ const MealDetailsScreen = ({ route }) => {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{day.charAt(0).toUpperCase() + day.slice(1)} Meals</Text>
         {Object.keys(meals).map((meal) => (
-            <TouchableOpacity key={meal} onPress={() => navigation.navigate('SingleMealDetail', { meal: meals[meal] })}>
+            <TouchableOpacity
+                key={meal}
+                onPress={() => {
+                    console.log(meals[meal]); // Log the meal data
+                    navigation.navigate('SingleMealDetail', { meal: meals[meal] });
+                }}
+            >
             <View style={styles.shadowBox}>
                 <View style={styles.mealCard}>
                 <View style={styles.descriptionContainer}>
