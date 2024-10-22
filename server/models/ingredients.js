@@ -34,6 +34,19 @@ module.exports = function(sequelize, DataTypes) {
     amount: {
       type: DataTypes.DOUBLE,
       allowNull: true
+    },
+    food_type: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    unit: {
+      type: DataTypes.STRING(10),
+      allowNull: true,
+      defaultValue: "g"
+    },
+    storageInstructions: {
+      type: DataTypes.TEXT,
+      allowNull: true
     }
   }, {
     sequelize,

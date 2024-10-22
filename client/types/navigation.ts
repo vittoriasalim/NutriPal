@@ -6,6 +6,7 @@ export type RootStackParamList = {
     OnboardScreen: undefined;  // Make sure this matches exactly
     HomeScreen: undefined; // Example with parameters
     ProfileScreen: { userId: string }; // Example with parameters
+    NutritionistDashboard:undefined;
     // Add other screens as needed
   };
 
@@ -19,9 +20,23 @@ export type ProgressStackParamList = {
 
 export type HealthStackParamList = {
   HealthProfileScreen: undefined; // No parameters needed
+  AccountProfileScreen: undefined;
   HealthProfileViewScreen: undefined,
   HealthGoalsSelection: undefined; // No parameters needed
-  NutritionistMatchScreen: undefined,
+  NutritionistMatchScreen: undefined;
   HealthGoalsSelectionSuccess: undefined,
   NutritionistMatchSuccess: undefined,
+
+  Consultation:undefined;
+};
+export type ProfileStackParamList = {
+
+  AccountProfileScreen: undefined;
+  Consultation:{clientId:number};
+  
+};
+export type ConsultationStackParamList= {
+
+  ClientsScreen: undefined;
+  Consultation: { userId:number,clientId: number , nutritionistId:number};
 };

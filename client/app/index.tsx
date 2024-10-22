@@ -10,6 +10,7 @@ import OnboardScreen from './screens/OnboardScreen';
 
 import { useAuth} from '../components/AuthProvider';
 import HomeScreen from './screens/HomeScreen';
+import Dashboard from './screens/nutritionist/Dashboard';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -22,6 +23,7 @@ export default function App() {
       headerShown: false, // This will hide the header
     }}>
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="NutritionistDashboard" component={Dashboard} />
 
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="OnboardScreen" component={OnboardScreen} />

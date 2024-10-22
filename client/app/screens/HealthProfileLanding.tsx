@@ -8,13 +8,16 @@ import NutritionistMatch from './NutritionistMatch';
 import HealthGoalsSelectionSuccess from './HealthGoalsSelectionSuccess';
 import NutritionistMatchSuccess from './NutritionistMatchSuccess';
 import { HealthStackParamList } from '@/types/navigation';
+import AccountProfileScreen from './AccountProfileScreen';
+import ChatScreen from './ChatScreen';
 
 const HealthStack = createNativeStackNavigator<HealthStackParamList>();
 
 const HealthProfileStackNavigator = () => {
   return (
-    <HealthStack.Navigator initialRouteName="HealthProfileScreen" screenOptions={{ headerShown: false }}>
-      <HealthStack.Screen name="HealthProfileScreen" component={HealthProfile} />
+    <HealthStack.Navigator initialRouteName="AccountProfileScreen" screenOptions={{ headerShown: false }}>
+      <HealthStack.Screen name="AccountProfileScreen" component={AccountProfileScreen} />
+      <HealthStack.Screen name="Consultation" component={ChatScreen} />
       <HealthStack.Screen name="HealthProfileViewScreen" component={HealthProfileView} />
       <HealthStack.Screen name="HealthGoalsSelection" component={HealthGoalsSelection} />
       <HealthStack.Screen name="NutritionistMatchScreen" component={NutritionistMatch} />

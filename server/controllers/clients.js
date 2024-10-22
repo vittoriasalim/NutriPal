@@ -67,7 +67,7 @@ exports.getClientByUserId = async (req, res) => {
     const { id } = req.params;  // Get userId from request parameters
 
     // Find the client by the userId
-    const client = await clients.findOne({ where: { id } });
+    const client = await clients.findOne({ where: { userId:id } });
 
     if (!client) {
       return res.status(404).json({ error: 'Client not found.' });

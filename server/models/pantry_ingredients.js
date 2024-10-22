@@ -22,6 +22,19 @@ module.exports = function(sequelize, DataTypes) {
         model: 'ingredients',
         key: 'id'
       }
+    },
+    expiryDate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    price: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+      defaultValue: 0
+    },
+    quantity: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
     }
   }, {
     sequelize,

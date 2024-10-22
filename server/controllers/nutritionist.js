@@ -55,6 +55,28 @@ exports.getNutritionistById = async (req, res) => {
   }
 };
 
+// Get a specific nutritionist by userID
+exports.getNutritionistByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Fetch nutritionist by userID
+    const nutritionist = await nutritionists.findOne({ where: { userId } });
+
+    // If no nutritionist is found, respond with a 404 status
+    if (!nutritionist) {
+      return res.status(404).json({ error: 'Nutritionist not found.' });
+    }
+
+    // Return the found nutritionist
+    return res.status(200).json(nutritionist);
+    
+  } catch (error) {
+    // In case of server error, return status 500
+    return res.status(500).json({ error: error.message || 'Error fetching nutritionist.' });
+  }
+};
+
 // Update a specific nutritionist by ID
 exports.updateNutritionistById = async (req, res) => {
   try {

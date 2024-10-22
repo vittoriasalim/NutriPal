@@ -1,4 +1,5 @@
 var DataTypes = require("sequelize").DataTypes;
+var _SequelizeMeta = require("./SequelizeMeta");
 var _breakfast_meals = require("./breakfast_meals");
 var _clients = require("./clients");
 var _daily_meal_plans = require("./daily_meal_plans");
@@ -8,6 +9,7 @@ var _health_progress_reports = require("./health_progress_reports");
 var _ingredients = require("./ingredients");
 var _lunch_meals = require("./lunch_meals");
 var _meals = require("./meals");
+var _messages = require("./messages");
 var _nutritionist_clients = require("./nutritionist_clients");
 var _nutritionists = require("./nutritionists");
 var _pantries = require("./pantries");
@@ -18,6 +20,7 @@ var _recipes = require("./recipes");
 var _users = require("./users");
 
 function initModels(sequelize) {
+  var SequelizeMeta = _SequelizeMeta(sequelize, DataTypes);
   var breakfast_meals = _breakfast_meals(sequelize, DataTypes);
   var clients = _clients(sequelize, DataTypes);
   var daily_meal_plans = _daily_meal_plans(sequelize, DataTypes);
@@ -27,6 +30,7 @@ function initModels(sequelize) {
   var ingredients = _ingredients(sequelize, DataTypes);
   var lunch_meals = _lunch_meals(sequelize, DataTypes);
   var meals = _meals(sequelize, DataTypes);
+  var messages = _messages(sequelize, DataTypes);
   var nutritionist_clients = _nutritionist_clients(sequelize, DataTypes);
   var nutritionists = _nutritionists(sequelize, DataTypes);
   var pantries = _pantries(sequelize, DataTypes);
@@ -44,6 +48,8 @@ function initModels(sequelize) {
   clients.hasMany(daily_nutrition, { as: "daily_nutritions", foreignKey: "clientId"});
   health_progress_reports.belongsTo(clients, { as: "client", foreignKey: "clientId"});
   clients.hasMany(health_progress_reports, { as: "health_progress_reports", foreignKey: "clientId"});
+  messages.belongsTo(clients, { as: "client", foreignKey: "clientId"});
+  clients.hasMany(messages, { as: "messages", foreignKey: "clientId"});
   nutritionist_clients.belongsTo(clients, { as: "client", foreignKey: "clientId"});
   clients.hasMany(nutritionist_clients, { as: "nutritionist_clients", foreignKey: "clientId"});
   breakfast_meals.belongsTo(daily_nutrition, { as: "dailyNutrition", foreignKey: "dailyNutritionId"});
@@ -68,6 +74,8 @@ function initModels(sequelize) {
   meals.hasMany(dinner_meals, { as: "dinner_meals", foreignKey: "mealId"});
   lunch_meals.belongsTo(meals, { as: "meal", foreignKey: "mealId"});
   meals.hasMany(lunch_meals, { as: "lunch_meals", foreignKey: "mealId"});
+  messages.belongsTo(nutritionists, { as: "nutritionist", foreignKey: "nutritionistId"});
+  nutritionists.hasMany(messages, { as: "messages", foreignKey: "nutritionistId"});
   nutritionist_clients.belongsTo(nutritionists, { as: "nutritionist", foreignKey: "nutritionistId"});
   nutritionists.hasMany(nutritionist_clients, { as: "nutritionist_clients", foreignKey: "nutritionistId"});
   clients.belongsTo(pantries, { as: "pantry", foreignKey: "pantryId"});
@@ -84,8 +92,11 @@ function initModels(sequelize) {
   users.hasMany(clients, { as: "clients", foreignKey: "userId"});
   nutritionists.belongsTo(users, { as: "user", foreignKey: "userId"});
   users.hasMany(nutritionists, { as: "nutritionists", foreignKey: "userId"});
+  pantries.belongsTo(users, { as: "user", foreignKey: "userId"});
+  users.hasMany(pantries, { as: "pantries", foreignKey: "userId"});
 
   return {
+    SequelizeMeta,
     breakfast_meals,
     clients,
     daily_meal_plans,
@@ -95,6 +106,7 @@ function initModels(sequelize) {
     ingredients,
     lunch_meals,
     meals,
+    messages,
     nutritionist_clients,
     nutritionists,
     pantries,

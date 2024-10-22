@@ -18,12 +18,29 @@ const LoginScreen = () => {
     setErrorMessage('');
     try {
 
-      const response = await login(email, password);
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'HomeScreen' }],
-      });
+      const response = await login(email, password); // Awaiting the login response
+      console.log(response);
 
+      // Check if response and the user object exist
+      if (response && response.user && response.user.userType) {
+        const userType = response.user.userType.toLowerCase(); // Normalize to lowercase for comparison
+
+        if (userType === "nutritionist") {
+          
+          console.log("i am nutri");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'NutritionistDashboard' }],
+          });
+        } else if (userType == "client") {
+          console.log("I am client");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'HomeScreen' }],
+          });
+        }
+      }
+      
 
       // If successful, navigate to the next screen
     } catch (error) {

@@ -1,24 +1,21 @@
-// App.tsx
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Home from './Home';
-import Progress from './Progress';
-import NutritionManagement from './NutritionManagement';
 import ProgressDetail from './ProgressDetail';
+import PantryStackNavigator from './PantryStackNavigator';
 import HealthProfileLanding from './HealthProfileLanding'
 import HealthProfileScreen from './HealthProfile';
 import HealthGoalsSelection from './HealthGoalsSelection';
 
 const Tab = createBottomTabNavigator();
 
-
 function CustomTabBar({ state , descriptors, navigation }) {
   return (
     <View style={styles.tabContainer}>
-      {state.routes.map((route: { key: string | number; name: React.Key | null | undefined; }, index: any) => {
+      {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel !== undefined
           ? options.tabBarLabel
@@ -53,9 +50,11 @@ function CustomTabBar({ state , descriptors, navigation }) {
             ? 'utensils'
             : route.name === 'Progress'
               ? 'chart-bar'
-              : 'user';
+              : route.name === "Add"
+                ? 'shopping-bag'
+              : "user";
 
-        if (route.name === 'Add') {
+        if (route.name === 'Pantry') {
           return (
             <TouchableOpacity
               key={route.name}
@@ -67,7 +66,8 @@ function CustomTabBar({ state , descriptors, navigation }) {
               onLongPress={onLongPress}
               style={styles.customAddButton}
             >
-              <FontAwesome5 name="plus" size={15} color="white" />
+              {/* Change the color dynamically based on focus */}
+              <FontAwesome5 name="shopping-bag" size={22} color={isFocused ? 'black' : 'white'} />
             </TouchableOpacity>
           );
         }
@@ -96,24 +96,20 @@ function CustomTabBar({ state , descriptors, navigation }) {
 
 export default function HomeScreen() {
   return (
-
-      <Tab.Navigator
-        screenOptions={{ headerShown: false }}
-        tabBar={(props) => <CustomTabBar {...props} />}
-      >
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Plans" component={Home} />
-        <Tab.Screen name="Add" component={Home} />
-        <Tab.Screen name="Progress" component={ProgressDetail} />
-        <Tab.Screen name="Profile" component={HealthProfileLanding} />
-
-      </Tab.Navigator>
- 
+    <Tab.Navigator
+      screenOptions={{ headerShown: false }}
+      tabBar={(props) => <CustomTabBar {...props} />}
+    >
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Plans" component={Home} />
+      <Tab.Screen name="Pantry" component={PantryStackNavigator} />
+      <Tab.Screen name="Progress" component={ProgressDetail} />
+      <Tab.Screen name="Profile" component={HealthProfileLanding} />
+    </Tab.Navigator>
   );
 }
 
 const styles = StyleSheet.create({
-  
   tabContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -133,9 +129,6 @@ const styles = StyleSheet.create({
   tabButton: {
     flex: 1,
     alignItems: 'center',
-
-   
-  
     justifyContent: 'center',
   },
   customAddButton: {
@@ -144,10 +137,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#83C687',
     width: 55,
-    height:55,
-
+    height: 55,
     borderRadius: 40,
     elevation: 5,
-
   },
 });
