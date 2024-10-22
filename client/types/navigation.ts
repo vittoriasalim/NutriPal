@@ -40,3 +40,8 @@ export type ConsultationStackParamList= {
   ClientsScreen: undefined;
   Consultation: { userId:number,clientId: number , nutritionistId:number};
 };
+
+export type HomeStackParamList = {
+  Home: undefined;
+  MealPlanScreen: undefined;
+}

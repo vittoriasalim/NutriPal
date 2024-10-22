@@ -9,6 +9,7 @@ import PantryStackNavigator from './PantryStackNavigator';
 import HealthProfileLanding from './HealthProfileLanding'
 import HealthProfileScreen from './HealthProfile';
 import HealthGoalsSelection from './HealthGoalsSelection';
+import MealPlanScreen from './MealPlanScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -101,7 +102,7 @@ export default function HomeScreen() {
       tabBar={(props) => <CustomTabBar {...props} />}
     >
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Plans" component={Home} />
+      <Tab.Screen name="Plans" component={MealPlanScreen} />
       <Tab.Screen name="Pantry" component={PantryStackNavigator} />
       <Tab.Screen name="Progress" component={ProgressDetail} />
       <Tab.Screen name="Profile" component={HealthProfileLanding} />
