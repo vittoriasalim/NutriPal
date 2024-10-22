@@ -195,11 +195,12 @@ const NutritionistMatch = () => {
     console.log("Selecting nutritionist", nutritionistId);
     try {
       // delete current match
-      const delResponse = await deletePairingByClientId(clientProfile.id);
-      console.log("DELETE RESPONSE", delResponse);
-      // add one to the ex nutritionist's availability
-      const addResponse = await incrementNutritionistAvailability(delResponse);
-
+      if (currentNutritionist) {
+        const delResponse = await deletePairingByClientId(clientProfile.id);
+        console.log("DELETE RESPONSE", delResponse);
+        // add one to the ex nutritionist's availability
+        const addResponse = await incrementNutritionistAvailability(delResponse);
+      }
       // create the new match pair
       const response = await createNewPair({nutritionistId: nutritionistId, clientId: clientProfile.id});
       // minus one to the new nutritionist's availability
@@ -218,25 +219,29 @@ const NutritionistMatch = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Your Current Nutritionist</Text>
       {currentNutritionist ? (
-        <View style={styles.nutritionistsContainer}>
+        <View style={styles.currentNutritionistContainer}>
         <View style={styles.currentNutritionistCard}>
-          <View style={styles.iconContainer}>
-            <MaterialCommunityIcons
-              name={currentNutritionist.sex === 'female' ? 'face-woman' : 'face-man'}
-              size={60}
-              color='#6d766b'
-            />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.nutritionistTitle}>
-              {currentNutritionist.firstName} {currentNutritionist.lastName}
-            </Text>
-            <Text style={styles.specialisationText}>
-              Specialisations: {currentNutritionist.specialisation.join(', ')}
-            </Text>
-            <Text style={styles.specialisationText}>
-              Qualifications: {currentNutritionist.qualifications.join(', ')}
-            </Text>
+          <View>
+            <View style={styles.nutritionistCardHeader}>
+              <View style={styles.iconContainer}>
+                <MaterialCommunityIcons
+                  name={currentNutritionist.sex === 'female' ? 'face-woman' : 'face-man'}
+                  size={30}
+                  color='#6d766b'
+                />
+              </View>
+              <Text style={styles.nutritionistTitle}>
+                {currentNutritionist.firstName} {currentNutritionist.lastName}
+              </Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.specialisationText}>Specialisation:
+                <Text style={styles.specialisationTextInner}> {currentNutritionist.specialisation.join(', ')}</Text>
+              </Text>
+              <Text style={styles.specialisationText}>Qualifications:
+              <Text style={styles.specialisationTextInner}> {currentNutritionist.qualifications.join(', ')}</Text>
+              </Text>
+            </View>
           </View>
           <FontAwesome6 name="handshake-simple" size={40} color="#6d766b" />
         </View>
@@ -244,41 +249,43 @@ const NutritionistMatch = () => {
       ) : (
         <Text style={styles.subtitle}>No current nutritionist assigned.</Text>
       )}
-      <Text style={styles.title}>Nutritionist Matching</Text>
-      <Text style={styles.subtitle}>These are nutritionists who we recommend based on your health goals.
-      </Text>
+      <Text style={styles.title}>Recommended Nutritionists</Text>
+      
       {loading && <Text>Loading nutritionists...</Text>}
       {error && <Text>{error}</Text>}
        <View style={styles.nutritionistsContainer}>
           {recommendedNutritionists.length > 0 ? (
             recommendedNutritionists.map((nutr, index) => (
               <View key={index} style={styles.nutritionistCard}>
-                {/* Conditional rendering for the icon */}
-                <View style={styles.iconContainer}>
-                  <MaterialCommunityIcons
-                    name={nutr.sex === 'female' ? 'face-woman' : 'face-man'} // Example icon names
-                    size={60}
-                    color='#6f9468'
-                  />
-                </View>
-                <View style={styles.textContainer}>
-                  <Text style={styles.nutritionistTitle}>
-                    {nutr.firstName} {nutr.lastName}
-                  </Text>
-                  <Text style={styles.specialisationText}>
-                    Specialisation: {nutr.specialisation.join(', ')}
-                  </Text>
-                  <Text style={styles.specialisationText}>
-                    Qualifications: {nutr.qualifications.join(', ')}
-                  </Text>
+                <View>
+                  <View style={styles.nutritionistCardHeader}>
+                    <View style={styles.iconContainer}>
+                      <MaterialCommunityIcons
+                        name={nutr.sex === 'female' ? 'face-woman' : 'face-man'} // Example icon names
+                        size={30}
+                        color='#6f9468'
+                      />
+                    </View>
+                    <Text style={styles.nutritionistTitle}>
+                      {nutr.firstName} {nutr.lastName}
+                    </Text>
+                  </View>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.specialisationText}>Specialisation:
+                      <Text style={styles.specialisationTextInner}> {nutr.specialisation.join(', ')}</Text>
+                    </Text>
+                    <Text style={styles.specialisationText}>Qualifications:
+                    <Text style={styles.specialisationTextInner}> {nutr.qualifications.join(', ')}</Text>
+                    </Text>
+                  </View>
                 </View>
                 <TouchableOpacity onPress={() => selectNutritionist(nutr.id)}>
-                  <Ionicons name="add-circle" size={40} color="#6f9468" />
+                  <Ionicons name="add-circle" size={60} color="#6f9468" />
                 </TouchableOpacity>
               </View>
             ))
           ) : (
-            <Text>No matching nutritionists found.</Text>
+            <Text style={styles.subtitle}>No matching nutritionists found.</Text>
           )}
       </View>
       {/* <Button title="Back to Health Profile" onPress={() => navigation.goBack()} /> */}
@@ -316,7 +323,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingHorizontal: 40,
+    paddingHorizontal: 10,
   },
   nutritionistCard: {
     backgroundColor: '#A5D6A7',
@@ -338,6 +345,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '100%',
   },
+  nutritionistCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  nutritionistCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  }, 
   textContainer: {
     flexGrow: 1,
     fontFamily: 'Poppins-Regular'
@@ -346,14 +362,25 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     letterSpacing: 2,
-    marginBottom: 15,
   },
   specialisationText: {
     flexWrap: 'wrap',
-    maxWidth: '80%',
+    maxWidth: '90%',
     marginBottom: 10,
+    fontFamily: 'Poppins-Bold',
+    letterSpacing: 1,
+    lineHeight: 20,
+  },
+  specialisationTextInner: {
     fontFamily: 'Poppins-Regular',
-    textAlign: 'justify',
+  },
+  specialisationTextHeader: {
+    flexWrap: 'wrap',
+    maxWidth: '90%',
+    marginBottom: 10,
+    fontFamily: 'Poppins-Bold',
+    letterSpacing: 1,
+    lineHeight: 20,
   },
   iconButton: {
     width: 40,
@@ -361,7 +388,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconContainer: {
-    marginRight: 20,
+    marginRight: 10,
   },
   iconCircle: {
     // borderRadius: 50,
@@ -372,7 +399,7 @@ const styles = StyleSheet.create({
     // textAlign: 'center',
   },
   currentNutritionistContainer: {
-    marginHorizontal: 80,
+    marginHorizontal: 10,
   }
 });
 

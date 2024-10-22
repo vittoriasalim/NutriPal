@@ -8,7 +8,7 @@ const NutritionistMatchSuccess = () => {
 
     const handleViewProfile = () => {
         // Navigate to view health profile page
-        navigation.navigate('HealthProfileViewScreen'); // Replace with your actual route name
+        navigation.navigate('AccountProfileScreen'); // Replace with your actual route name
     };
 
     return (
@@ -16,11 +16,11 @@ const NutritionistMatchSuccess = () => {
             <View style={styles.content}>
                 <Text style={styles.title}>Your Nutritionist was updated!</Text>
                 <Text style={styles.subtitle}>
-                    Your selected nutritionist will guide you towards your health goals.
+                    Thank you for selecting your nutritionist, they will guide you towards your health goals.
                 </Text>
                 
                 <TouchableOpacity style={styles.button} onPress={handleViewProfile}>
-                    <Text style={styles.buttonText}>View Your Health Profile</Text>
+                    <Text style={styles.buttonText}>View Your Profile</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -40,11 +40,11 @@ const styles = StyleSheet.create({
     content: {
         alignItems: 'center', // Center text and button horizontally
         padding: 20, // Add some padding
-        borderRadius: 10,
-        shadowColor: '#000', // Optional: shadow for better visibility
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3, // For Android shadow
+        //borderRadius: 10,
+        //shadowColor: '#000', // Optional: shadow for better visibility
+        //shadowOpacity: 0.1,
+        //shadowRadius: 5,
+        //elevation: 3, // For Android shadow
         backgroundColor: '#fff', // Optional: background color
     },
     title: {

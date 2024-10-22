@@ -8,7 +8,7 @@ const HealthGoalsSelectionSuccess = () => {
 
     const handleViewProfile = () => {
         // Navigate to view health profile page
-        navigation.navigate('HealthProfileViewScreen'); // Replace with your actual route name
+        navigation.navigate('AccountProfileScreen'); // Replace with your actual route name
     };
 
     return (
@@ -16,12 +16,12 @@ const HealthGoalsSelectionSuccess = () => {
             <View style={styles.content}>
                 <Text style={styles.title}>Your Health Profile was updated!</Text>
                 <Text style={styles.subtitle}>
-                    Thank you for building your health profile, 
-                    now you can receive services tailored to your new goals.
+                    Thank you for updating your profile, 
+                    now you can receive services tailored to your new goals and preferences.
                 </Text>
                 
                 <TouchableOpacity style={styles.button} onPress={handleViewProfile}>
-                    <Text style={styles.buttonText}>View Your Health Profile</Text>
+                    <Text style={styles.buttonText}>View Your Profile</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -41,11 +41,11 @@ const styles = StyleSheet.create({
     content: {
         alignItems: 'center', // Center text and button horizontally
         padding: 20, // Add some padding
-        borderRadius: 10,
-        shadowColor: '#000', // Optional: shadow for better visibility
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3, // For Android shadow
+        //borderRadius: 10,
+        //shadowColor: '#000', // Optional: shadow for better visibility
+        //shadowOpacity: 0.1,
+        //shadowRadius: 5,
+        //elevation: 3, // For Android shadow
         backgroundColor: '#fff', // Optional: background color
     },
     title: {

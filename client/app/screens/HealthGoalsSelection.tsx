@@ -184,6 +184,7 @@ const HealthGoalsSelection = () => {
           healthGoals.push(selectedGoals[i] + ':' + weightLossAmount);
         } else {
           for (let j in combinedAllergiesList) {
+            healthGoals.push(selectedGoals[i]);
             dietaryPreferences.push('Allergic to ' + combinedAllergiesList[j]);
           }
         } 
