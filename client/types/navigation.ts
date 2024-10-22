@@ -24,7 +24,8 @@ export type HealthStackParamList = {
   HealthProfileViewScreen: undefined,
   HealthGoalsSelection: undefined; // No parameters needed
   NutritionistMatchScreen: undefined;
- 
+  HealthGoalsSelectionSuccess: undefined,
+  NutritionistMatchSuccess: undefined,
 
   Consultation:undefined;
 };
@@ -38,5 +39,4 @@ export type ConsultationStackParamList= {
 
   ClientsScreen: undefined;
   Consultation: { userId:number,clientId: number , nutritionistId:number};
-  
 };

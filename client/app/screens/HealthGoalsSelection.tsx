@@ -4,13 +4,19 @@ import { CheckBox } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getClientProfile, updateClientById } from '@/services/client';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { HealthStackParamList } from '@/types/navigation';
 
 const HealthGoalsSelection = () => {
+
+  const navigation = useNavigation<NavigationProp<HealthStackParamList>>();
+
   // State to store user data
   const [currentSlide, setCurrentSlide] = useState(0);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isErrorVisible, setIsErrorVisible] = useState(true);
 
   const [currentWeight, setCurrentWeight] = useState('');
   const [currentHeight, setCurrentHeight] = useState('');
@@ -61,6 +67,10 @@ const HealthGoalsSelection = () => {
       goals: ['Mental Well-Being'],
     },
   ];
+  
+  const handleToggleError = () => {
+    setIsErrorVisible(!isErrorVisible);
+  };
 
   const toggleGoal = (goal) => {
     setSelectedGoals((prev) =>
@@ -137,6 +147,31 @@ const HealthGoalsSelection = () => {
   }
 
   const handleSubmit = async () => {
+    if (selectedGoals.length === 0) {
+      setError('Please select at least one health goal.');
+      setIsErrorVisible(true);
+      return;
+    }
+
+    if (selectedGoals.includes('Weight Loss') && weightLossAmount.trim() === '') {
+      setError('Please enter how much weight you want to lose.');
+      setIsErrorVisible(true);
+      return;
+    }
+  
+    if (selectedGoals.includes('Allergy Management')) {
+      const allergiesList = Object.keys(allergies).filter(allergy => allergies[allergy]);
+      if (allergiesList.length === 0 && customAllergies.length === 0) {
+        setError('Please select at least one allergy or add a custom allergy.');
+        setIsErrorVisible(true);
+        return;
+      }
+    }
+  
+    // If all validations pass, proceed with the submission logic
+    setError(null); // Clear any previous error
+    setIsErrorVisible(true);
+
     const allergiesList = Object.keys(allergies).filter(allergy => allergies[allergy]);
     const combinedAllergiesList = [...allergiesList, ...customAllergies];
 
@@ -149,6 +184,7 @@ const HealthGoalsSelection = () => {
           healthGoals.push(selectedGoals[i] + ':' + weightLossAmount);
         } else {
           for (let j in combinedAllergiesList) {
+            healthGoals.push(selectedGoals[i]);
             dietaryPreferences.push('Allergic to ' + combinedAllergiesList[j]);
           }
         } 
@@ -189,12 +225,26 @@ const HealthGoalsSelection = () => {
       // Fetch the updated client profile again
       const updatedClientProfile = await checkClientProfile();
       console.log('Updated Client Profile:', updatedClientProfile);
+
+      navigation.navigate('HealthGoalsSelectionSuccess');
     } else {
       console.log('No existing client profile found.');
     }
   };
 
   const handleNext = () => {
+    console.log("NEW CHANGE NEXT");
+    if (currentWeight.trim() === '') {
+      setError('Please enter your weight.');
+      setIsErrorVisible(true);
+      return;
+    }
+  
+    if (currentHeight.trim() === '') {
+      setError('Please enter your height.');
+      return;
+    }
+
     if (currentSlide < 1) {
       setCurrentSlide(currentSlide + 1);
     }
@@ -208,6 +258,14 @@ const HealthGoalsSelection = () => {
 
   return (
     <View style={styles.container}>
+      {isErrorVisible && error && (
+        <View style={styles.errorPopup}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity onPress={handleToggleError}>
+            <Text style={styles.closeButton}>Minimise</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       {currentSlide === 0 ? (
         <View style={styles.slide}>
           <Text style={styles.title}>Build Your Health Profile</Text>
@@ -402,6 +460,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 5, // Space between label and input
     alignSelf: 'center', // Center the label
+    fontFamily: 'Poppins-Regular',
   },
   firstSlide: {
     paddingHorizontal: 20,
@@ -495,6 +554,29 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  errorPopup: {
+    position: 'absolute',
+    top: 100,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FF6F61',
+    padding: 20,
+    borderRadius: 10,
+    marginHorizontal: 20,
+    zIndex: 1000,
+  },
+  errorText: {
+    color: 'black',
+    textAlign: 'center',
+    marginBottom: 10,
+    fontFamily: 'Poppins-Regular',
+  },
+  closeButton: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 10,
+    fontWeight: 'bold',
   },
 });
 

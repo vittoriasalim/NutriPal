@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-import HealthGoalsSelection from './HealthGoalsSelection';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { HealthStackParamList } from '@/types/navigation';
 
 const HealthProfileView = () => {
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<HealthStackParamList>>();
   
   return (
     <View style={styles.container}>
       <Text style={styles.title}>View Health Profile</Text>
-      <Button title="Back to Health Profile" onPress={() => navigation.goBack()} />
+      <Button title="Back to Health Profile menu" onPress={() => navigation.navigate('HealthProfileScreen')} />
       {/* <Button 
         title="Back to Health Profile" 
         onPress={() => navigation.navigate('HealthProfileScreen')} 
