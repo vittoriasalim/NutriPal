@@ -288,8 +288,6 @@ const NutritionistMatch = () => {
             <Text style={styles.subtitle}>No matching nutritionists found.</Text>
           )}
       </View>
-      {/* <Button title="Back to Health Profile" onPress={() => navigation.goBack()} /> */}
-      <Button title="Back to Health Profile" onPress={() => navigation.navigate('HealthProfileScreen')} />
     </View>
     </ScrollView>
     </SafeAreaView>
@@ -302,6 +300,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    paddingBottom: 50,
     backgroundColor: '#fff',
   },
   title: {
