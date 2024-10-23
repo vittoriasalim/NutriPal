@@ -40,3 +40,14 @@ export type ConsultationStackParamList= {
   ClientsScreen: undefined;
   Consultation: { userId:number,clientId: number , nutritionistId:number};
 };
+
+// export type HomeStackParamList = {
+//   Home: undefined;
+//   MealPlanScreen: undefined;
+// }
+
+export type MealStackParamList = {
+  MealPlanScreen: undefined;
+  MealDetailsScreen: {day: string};
+  SingleMealDetail: { meal: { name: string; calorie: number; carbohydrate: number; protein: number, fat: number; image: string; description?: string; longDescription?: string; } };
+}
