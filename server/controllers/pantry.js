@@ -50,7 +50,7 @@ exports.getPantryForUser = async (req, res) => {
   
       // If no ingredients found, return empty array
       if (!pantryIngredients.length) {
-        return res.status(200).json({ message: 'Pantry is empty', ingredients: [] });
+        return res.status(200).json({});
       }
   
       // Return the pantry ingredients to the client
@@ -104,77 +104,85 @@ exports.addIngredientToPantry = async (req, res) => {
     }
   };
 
-// Update a pantry ingredient
-exports.updatePantryIngredient = async (req, res) => {
+  exports.updatePantryIngredient = async (req, res) => {
+    const { userId, pantryIngredientId } = req.params;
+    const { expiryDate, quantity } = req.body;
+  
     try {
-      const { userId, ingredientId } = req.params;
-      const { expiryDate, quantity, price } = req.body;
-  
       const pantry = await ensurePantryExists(userId);
-      if (!pantry || !pantry.id) {
-        return res.status(404).json({ message: 'Pantry not found' });
-      }
   
-      const pantryIngredient = await pantry_ingredients.findOne({
-        where: { pantryId: pantry.id, ingredientId },
-      });
+      // Find the pantry ingredient by its unique ID (pantryIngredientId)
+    const pantryIngredient = await pantry_ingredients.findOne({
+      where: { id: pantryIngredientId, pantryId: pantry.id }, // Match pantryIngredientId and pantryId
+    });
+
+    // If the pantry ingredient is not found, return a 404 error
+    if (!pantryIngredient) {
+      return res.status(404).json({ message: 'Ingredient not found in pantry' });
+    }
   
       if (!pantryIngredient) {
         return res.status(404).json({ message: 'Ingredient not found in pantry' });
       }
   
-      // Update the pantry ingredient details
-      pantryIngredient.expiryDate = expiryDate || pantryIngredient.expiryDate;
+      // Update the pantry ingredient's quantity and expiry date
       pantryIngredient.quantity = quantity || pantryIngredient.quantity;
-      pantryIngredient.price = price || pantryIngredient.price;
+      pantryIngredient.expiryDate = expiryDate || pantryIngredient.expiryDate;
   
       await pantryIngredient.save();
   
-      res.status(200).json(pantryIngredient);
+      return res.status(200).json(pantryIngredient);
     } catch (error) {
       console.error('Error in updatePantryIngredient:', error);
-      res.status(500).json({ error: 'Server error' });
+      return res.status(500).json({ error: 'Server error' });
     }
   };
   
-  // Remove an ingredient from the pantry
-  exports.removePantryIngredient = async (req, res) => {
-    try {
-      const { userId, ingredientId } = req.params;
   
-      const pantry = await ensurePantryExists(userId);
-      if (!pantry || !pantry.id) {
-        return res.status(404).json({ message: 'Pantry not found' });
-      }
-  
-      const pantryIngredient = await pantry_ingredients.findOne({
-        where: { pantryId: pantry.id, ingredientId },
-      });
-  
-      if (!pantryIngredient) {
-        return res.status(404).json({ message: 'Ingredient not found in pantry' });
-      }
-  
-      await pantryIngredient.destroy();
-  
-      res.status(200).json({ message: 'Ingredient removed from pantry' });
-    } catch (error) {
-      console.error('Error in removePantryIngredient:', error);
-      res.status(500).json({ error: 'Server error' });
+// Remove an ingredient from the pantry by pantry_ingredient id
+exports.removePantryIngredient = async (req, res) => {
+  try {
+    const { userId, pantryIngredientId } = req.params; // Extract userId and pantryIngredientId from URL params
+
+    // Ensure the pantry exists for the user
+    const pantry = await ensurePantryExists(userId);
+    if (!pantry || !pantry.id) {
+      return res.status(404).json({ message: 'Pantry not found' });
     }
-  };
+
+    // Find the pantry ingredient by its unique ID (pantryIngredientId)
+    const pantryIngredient = await pantry_ingredients.findOne({
+      where: { id: pantryIngredientId, pantryId: pantry.id }, // Match pantryIngredientId and pantryId
+    });
+
+    // If the pantry ingredient is not found, return a 404 error
+    if (!pantryIngredient) {
+      return res.status(404).json({ message: 'Ingredient not found in pantry' });
+    }
+
+    // Delete the pantry ingredient record
+    await pantryIngredient.destroy();
+
+    // Respond with a success message
+    res.status(200).json({ message: 'Ingredient removed from pantry' });
+  } catch (error) {
+    console.error('Error in removePantryIngredient:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 
 // Get a specific ingredient from the user's pantry
 exports.getPantryIngredient = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const { ingredientId } = req.params;
+    const { userId, ingredientId } = req.params;
+
 
     // Ensure pantry exists for the user
     const pantry = await ensurePantryExists(userId);
 
     // Fetch the specific ingredient from the pantry
-    const pantryIngredient = await pantry_ingredients.findOne({
+    const pantryIngredient = await pantry_ingredients.findAll({
       where: { pantryId: pantry.id, ingredientId },
       include: [{ model: ingredients, as: 'ingredient' }],  // Join with ingredient details
     });
@@ -188,3 +196,36 @@ exports.getPantryIngredient = async (req, res) => {
     return res.status(500).json({ error: 'Error fetching ingredient from pantry.' });
   }
 };
+
+// Remove all instances of a specific ingredient in the pantry
+exports.removeAllIngredientsByType = async (req, res) => {
+  try {
+    const { userId, ingredientId } = req.params;
+
+    // Ensure pantry exists for the user
+    const pantry = await ensurePantryExists(userId);
+    if (!pantry || !pantry.id) {
+      return res.status(404).json({ message: 'Pantry not found' });
+    }
+
+    // Find all instances of the ingredient in the pantry
+    const pantryIngredients = await pantry_ingredients.findAll({
+      where: { pantryId: pantry.id, ingredientId },
+    });
+
+    if (!pantryIngredients.length) {
+      return res.status(404).json({ message: 'No instances of this ingredient found in the pantry' });
+    }
+
+    // Remove all instances of the ingredient
+    await pantry_ingredients.destroy({
+      where: { pantryId: pantry.id, ingredientId },
+    });
+
+    res.status(200).json({ message: 'All instances of the ingredient removed from the pantry' });
+  } catch (error) {
+    console.error('Error in removeAllIngredientsByType:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+

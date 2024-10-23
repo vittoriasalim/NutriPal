@@ -10,15 +10,16 @@ const meatImage = require('@/assets/images/meat.png');
 const seafoodImage = require('@/assets/images/seafood.png');
 
 interface PantryItemCardProps {
-  item: any; // Expecting the entire item object from the pantry
+  ingredient: any; // Ingredient object
+  totalQuantity: number; // Combined quantity
+  earliestExpiryDate: string | Date; // Earliest expiry date
+  items: any[]; // Full list of pantry items for this ingredient
 }
 
-const PantryItemCard: React.FC<PantryItemCardProps> = ({ item }) => {
+const PantryItemCard: React.FC<PantryItemCardProps> = ({ ingredient, totalQuantity, earliestExpiryDate}) => {
   const navigation = useNavigation<NavigationProp<IngredientStackParamList>>(); // Hook to handle navigation
 
-  // Extract relevant properties from the item
-  const { ingredient, quantity, expiryDate } = item;
-  const { ingredientName, food_type, unit } = ingredient;
+  const { ingredientName, food_type, unit, id } = ingredient;
 
   // Determine the image source based on the category (food type)
   const getImageForCategory = (category: string | undefined) => {
@@ -36,7 +37,7 @@ const PantryItemCard: React.FC<PantryItemCardProps> = ({ item }) => {
   // Navigate to the ingredient detail page when card is pressed
   const handlePress = () => {
     navigation.navigate('IngredientDetailScreen', {
-      item, // Pass the entire item to the IngredientDetailScreen
+      id,
     });
   };
 
@@ -47,10 +48,10 @@ const PantryItemCard: React.FC<PantryItemCardProps> = ({ item }) => {
           <Image source={getImageForCategory(food_type)} style={styles.image} />
           <Text style={styles.itemName}>{ingredientName}</Text>
           <Text style={styles.itemQuantity}>
-            {quantity} {unit}
+            {totalQuantity} {unit}
           </Text>
           <Text style={styles.expiryDate}>
-            Expiry: {new Date(expiryDate).toLocaleDateString()}
+            Expiry: {new Date(earliestExpiryDate).toLocaleDateString()}
           </Text>
         </View>
       </TouchableOpacity>
@@ -81,8 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     resizeMode: 'cover', // Ensure the image covers the space without distortion
-  }
-  ,
+  },
   itemName: {
     fontSize: 16,
     fontWeight: 'bold',

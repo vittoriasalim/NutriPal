@@ -4,27 +4,22 @@ import { Ionicons } from '@expo/vector-icons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; // Importing the modal date picker
 import { addIngredientToPantry } from '@/services/pantry'; // Import the addIngredient service
 
-interface AddIngredientModalProps {
+interface AddMoreModalProps {
   visible: boolean;
   onClose: () => void;
-  userId: number; // Ensure to pass userId to the modal
-  onSuccess: () => void; // Callback to refresh the pantry data on successful addition
+  ingredientName: string; // Ingredient name (passed as a prop)
+  onSuccess:() => void; // Callback for adding quantity and expiry date
+  userId: number; // User
 }
 
-const AddIngredientModal: React.FC<AddIngredientModalProps> = ({ visible, onClose, userId, onSuccess }) => {
-  const [ingredientName, setIngredientName] = useState('');
+const AddMoreModal: React.FC<AddMoreModalProps> = ({ visible, onClose, ingredientName, onSuccess, userId }) => {
   const [expiryDate, setExpiryDate] = useState(new Date());
   const [quantity, setQuantity] = useState('');
-  const [unit, setUnit] = useState('g'); // Default unit is 'g' for grams
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // Optional loading state
 
-  // Validate the fields before saving
+  // Validate the fields before adding
   const validateFields = () => {
-    if (!ingredientName.trim()) {
-      Alert.alert('Error', 'Please enter an ingredient name.');
-      return false;
-    }
     if (!quantity || isNaN(Number(quantity)) || Number(quantity) <= 0) {
       Alert.alert('Error', 'Please enter a valid quantity.');
       return false;
@@ -32,7 +27,7 @@ const AddIngredientModal: React.FC<AddIngredientModalProps> = ({ visible, onClos
     return true;
   };
 
-  const handleSave = async () => {
+  const handleAdd = async () => {
     if (!validateFields()) {
       return; // Stop if validation fails
     }
@@ -44,10 +39,8 @@ const AddIngredientModal: React.FC<AddIngredientModalProps> = ({ visible, onClos
       await addIngredientToPantry(userId, { ingredientName, expiryDate, quantity });
 
       // Reset fields after saving
-      setIngredientName('');
       setExpiryDate(new Date());
       setQuantity('');
-      setUnit('g');
       // Close modal and trigger onSuccess callback to refresh data
       onClose();
       onSuccess();
@@ -57,10 +50,6 @@ const AddIngredientModal: React.FC<AddIngredientModalProps> = ({ visible, onClos
     } finally {
       setIsLoading(false); // Set loading to false after completion
     }
-  };
-
-  const handleToggleUnit = () => {
-    setUnit(prevUnit => (prevUnit === 'g' ? 'ml' : 'g'));
   };
 
   // Show date picker modal
@@ -89,21 +78,11 @@ const AddIngredientModal: React.FC<AddIngredientModalProps> = ({ visible, onClos
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <View style={styles.header}>
-            <Text style={styles.modalTitle}>Add Ingredient</Text>
+            <Text style={styles.modalTitle}>{`Add ${ingredientName}`}</Text>
             <TouchableOpacity onPress={onClose}>
               <Ionicons name="close" size={24} color="#666" />
             </TouchableOpacity>
           </View>
-
-          {/* Ingredient Name Field */}
-          <Text style={styles.fieldLabel}>Ingredient Name</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ingredient Name"
-            placeholderTextColor="#999"
-            value={ingredientName}
-            onChangeText={setIngredientName}
-          />
 
           {/* Expiry Date Selector */}
           <Text style={styles.fieldLabel}>Expiry Date</Text>
@@ -120,29 +99,24 @@ const AddIngredientModal: React.FC<AddIngredientModalProps> = ({ visible, onClos
             minimumDate={new Date()} // Ensures no past dates can be picked
           />
 
-          {/* Quantity and Unit Selector */}
+          {/* Quantity Field */}
           <Text style={styles.fieldLabel}>Quantity</Text>
-          <View style={styles.quantityContainer}>
-            <TextInput
-              style={styles.quantityInput}
-              placeholder="Quantity"
-              placeholderTextColor="#999"
-              value={quantity}
-              onChangeText={setQuantity}
-              keyboardType="numeric"
-            />
-            <TouchableOpacity style={styles.unitToggle} onPress={handleToggleUnit}>
-              <Text style={styles.unitToggleText}>{unit}</Text>
-            </TouchableOpacity>
-          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Quantity"
+            placeholderTextColor="#999"
+            value={quantity}
+            onChangeText={setQuantity}
+            keyboardType="numeric"
+          />
 
           {/* Buttons */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
-              <Text style={styles.saveButtonText}>{isLoading ? 'Saving...' : 'Save'}</Text>
+            <TouchableOpacity style={styles.saveButton} onPress={handleAdd} disabled={isLoading}>
+              <Text style={styles.saveButtonText}>{isLoading ? 'Adding...' : 'Add'}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -211,36 +185,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     color: '#666',
   },
-  quantityContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  quantityInput: {
-    height: 45,
-    width: '65%',
-    borderColor: '#E5E5E5',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontFamily: 'Poppins-Regular',
-    color: '#333',
-  },
-  unitToggle: {
-    height: 45,
-    width: '30%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: '#E5E5E5',
-    borderWidth: 1,
-    borderRadius: 10,
-    backgroundColor: '#F5F5F5',
-  },
-  unitToggleText: {
-    fontFamily: 'Poppins-Regular',
-    color: '#333',
-    fontSize: 16,
-  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -275,4 +219,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddIngredientModal;
+export default AddMoreModal;

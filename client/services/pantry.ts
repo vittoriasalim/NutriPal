@@ -22,10 +22,21 @@ export const getPantryForUser = async (userId: number) => {
   }
 };
 
-// Update a specific ingredient in the pantry
-export const updatePantryIngredient = async (userId: number, ingredientId: number, updateData: { expiryDate?: Date; quantity?: string }) => {
+// Get a specific ingredient from the user's pantry
+export const getPantryIngredient = async (userId: number, ingredientId: number) => {
   try {
-    const response = await apiService.putData(`/pantry/${userId}/ingredient/${ingredientId}`, updateData);
+    const response = await apiService.fetchData(`/pantry/${userId}/ingredient/${ingredientId}`);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error("Error fetching specific pantry ingredient:", error);
+    throw error;
+  }
+};
+
+export const updatePantryIngredient = async (userId, ingredientId, updateData) => {
+  try {
+    const response = await apiService.putData(`/pantry/${userId}/pantryingredient/${ingredientId}`, updateData);
     return response;
   } catch (error) {
     console.error("Error updating pantry ingredient:", error);
@@ -33,13 +44,23 @@ export const updatePantryIngredient = async (userId: number, ingredientId: numbe
   }
 };
 
-// Remove an ingredient from the pantry
-export const removePantryIngredient = async (userId: number, ingredientId: number) => {
+
+export const removePantryIngredient = async (userId, ingredientId) => {
   try {
-    const response = await apiService.deleteData(`/pantry/${userId}/ingredient/${ingredientId}`);
+    const response = await apiService.deleteData(`/pantry/${userId}/pantryIngredient/${ingredientId}`);
     return response;
   } catch (error) {
     console.error("Error removing ingredient from pantry:", error);
+    throw error;
+  }
+};
+
+export const deleteAllIngredients = async (userId, ingredientId) => {
+  try {
+    const response = await apiService.deleteData(`/pantry/${userId}/ingredient/${ingredientId}/all`);
+    return response;
+  } catch (error) {
+    console.error("Error deleting all ingredients:", error);
     throw error;
   }
 };

@@ -1,34 +1,104 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import PantryCategoryTab from '@/components/PantryCategoryTab'; 
 import PantryItemCard from '@/components/PantryItemCard'; 
 import AddIngredientModal from '@/components/AddIngredientModal'; 
 import { Ionicons } from '@expo/vector-icons'; // Using Ionicons for the "+" icon
 import { getPantryForUser } from '@/services/pantry'; // Import the pantry service
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import { DataTable } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 
 const PantryScreen: React.FC = () => {
   const categories = ['All', 'Meat', 'Seafood', 'Vegetable'];
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [pantryData, setPantryData] = useState([]); // Store fetched pantry ingredients
   const [isModalVisible, setModalVisible] = useState(false); // For modal visibility
+  const [userData, setUserData] = useState<any>(null); // To store user data from AsyncStorage
+  const [loading, setLoading] = useState(true); // Loading state
   const screenHeight = Dimensions.get('window').height;
 
-  const userId = 1; // Replace with actual userId
-
-  // Fetch pantry data when component mounts
-  const fetchPantryData = async () => {
+  // Fetch user data from AsyncStorage
+  const getUserData = async () => {
     try {
-      const data = await getPantryForUser(userId); // Fetch pantry data via the controller
-      setPantryData(data); // Store the fetched data
+      const jsonValue = await AsyncStorage.getItem('user'); // Fetch user data
+      if (jsonValue) {
+        const user = JSON.parse(jsonValue); // Parse and set the user data
+        setUserData(user);
+        fetchPantryData(user.id); // Fetch pantry data after getting the user
+      } else {
+        Alert.alert('Error', 'No user data found.');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      Alert.alert('Error', 'Failed to load user data.');
+      setLoading(false);
+    }
+  };
+
+  // Fetch pantry data using the userId
+  const fetchPantryData = async (userId: number) => {
+    try {
+      const data = await getPantryForUser(userId); // Fetch pantry data from backend
+      if (Object.keys(data).length === 0) {
+        // If data is an empty object, show an empty state
+        setPantryData([]); // Set to an empty array to show a message
+      } else {
+        const combinedData = combinePantryItems(data);
+        setPantryData(combinedData); // Store the combined pantry data
+      }
     } catch (error) {
       console.error('Error fetching pantry data:', error);
       Alert.alert('Error', 'Failed to load pantry data.');
+    } finally {
+      setLoading(false); // Stop loading regardless of success or failure
     }
   };
 
   useEffect(() => {
-    fetchPantryData(); // Load pantry data on component mount
+    getUserData(); // Load user and pantry data when component mounts
   }, []);
+
+  // useEffect to load user data when the component mounts
+  useFocusEffect(
+    useCallback(() => {
+      // Call getUserData every time the screen comes into focus
+      getUserData();
+
+      return () => {
+        // Clean-up logic if needed
+      };
+    }, []) // Add dependencies like 'update' to trigger re-render when it changes
+  );
+
+  // Combine pantry items by ingredient_id, summing quantities and taking earliest expiry date
+  const combinePantryItems = (data) => {
+    const combinedItems = {};
+    console.log(data);
+
+    data.forEach(item => {
+      const ingredientId = item.ingredient.id;
+
+      if (!combinedItems[ingredientId]) {
+        combinedItems[ingredientId] = {
+          ingredient: item.ingredient,
+          items: [item],
+          totalQuantity: item.quantity,
+          earliestExpiryDate: new Date(item.expiryDate),
+        };
+      } else {
+        combinedItems[ingredientId].items.push(item);
+        combinedItems[ingredientId].totalQuantity += item.quantity;
+        combinedItems[ingredientId].earliestExpiryDate = new Date(Math.min(
+          new Date(combinedItems[ingredientId].earliestExpiryDate),
+          new Date(item.expiryDate)
+        ));
+      }
+    });
+
+    return Object.values(combinedItems);
+  };
 
   const handleAddItem = () => {
     setModalVisible(true); // Show the modal to add an ingredient
@@ -36,13 +106,16 @@ const PantryScreen: React.FC = () => {
 
   const handleSuccess = () => {
     setModalVisible(false); // Close the modal after saving
-    fetchPantryData(); // Refresh the pantry data after adding an ingredient
+    if (userData) {
+      fetchPantryData(userData.id); // Refresh the pantry data after adding an ingredient
+    }
   };
 
   const filteredPantryData = selectedCategory === 'All'
     ? pantryData
     : pantryData.filter(item => item.ingredient.food_type === selectedCategory);
 
+  // Render the content based on loading or empty pantry state
   return (
     <View style={styles.container}>
       {/* Header with Pantry text and Add button */}
@@ -60,18 +133,27 @@ const PantryScreen: React.FC = () => {
         onCategorySelect={setSelectedCategory}
       />
 
-      {/* Pantry Items */}
-      <FlatList
-        data={filteredPantryData}
-        numColumns={2}
-        keyExtractor={(item) => item.ingredient.id.toString()} // Unique key for each pantry ingredient
-        renderItem={({ item }) => (
-          <PantryItemCard item={item} /> // Pass the entire item
-        )}
-        columnWrapperStyle={styles.row}
-        contentContainerStyle={styles.cardContainer}
-        style={[styles.list, { maxHeight: screenHeight * 0.6 }]}
-      />
+      {loading ? (
+        <Text style={styles.loadingText}>Loading pantry data...</Text>
+      ) : pantryData.length === 0 ? (
+        <Text style={styles.emptyText}>Your pantry is empty. Add ingredients to get started!</Text>
+      ) : (
+        <FlatList
+          data={filteredPantryData}
+          numColumns={2}
+          keyExtractor={(item) => item.ingredient.id.toString()} // Unique key for each pantry ingredient
+          renderItem={({ item }) => (
+            <PantryItemCard 
+              ingredient={item.ingredient} // Pass the ingredient details
+              totalQuantity={item.totalQuantity} // Pass the combined quantity
+              earliestExpiryDate={item.earliestExpiryDate} // Pass the earliest expiry date
+            />
+          )}
+          columnWrapperStyle={styles.row}
+          contentContainerStyle={styles.cardContainer}
+          style={[styles.list, { maxHeight: screenHeight * 0.6 }]}
+        />
+      )}
 
       {/* Generate Recipes Button */}
       <TouchableOpacity style={styles.generateButton}>
@@ -82,7 +164,7 @@ const PantryScreen: React.FC = () => {
       <AddIngredientModal
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
-        userId={userId}
+        userId={userData ? userData.id : null} // Pass userId dynamically from user data
         onSuccess={handleSuccess} // Refresh the pantry data after adding an ingredient
       />
     </View>
@@ -144,6 +226,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     fontFamily: 'Poppins-Regular',
+  },
+  loadingText: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginVertical: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginVertical: 20,
+    color: '#888',
   },
 });
 

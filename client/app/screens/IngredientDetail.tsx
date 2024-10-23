@@ -1,13 +1,17 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, FlatList } from 'react-native';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+import EditModal from '@/components/EditModal'; // Import the new modal component
+import { getPantryIngredient } from '@/services/pantry'; // Import service for fetching ingredient
+import AsyncStorage from '@react-native-async-storage/async-storage'; // AsyncStorage for user data
 
 // Import your images
 const vegetableImage = require('@/assets/images/vegetables.png');
 const meatImage = require('@/assets/images/meat.png');
 const seafoodImage = require('@/assets/images/seafood.png');
 
-// Mock health benefits data for demo purposes
+// Mock health benefits data
 const healthBenefits = [
   { id: '1', image: require('@/assets/images/benefits/healthy-skin.png') },
   { id: '2', image: require('@/assets/images/benefits/heart-health.png') },
@@ -15,17 +19,54 @@ const healthBenefits = [
 ];
 
 const IngredientDetailScreen: React.FC = () => {
+  const navigation = useNavigation();
   const screenHeight = Dimensions.get('window').height;
 
-  // Retrieve the passed item from the navigation route
-  const route = useRoute<RouteProp<{ params: { item: any } }, 'params'>>();
-  const { item } = route.params; // Destructure the item from route params
+  // Retrieve the passed ingredientId from the navigation route
+  const route = useRoute<RouteProp<{ params: { id: number } }, 'params'>>();
+  const { id } = route.params; // Destructure the ingredientId from route params
 
-  // Extract details from the passed item
-  const { ingredient, quantity, expiryDate, price, description } = item;
-  const { ingredientName, food_type, storageInstructions, unit } = ingredient;
+  // State to hold fetched ingredient data
+  const [ingredientData, setIngredientData] = useState<any[]>([]); // Holds the fetched ingredient data
+  const [loading, setLoading] = useState(true); // State for managing loading
+  const [isModalVisible, setModalVisible] = useState(false); // State to manage the modal visibility
 
-  // Determine the image source based on the food type (category)
+  // Function to fetch user data from AsyncStorage and fetch ingredient data
+  const fetchIngredientData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('user');
+      if (jsonValue) {
+        const user = JSON.parse(jsonValue);
+        const data = await getPantryIngredient(user.id, id); // Fetch specific ingredient data
+        if (data.length > 0) {
+          setIngredientData(data);
+        } else {
+          Alert.alert('Error', 'No ingredient data found.');
+        }
+        setLoading(false);
+      } else {
+        Alert.alert('Error', 'No user data found.');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Error fetching ingredient data:', error);
+      Alert.alert('Error', 'Failed to load ingredient data.');
+      setLoading(false);
+    }
+  };
+
+  // Effect hook to fetch ingredient data when the screen is loaded
+  useEffect(() => {
+    fetchIngredientData();
+  }, []);
+
+  // Toggle the modal visibility
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+    fetchIngredientData();
+  }
+
+  // Determine the image source based on the food type
   const getImageForCategory = (category: string) => {
     switch (category?.toLowerCase()) {
       case 'meat':
@@ -38,11 +79,44 @@ const IngredientDetailScreen: React.FC = () => {
     }
   };
 
+  const handleAddItem = () => {
+    setModalVisible(true); // Show the modal to add an ingredient
+  };
+
+  const handleSuccess = () => {
+    setModalVisible(false); // Close the modal after saving
+    if (ingredientData) {
+      fetchIngredientData(); // Refresh the pantry data after adding an ingredient
+    }
+  };
+
+  if (loading) {
+    return <Text>Loading...</Text>; // Display a loading indicator while fetching data
+  }
+
+  if (!ingredientData.length) {
+    return <Text>No ingredient data found.</Text>; // Show if no data found
+  }
+
+  // Extract data from the fetched ingredient data
+  const { ingredient } = ingredientData[0]; // Get the main ingredient information
+  const { ingredientName, food_type, storageInstructions, unit, description, price } = ingredient;
+
+  // Combine quantities and find the earliest expiry date
+  const totalQuantity = ingredientData.reduce((sum, currentItem) => sum + currentItem.quantity, 0);
+  const earliestExpiryDate = ingredientData.reduce((earliest, currentItem) => {
+    const currentExpiryDate = new Date(currentItem.expiryDate);
+    return currentExpiryDate < earliest ? currentExpiryDate : earliest;
+  }, new Date(ingredientData[0].expiryDate));
+
   return (
     <View style={styles.container}>
-      {/* Header with "Pantry" text */}
+      {/* Header with "Pantry" text and Edit button */}
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Pantry</Text>
+        <TouchableOpacity onPress={toggleModal} style={styles.editButton}>
+          <Ionicons name="pencil" size={24} color="black" />
+        </TouchableOpacity>
       </View>
 
       {/* Ingredient Details */}
@@ -52,19 +126,19 @@ const IngredientDetailScreen: React.FC = () => {
           <Image 
             source={getImageForCategory(food_type)} 
             style={styles.ingredientImage} 
-            resizeMode="contain" // Ensures the image fits without distortion
+            resizeMode="contain"
           />
           <View>
             <Text style={styles.ingredientName}>{ingredientName}</Text>
-            <Text style={styles.expiryText}>Expiry: {new Date(expiryDate).toLocaleDateString()}</Text>
+            <Text style={styles.expiryText}>Expiry: {earliestExpiryDate.toLocaleDateString()}</Text>
           </View>
         </View>
 
         {/* Quantity and Price */}
         <View style={styles.detailsRow}>
           <View style={styles.detailBlock}>
-            <Text style={styles.detailLabel}>Quantity</Text>
-            <Text style={styles.detailValue}>{quantity} {unit}</Text>
+            <Text style={styles.detailLabel}>Total Quantity</Text>
+            <Text style={styles.detailValue}>{totalQuantity} {unit}</Text>
           </View>
           <View style={styles.detailBlock}>
             <Text style={styles.detailLabel}>Price</Text>
@@ -104,6 +178,14 @@ const IngredientDetailScreen: React.FC = () => {
           </Text>
         </View>
       </View>
+
+      {/* Use the modal component */}
+      <EditModal
+        visible={isModalVisible}
+        onClose={toggleModal}
+        ingredientId={id} // Pass all items for the ingredient
+        onSuccess={handleSuccess}
+      />
     </View>
   );
 };
@@ -151,6 +233,13 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     fontFamily: 'Poppins-Regular',
+  },
+  editButton: {
+    position: 'absolute',
+    right: 0,
+    top: 60,
+    padding: 10,
+    backgroundColor: '#f5f5f5',
   },
   expiryText: {
     fontSize: 16,

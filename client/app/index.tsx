@@ -12,12 +12,17 @@ import { useAuth} from '../components/AuthProvider';
 import HomeScreen from './screens/HomeScreen';
 import Dashboard from './screens/nutritionist/Dashboard';
 
+import 'react-native-gesture-handler'; // Add this import at the top
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   const { isAuthenticated, loading } = useAuth();
 
   return (
+
+    <GestureHandlerRootView style={{ flex: 1 }}>
 
     <Stack.Navigator initialRouteName="SplashScreen" screenOptions={{
       headerShown: false, // This will hide the header
@@ -32,6 +37,6 @@ export default function App() {
         {/* <Stack.Screen name="HealthProfileScreen" component={HealthProfileScreen} /> 
         <Stack.Screen name="HealthGoalsSelection" component={HealthGoalsSelection} /> */}
     </Stack.Navigator>
-
+    </GestureHandlerRootView>
   );
 }
