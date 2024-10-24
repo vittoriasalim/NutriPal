@@ -30,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
     carbohydrate: {
       type: DataTypes.DOUBLE,
       allowNull: true
+    },
+    image: {
+      type: DataTypes.TEXT,
+      allowNull: true
     }
   }, {
     sequelize,
