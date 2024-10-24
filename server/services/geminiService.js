@@ -35,8 +35,9 @@ async function generateMealPlan(clientInfo) {
     Generate a week of meal plan for a person who is ${weight} kg and ${height} cm tall.
     These are their health goals: ${healthGoals.join(", ")}.
     Their dietary preferences include ${dietaryPreferences.join(", ")}. You should not include any
-    food using the items that the person is allergic to. Please include a link to an image which
-    represents each food item. The calorie is in kCal, the protein, fat and carbohydrate are in grams.
+    food using the items that the person is allergic to. Please include a link to an image from Unsplash
+    which best represents each food item.
+    The calorie is in kCal, the protein, fat and carbohydrate are in grams.
     For calorie, protein, fat and carbohydrate only giving a numerical number.
     Please provide a balanced meal plan for a week.
     Please return your response in the following format...

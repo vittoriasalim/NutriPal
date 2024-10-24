@@ -12,19 +12,6 @@ const MealPlanScreen = () => {
   const [userData, setUserData] = useState(null);
   const [newMealPlan, setMealPlan] = useState(null);
 
-  // Function to fetch the meal plan from the backend
-  // const fetchMealPlan = async (userId) => {
-  //   try {
-  //     console.log("FETCH MEAL PLAN");
-  //     const response = await apiService.postData(`/api/meal_plan/${userId}`, {}); // Adjust based on your API endpoint
-  //     //setMealPlan(response.result); // Set the fetched meal plan in state
-  //     console.log("MEAL PLAN...");
-  //     console.log(response);
-  //   } catch (error) {
-  //     console.error('Error fetching meal plan:', error);
-  //   }
-  // };
-
   // Function to retrieve user data from AsyncStorage
   const getUserData = async () => {
     try {
