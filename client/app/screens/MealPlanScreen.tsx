@@ -1,11 +1,57 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { mealPlan } from '../../assets/mealPlanTestData';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { MealStackParamList } from '@/types/navigation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import apiService from '@/services/api';
+import { getMealPlan } from '@/services/meal_plans';
 
 const MealPlanScreen = () => {
+  const [userData, setUserData] = useState(null);
+  const [newMealPlan, setMealPlan] = useState(null);
+
+  // Function to fetch the meal plan from the backend
+  // const fetchMealPlan = async (userId) => {
+  //   try {
+  //     console.log("FETCH MEAL PLAN");
+  //     const response = await apiService.postData(`/api/meal_plan/${userId}`, {}); // Adjust based on your API endpoint
+  //     //setMealPlan(response.result); // Set the fetched meal plan in state
+  //     console.log("MEAL PLAN...");
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.error('Error fetching meal plan:', error);
+  //   }
+  // };
+
+  // Function to retrieve user data from AsyncStorage
+  const getUserData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('user');
+      if (jsonValue !== null) {
+        const user = JSON.parse(jsonValue);
+        console.log('MEAL PLAN SCREEN - User data retrieved:', user);
+        setUserData(user);
+        console.log("going to get meal plan")
+        try {
+          const res = await getMealPlan(user.id);
+          console.log(res);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        console.log('No user data found');
+      }
+    } catch (error) {
+      console.error('Error retrieving user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
   const navigation = useNavigation<NavigationProp<MealStackParamList>>();
 
   const handleViewMore = (day) => {

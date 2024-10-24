@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { mealPlan } from '../../assets/mealPlanTestData';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { MealStackParamList } from '@/types/navigation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MealDetailsScreen = ({ route }) => {
 
