@@ -10,7 +10,7 @@ exports.getMealPlan = async (userId) => {
     console.log("backend/services/mealPlanService.js");
     console.log("Finding client:", userId);
 
-    const clientInfo = await clients.findOne({ where: { userId: userId } });
+    const clientInfo = await clients.findOne({ where: { id: userId } });
     if (!clientInfo) throw new Error('Client info not found');
 
     const clientData = {

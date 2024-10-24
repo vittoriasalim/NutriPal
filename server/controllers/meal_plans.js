@@ -11,7 +11,7 @@ exports.generateMealPlan = async (req, res) => {
 
     try {
         const mealPlan = await mealPlanService.getMealPlan(userId);
-        console.log('Generated meal plan:', JSON.stringify(mealPlan, null, 2));
+        //console.log('Generated meal plan:', JSON.stringify(mealPlan, null, 2));
 
         // Save the formatted meal plan to the database
         await mealPlanService.saveMealPlan(mealPlan, userId);

@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getClientProfile, updateClientById } from '@/services/client';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { HealthStackParamList } from '@/types/navigation';
+import { updateClient } from '@/services/clients';
 
 const HealthGoalsSelection = () => {
 
@@ -214,7 +215,8 @@ const HealthGoalsSelection = () => {
       updatedData.pantryId = clientProfile.pantryId;
 
       // Update client profile
-      await updateClientById(userData.id, updatedData);
+      // await updateClientById(userData.id, updatedData);
+      await updateClient(clientProfile.id, updatedData);
 
       // Update local storage
       await AsyncStorage.setItem('healthGoals', JSON.stringify(updatedData.healthGoals));

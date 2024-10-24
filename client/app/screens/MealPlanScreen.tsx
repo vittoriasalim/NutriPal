@@ -7,6 +7,7 @@ import { MealStackParamList } from '@/types/navigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiService from '@/services/api';
 import { getMealPlan, getLatestWeeklyMealPlan } from '@/services/meal_plans';
+import { getClientByUserId } from '@/services/clients';
 
 interface MealPlan {
   [day: string]: {
@@ -44,6 +45,7 @@ interface MealPlan {
 const MealPlanScreen = () => {
   const [userData, setUserData] = useState(null);
   const [mealPlan, setMealPlan] = useState<MealPlan | null>(null);
+  const [loading, setLoading] = useState(true);
 
   // Function to retrieve user data from AsyncStorage
   const getUserData = async () => {
@@ -55,17 +57,27 @@ const MealPlanScreen = () => {
         setUserData(user);
         console.log("going to get meal plan");
         try {
-          const res = await getLatestWeeklyMealPlan(user.id);
-          console.log(res);
+          const clientProfile = await getClientByUserId(user.id);
+          console.log("CLIENT PROFILE", clientProfile);
+
+          // if (clientProfile.healthGoals.length === 0) {
+          //   console.log("NEED HEALTH GOALS FIRST");
+          // }
+
+          const res = await getLatestWeeklyMealPlan(clientProfile.id);
+          //console.log(res);
           setMealPlan(res);
           if (!res) {
-            const getNewMealPlan = await getMealPlan(user.id);
+            const getNewMealPlan = await getMealPlan(clientProfile.id);
             setMealPlan(getNewMealPlan);
           } else {
             setMealPlan(res); // Set the meal plan if it exists
           }
         } catch (err) {
           console.log(err);
+        }
+        finally {
+          setLoading(false); // End loading when data fetching is done
         }
       } else {
         console.log('No user data found');
