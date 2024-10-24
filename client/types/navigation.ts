@@ -56,5 +56,5 @@ export type MealStackParamList = {
       dinner: { name: string; calorie: number; carbohydrate: number; protein: number, fat: number; description: string; }
     };
   };
-  SingleMealDetail: { meal: { name: string; calorie: number; carbohydrate: number; protein: number, fat: number; description: string; } };
+  SingleMealDetail: { meal: { mealName: string; calorie: number; carbohydrate: number; protein: number, fat: number; description: string; }; time: string };
 }

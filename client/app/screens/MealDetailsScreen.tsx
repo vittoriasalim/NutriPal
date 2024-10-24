@@ -40,7 +40,7 @@ const MealDetailsScreen = ({ route }) => {
           key={meal}
           onPress={() => {
             console.log(meals[meal]); // Log the meal data
-            navigation.navigate('SingleMealDetail', { meal: meals[meal] });
+            navigation.navigate('SingleMealDetail', { meal: meals[meal], time: meal });
           }}
         >
           <View style={styles.shadowBox}>
