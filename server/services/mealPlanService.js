@@ -46,7 +46,7 @@ exports.saveMealPlan = async (mealPlan, userId) => {
         for (const mealType of ['breakfast', 'lunch', 'dinner']) {
             const meal = mealsForDay[mealType];
             if (meal) {
-                const { name, description, calorie, protein, fat, carbohydrate, image } = meal;
+                const { name, description, calorie, protein, fat, carbohydrate } = meal;
 
                 const newMeal = await meals.create({
                     mealName: name,
@@ -55,7 +55,7 @@ exports.saveMealPlan = async (mealPlan, userId) => {
                     protein,
                     fats: fat,
                     carbohydrate: carbohydrate,
-                    image: image
+                    image: '',
                 });
                 savedMeals[mealType] = newMeal.id; // Store the saved meal ID
                 console.log(`Saved ${mealType} for ${day}:`, newMeal.id);
