@@ -37,11 +37,49 @@ exports.getLatestWeeklyMealPlan = async (req, res) => {
 
         // Return null if no meal plan is found
         if (!latestMealPlan) {
-            return res.status(200).json({ result: null });
+            return res.status(200).json(null);
         }
 
-        console.log('Latest weekly meal plan:', latestMealPlan);
-        res.status(200).json({ result: latestMealPlan });
+        const weeklyMealPlanJson = {};
+
+        const mondayMeals = await daily_meal_plans.findByPk(latestMealPlan.mondayMealsId);
+        console.log("MONDAY MEALS", mondayMeals);
+        const tuesdayMeals = await daily_meal_plans.findByPk(latestMealPlan.tuesdayMealsId);
+        const wednesdayMeals = await daily_meal_plans.findByPk(latestMealPlan.wednesdayMealsId);
+        const thursdayMeals = await daily_meal_plans.findByPk(latestMealPlan.thursdayMealsId);
+        const fridayMeals = await daily_meal_plans.findByPk(latestMealPlan.fridayMealsId);
+        const saturdayMeals = await daily_meal_plans.findByPk(latestMealPlan.saturdayMealsId);
+        const sundayMeals = await daily_meal_plans.findByPk(latestMealPlan.sundayMealsId);
+
+        const daysInWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const weeklyMealPlanData = [mondayMeals, tuesdayMeals, wednesdayMeals, thursdayMeals, fridayMeals, saturdayMeals, sundayMeals];
+
+        for (let i in weeklyMealPlanData) {
+            console.log(i);
+            const breakfastData = await meals.findByPk(weeklyMealPlanData[i].breakfastMealPlan);
+            const lunchData = await meals.findByPk(weeklyMealPlanData[i].lunchMealPlan);
+            const dinnerData = await meals.findByPk(weeklyMealPlanData[i].dinnerMealPlan);
+            
+            weeklyMealPlanJson[daysInWeek[i]] = {
+                // breakfast: {
+                //     name: breakfastData.mealName,
+                //     description: breakfastData.description,
+                //     calorie: breakfastData.calorie,
+                //     carbohydrate: breakfastData.carbohydrate,
+                //     fat: breakfastData.fats,
+                //     protein: breakfastData.protein,
+                //     image: breakfastData.image,
+                // },
+                breakfast: breakfastData,
+                lunch: lunchData,
+                dinner: dinnerData
+            };
+        }
+
+        console.log(weeklyMealPlanJson);
+        
+        res.status(200).json(weeklyMealPlanJson);
+        // res.status(200).json(latestMealPlan);
     } catch (error) {
         console.error('Error retrieving latest weekly meal plan:', error);
         res.status(500).json({ error: 'Error retrieving latest weekly meal plan' });

@@ -37,7 +37,6 @@ const SingleMealDetail = ({ route }) => {
             <Text style={styles.title}>{titleWords.slice(1).join(' ')}</Text>
           )}
           <Text style={styles.description}>{meal.description}</Text>
-          <Text style={styles.longDescription}>{meal.longDescription}</Text>
         </View>
       </View>
       <View style={styles.imageContainer}>

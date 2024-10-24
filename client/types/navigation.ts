@@ -48,6 +48,13 @@ export type ConsultationStackParamList= {
 
 export type MealStackParamList = {
   MealPlanScreen: undefined;
-  MealDetailsScreen: {day: string};
-  SingleMealDetail: { meal: { name: string; calorie: number; carbohydrate: number; protein: number, fat: number; image: string; description?: string; longDescription?: string; } };
+  MealDetailsScreen: {
+    day: string;
+    meals: {
+      breakfast: { name: string; calorie: number; carbohydrate: number; protein: number, fat: number; description: string; },
+      lunch: { name: string; calorie: number; carbohydrate: number; protein: number, fat: number; description: string; },
+      dinner: { name: string; calorie: number; carbohydrate: number; protein: number, fat: number; description: string; }
+    };
+  };
+  SingleMealDetail: { meal: { name: string; calorie: number; carbohydrate: number; protein: number, fat: number; description: string; } };
 }
