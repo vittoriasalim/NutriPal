@@ -5,6 +5,7 @@ var _clients = require("./clients");
 var _daily_meal_plans = require("./daily_meal_plans");
 var _daily_nutrition = require("./daily_nutrition");
 var _dinner_meals = require("./dinner_meals");
+var _gemini = require("./gemini");
 var _health_progress_reports = require("./health_progress_reports");
 var _ingredients = require("./ingredients");
 var _lunch_meals = require("./lunch_meals");
@@ -26,6 +27,7 @@ function initModels(sequelize) {
   var daily_meal_plans = _daily_meal_plans(sequelize, DataTypes);
   var daily_nutrition = _daily_nutrition(sequelize, DataTypes);
   var dinner_meals = _dinner_meals(sequelize, DataTypes);
+  var gemini = _gemini(sequelize, DataTypes);
   var health_progress_reports = _health_progress_reports(sequelize, DataTypes);
   var ingredients = _ingredients(sequelize, DataTypes);
   var lunch_meals = _lunch_meals(sequelize, DataTypes);
@@ -90,6 +92,8 @@ function initModels(sequelize) {
   recipes.hasMany(recipe_ingredients, { as: "recipe_ingredients", foreignKey: "recipeId"});
   clients.belongsTo(users, { as: "user", foreignKey: "userId"});
   users.hasMany(clients, { as: "clients", foreignKey: "userId"});
+  gemini.belongsTo(users, { as: "user", foreignKey: "userId"});
+  users.hasMany(gemini, { as: "geminis", foreignKey: "userId"});
   nutritionists.belongsTo(users, { as: "user", foreignKey: "userId"});
   users.hasMany(nutritionists, { as: "nutritionists", foreignKey: "userId"});
   pantries.belongsTo(users, { as: "user", foreignKey: "userId"});
@@ -102,6 +106,7 @@ function initModels(sequelize) {
     daily_meal_plans,
     daily_nutrition,
     dinner_meals,
+    gemini,
     health_progress_reports,
     ingredients,
     lunch_meals,

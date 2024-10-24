@@ -12,6 +12,8 @@ const dinnerRoutes = require('./routes/dinner_meals');
 const mealRoutes = require('./routes/meals');
 const pantryRoutes = require('./routes/pantry');
 const messageRoutes = require('./routes/messages');
+const geminiRoutes = require('./routes/gemini');
+
 
 
 app.use(express.json()); // To parse JSON request bodies
@@ -27,6 +29,7 @@ app.use('/lunch_meals', lunchRoutes);
 app.use('/meals', mealRoutes);
 app.use('/pantry', pantryRoutes);
 app.use('/message', messageRoutes);
+app.use('/gemini', geminiRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
