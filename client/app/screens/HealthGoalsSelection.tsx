@@ -160,6 +160,15 @@ const HealthGoalsSelection = () => {
       setIsErrorVisible(true);
       return;
     }
+
+    if (selectedGoals.includes('Weight Loss')) {
+      const weightLoss = parseFloat(weightLossAmount);
+      if (isNaN(weightLoss) || weightLoss <= 0 || weightLoss > currentWeight * 0.2) {
+        setError('Please enter a valid amount for weight loss (Not more than 20% of your current weight).');
+        setIsErrorVisible(true);
+        return;
+      }
+    }
   
     if (selectedGoals.includes('Allergy Management')) {
       const allergiesList = Object.keys(allergies).filter(allergy => allergies[allergy]);
@@ -255,8 +264,25 @@ const HealthGoalsSelection = () => {
       return;
     }
 
+    const weight = parseFloat(currentWeight);
+    const height = parseFloat(currentHeight);
+
+    if (isNaN(weight) || weight <= 0 || weight > 500) {
+      setError('Please enter a valid weight (1 - 500 kg).');
+      setIsErrorVisible(true);
+      return;
+    }
+
+    if (isNaN(height) || height <= 0 || height > 250) {
+      setError('Please enter a valid height (1 - 250 cm).');
+      setIsErrorVisible(true);
+      return;
+    }
+
+
     if (currentSlide < 1) {
       setCurrentSlide(currentSlide + 1);
+      setIsErrorVisible(false);
     }
   };
 
