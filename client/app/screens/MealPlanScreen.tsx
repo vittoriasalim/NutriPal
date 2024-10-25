@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
-//import { mealPlan } from '../../assets/mealPlanTestData';
+import { defaultMealPlan } from '../../assets/defaultMealPlan';
 import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { MealStackParamList } from '@/types/navigation';
@@ -8,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiService from '@/services/api';
 import { getMealPlan, getLatestWeeklyMealPlan } from '@/services/meal_plans';
 import { getClientByUserId } from '@/services/clients';
+import { useCallback } from 'react';
 
 interface MealPlan {
   [day: string]: {
@@ -47,49 +49,57 @@ const MealPlanScreen = () => {
   const [mealPlan, setMealPlan] = useState<MealPlan | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Function to retrieve user data from AsyncStorage
   const getUserData = async () => {
+    setLoading(true); // Start loading before fetching
+  
     try {
       const jsonValue = await AsyncStorage.getItem('user');
       if (jsonValue !== null) {
         const user = JSON.parse(jsonValue);
         console.log('MEAL PLAN SCREEN - User data retrieved:', user);
         setUserData(user);
-        console.log("going to get meal plan");
+  
         try {
           const clientProfile = await getClientByUserId(user.id);
-          console.log("CLIENT PROFILE", clientProfile);
-
-          // if (clientProfile.healthGoals.length === 0) {
-          //   console.log("NEED HEALTH GOALS FIRST");
-          // }
-
-          const res = await getLatestWeeklyMealPlan(clientProfile.id);
-          //console.log(res);
-          setMealPlan(res);
-          if (!res) {
-            const getNewMealPlan = await getMealPlan(clientProfile.id);
-            setMealPlan(getNewMealPlan);
+          console.log("going to get meal plan");
+  
+          // If user did not set up health profile, give suggested meal
+          if (!clientProfile.healthGoals || clientProfile.healthGoals.length === 0) {
+            setMealPlan(defaultMealPlan);
           } else {
-            setMealPlan(res); // Set the meal plan if it exists
+            const res = await getLatestWeeklyMealPlan(clientProfile.id);
+            if (res) {
+              setMealPlan(res); // Set the meal plan if it exists
+            } else {
+              setMealPlan(defaultMealPlan);
+            }
           }
         } catch (err) {
-          console.log(err);
-        }
-        finally {
-          setLoading(false); // End loading when data fetching is done
+          console.log('Error fetching client profile:', err);
         }
       } else {
         console.log('No user data found');
       }
     } catch (error) {
       console.error('Error retrieving user data:', error);
+    } finally {
+      setLoading(false); // End loading when data fetching is done
     }
   };
+  
 
-  useEffect(() => {
-    getUserData();
-  }, []);
+   // useEffect to load user data when the component mounts
+   useFocusEffect(
+    useCallback(() => {
+      // Call getUserData every time the screen comes into focus
+      getUserData();
+
+      return () => {
+        console.log('Cleanup logic');
+        // Clean-up logic if needed
+      };
+    }, [mealPlan]) // Add dependencies like 'update' to trigger re-render when it changes
+  );
 
   const navigation = useNavigation<NavigationProp<MealStackParamList>>();
 

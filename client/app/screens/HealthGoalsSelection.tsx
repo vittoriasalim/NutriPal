@@ -7,6 +7,7 @@ import { getClientProfile, updateClientById } from '@/services/client';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { HealthStackParamList } from '@/types/navigation';
 import { updateClient } from '@/services/clients';
+import { getMealPlan } from '@/services/meal_plans';
 
 const HealthGoalsSelection = () => {
 
@@ -231,6 +232,13 @@ const HealthGoalsSelection = () => {
       navigation.navigate('HealthGoalsSelectionSuccess');
     } else {
       console.log('No existing client profile found.');
+    }
+
+    // generate new meal plan
+    try {
+      const newMealPlan = await getMealPlan(clientProfile.id);
+    } catch (err) {
+      throw(err);
     }
   };
 
