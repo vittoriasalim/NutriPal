@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getClientProfile, updateClientById } from '@/services/client';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { HealthStackParamList } from '@/types/navigation';
+import { updateClient } from '@/services/clients';
+import { getMealPlan } from '@/services/meal_plans';
 
 const HealthGoalsSelection = () => {
 
@@ -158,6 +160,15 @@ const HealthGoalsSelection = () => {
       setIsErrorVisible(true);
       return;
     }
+
+    if (selectedGoals.includes('Weight Loss')) {
+      const weightLoss = parseFloat(weightLossAmount);
+      if (isNaN(weightLoss) || weightLoss <= 0 || weightLoss > currentWeight * 0.2) {
+        setError('Please enter a valid amount for weight loss (Not more than 20% of your current weight).');
+        setIsErrorVisible(true);
+        return;
+      }
+    }
   
     if (selectedGoals.includes('Allergy Management')) {
       const allergiesList = Object.keys(allergies).filter(allergy => allergies[allergy]);
@@ -214,7 +225,8 @@ const HealthGoalsSelection = () => {
       updatedData.pantryId = clientProfile.pantryId;
 
       // Update client profile
-      await updateClientById(userData.id, updatedData);
+      // await updateClientById(userData.id, updatedData);
+      await updateClient(clientProfile.id, updatedData);
 
       // Update local storage
       await AsyncStorage.setItem('healthGoals', JSON.stringify(updatedData.healthGoals));
@@ -229,6 +241,13 @@ const HealthGoalsSelection = () => {
       navigation.navigate('HealthGoalsSelectionSuccess');
     } else {
       console.log('No existing client profile found.');
+    }
+
+    // generate new meal plan
+    try {
+      const newMealPlan = await getMealPlan(clientProfile.id);
+    } catch (err) {
+      throw(err);
     }
   };
 
@@ -245,8 +264,25 @@ const HealthGoalsSelection = () => {
       return;
     }
 
+    const weight = parseFloat(currentWeight);
+    const height = parseFloat(currentHeight);
+
+    if (isNaN(weight) || weight <= 0 || weight > 500) {
+      setError('Please enter a valid weight (1 - 500 kg).');
+      setIsErrorVisible(true);
+      return;
+    }
+
+    if (isNaN(height) || height <= 0 || height > 250) {
+      setError('Please enter a valid height (1 - 250 cm).');
+      setIsErrorVisible(true);
+      return;
+    }
+
+
     if (currentSlide < 1) {
       setCurrentSlide(currentSlide + 1);
+      setIsErrorVisible(false);
     }
   };
 

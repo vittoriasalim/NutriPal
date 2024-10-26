@@ -1,43 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { mealPlan } from '../../assets/mealPlanTestData';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { MealStackParamList } from '@/types/navigation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MealDetailsScreen = ({ route }) => {
-
   const navigation = useNavigation<NavigationProp<MealStackParamList>>();
-  const { day } = route.params; 
-  const meals = mealPlan[day];
+  const { day, meals } = route.params; 
+
+  // Function to truncate the description after 10 words
+  const truncateDescription = (description) => {
+    const words = description.split(' ');
+    if (words.length > 10) {
+      return words.slice(0, 10).join(' ') + '...';
+    }
+    return description;
+  };
+
+  // Function to get the appropriate image source based on the meal type
+  const getMealImage = (mealType) => {
+    switch (mealType) {
+      case 'breakfast':
+        return require('../../assets/images/breakfast.jpg');
+      case 'lunch':
+        return require('../../assets/images/lunch.jpg');
+      case 'dinner':
+        return require('../../assets/images/dinner.jpg');
+      default:
+        return require('../../assets/images/dinner.jpg');
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{day.charAt(0).toUpperCase() + day.slice(1)} Meals</Text>
-        {Object.keys(meals).map((meal) => (
-            <TouchableOpacity
-                key={meal}
-                onPress={() => {
-                    console.log(meals[meal]); // Log the meal data
-                    navigation.navigate('SingleMealDetail', { meal: meals[meal] });
-                }}
-            >
-            <View style={styles.shadowBox}>
-                <View style={styles.mealCard}>
-                <View style={styles.descriptionContainer}>
-                    <Text style={styles.mealType}>{meal.charAt(0).toUpperCase() + meal.slice(1)}</Text>
-                    <Text style={styles.mealName}>{meals[meal].name}</Text>
-                    <Text style={styles.calories}>{`${meals[meal].calorie} kcal`}</Text>
-                    {/* Include a description if you have one */}
-                    <Text style={styles.description}>{meals[meal].description}</Text>
-                </View>
-                <Image
-                    source={require('../../assets/images/mockMealPlan/steak.jpg')} // Use dynamic image source
-                    style={styles.image}
-                />
-                </View>
+      {Object.keys(meals).map((meal) => (
+        <TouchableOpacity
+          key={meal}
+          onPress={() => {
+            console.log(meals[meal]); // Log the meal data
+            navigation.navigate('SingleMealDetail', { meal: meals[meal], time: meal });
+          }}
+        >
+          <View style={styles.shadowBox}>
+            <View style={styles.mealCard}>
+              <View style={styles.descriptionContainer}>
+                <Text style={styles.mealType}>{meal.charAt(0).toUpperCase() + meal.slice(1)}</Text>
+                <Text style={styles.mealName}>{meals[meal].mealName}</Text>
+                <Text style={styles.calories}>{`${meals[meal].calorie} kcal`}</Text>
+                {/* Use the truncation function for the description */}
+                <Text style={styles.description}>{truncateDescription(meals[meal].description)}</Text>
+              </View>
+              <Image
+                source={getMealImage(meal)} // Use the function to get the correct image source
+                style={styles.image}
+              />
             </View>
-            </TouchableOpacity>
-        ))}
+          </View>
+        </TouchableOpacity>
+      ))}
     </ScrollView>
   );
 };
@@ -58,7 +80,7 @@ const styles = StyleSheet.create({
   image: {
     width: '50%', 
     height: '100%', 
-    resizeMode: 'cover', // Ensure the image fills the space correctly
+    resizeMode: 'cover',
   },
   mealCard: {
     flexDirection: 'row',
@@ -69,7 +91,6 @@ const styles = StyleSheet.create({
     height: 200,
   },
   shadowBox: {
-    // Shadow for iOS
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -77,7 +98,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    // Elevation for Android
     elevation: 5,
   },
   descriptionContainer: {
@@ -105,7 +125,6 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 10,
-    //color: '#888',
     fontFamily: 'Poppins-Regular',
     letterSpacing: 1,
   },

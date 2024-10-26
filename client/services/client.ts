@@ -50,6 +50,8 @@ export const updateUserProfile = async (userId: number, userData: Partial<User>)
   };
 
 export const updateClientById = async (id: number, clientData: Partial<Client>): Promise<Client> => {
+
+    console.log("SERVICES Received", id, clientData);
     try {
         const response = await apiService.putData<Client>(`/clients/${id}`, clientData);
         console.log('Client updated successfully:', response);

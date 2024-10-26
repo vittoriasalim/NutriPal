@@ -19,6 +19,7 @@ var _pantry_recipes = require("./pantry_recipes");
 var _recipe_ingredients = require("./recipe_ingredients");
 var _recipes = require("./recipes");
 var _users = require("./users");
+var _weekly_meal_plans = require("./weekly_meal_plans");
 
 function initModels(sequelize) {
   var SequelizeMeta = _SequelizeMeta(sequelize, DataTypes);
@@ -41,6 +42,7 @@ function initModels(sequelize) {
   var recipe_ingredients = _recipe_ingredients(sequelize, DataTypes);
   var recipes = _recipes(sequelize, DataTypes);
   var users = _users(sequelize, DataTypes);
+  var weekly_meal_plans = _weekly_meal_plans(sequelize, DataTypes);
 
   clients.belongsToMany(nutritionists, { as: 'nutritionistId_nutritionists', through: nutritionist_clients, foreignKey: "clientId", otherKey: "nutritionistId" });
   nutritionists.belongsToMany(clients, { as: 'clientId_clients', through: nutritionist_clients, foreignKey: "nutritionistId", otherKey: "clientId" });
@@ -54,6 +56,22 @@ function initModels(sequelize) {
   clients.hasMany(messages, { as: "messages", foreignKey: "clientId"});
   nutritionist_clients.belongsTo(clients, { as: "client", foreignKey: "clientId"});
   clients.hasMany(nutritionist_clients, { as: "nutritionist_clients", foreignKey: "clientId"});
+  weekly_meal_plans.belongsTo(clients, { as: "client", foreignKey: "clientId"});
+  clients.hasMany(weekly_meal_plans, { as: "weekly_meal_plans", foreignKey: "clientId"});
+  weekly_meal_plans.belongsTo(daily_meal_plans, { as: "fridayMeal", foreignKey: "fridayMealsId"});
+  daily_meal_plans.hasMany(weekly_meal_plans, { as: "weekly_meal_plans", foreignKey: "fridayMealsId"});
+  weekly_meal_plans.belongsTo(daily_meal_plans, { as: "mondayMeal", foreignKey: "mondayMealsId"});
+  daily_meal_plans.hasMany(weekly_meal_plans, { as: "mondayMeals_weekly_meal_plans", foreignKey: "mondayMealsId"});
+  weekly_meal_plans.belongsTo(daily_meal_plans, { as: "saturdayMeal", foreignKey: "saturdayMealsId"});
+  daily_meal_plans.hasMany(weekly_meal_plans, { as: "saturdayMeals_weekly_meal_plans", foreignKey: "saturdayMealsId"});
+  weekly_meal_plans.belongsTo(daily_meal_plans, { as: "sundayMeal", foreignKey: "sundayMealsId"});
+  daily_meal_plans.hasMany(weekly_meal_plans, { as: "sundayMeals_weekly_meal_plans", foreignKey: "sundayMealsId"});
+  weekly_meal_plans.belongsTo(daily_meal_plans, { as: "thursdayMeal", foreignKey: "thursdayMealsId"});
+  daily_meal_plans.hasMany(weekly_meal_plans, { as: "thursdayMeals_weekly_meal_plans", foreignKey: "thursdayMealsId"});
+  weekly_meal_plans.belongsTo(daily_meal_plans, { as: "tuesdayMeal", foreignKey: "tuesdayMealsId"});
+  daily_meal_plans.hasMany(weekly_meal_plans, { as: "tuesdayMeals_weekly_meal_plans", foreignKey: "tuesdayMealsId"});
+  weekly_meal_plans.belongsTo(daily_meal_plans, { as: "wednesdayMeal", foreignKey: "wednesdayMealsId"});
+  daily_meal_plans.hasMany(weekly_meal_plans, { as: "wednesdayMeals_weekly_meal_plans", foreignKey: "wednesdayMealsId"});
   breakfast_meals.belongsTo(daily_nutrition, { as: "dailyNutrition", foreignKey: "dailyNutritionId"});
   daily_nutrition.hasMany(breakfast_meals, { as: "breakfast_meals", foreignKey: "dailyNutritionId"});
   dinner_meals.belongsTo(daily_nutrition, { as: "dailyNutrition", foreignKey: "dailyNutritionId"});
@@ -120,6 +138,7 @@ function initModels(sequelize) {
     recipe_ingredients,
     recipes,
     users,
+    weekly_meal_plans,
   };
 }
 module.exports = initModels;

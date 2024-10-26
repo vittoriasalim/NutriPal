@@ -13,6 +13,7 @@ const mealRoutes = require('./routes/meals');
 const pantryRoutes = require('./routes/pantry');
 const messageRoutes = require('./routes/messages');
 const geminiRoutes = require('./routes/gemini');
+const mealPlansRoutes = require('./routes/meal_plans');
 
 
 
@@ -30,6 +31,7 @@ app.use('/meals', mealRoutes);
 app.use('/pantry', pantryRoutes);
 app.use('/message', messageRoutes);
 app.use('/gemini', geminiRoutes);
+app.use('/meal_plans', mealPlansRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
