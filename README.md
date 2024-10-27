@@ -43,22 +43,19 @@ NutriPal leverages a **Retrieval-Augmented Generation (RAG)** framework, integra
 
 ## ⚙️ Configuration
 
-**Node.js** ![Node.js](https://img.icons8.com/color/20/000000/nodejs.png)  
+- **Node.js** ![Node.js](https://img.icons8.com/color/20/000000/nodejs.png)  
   Recommended version: v14.x or higher. Node.js is required to run the backend server and manage dependencies.
 
-**npm** ![npm](https://img.icons8.com/color/20/000000/npm.png)  
+- **npm** ![npm](https://img.icons8.com/color/20/000000/npm.png)  
   Node Package Manager, which usually comes with Node.js. Use npm to manage project dependencies.
 
-**React Native CLI** or **Expo CLI** ![React Native](https://img.icons8.com/color/20/000000/react-native.png)  
+- **React Native CLI** or **Expo CLI** ![React Native](https://img.icons8.com/color/20/000000/react-native.png)  
   React Native CLI for native builds or Expo CLI for a simplified setup. Choose based on your preference for building mobile applications.
 
-**Xcode** (macOS only) ![Xcode](https://img.icons8.com/color/20/000000/xcode.png)  
+- **Xcode** (macOS only) ![Xcode](https://img.icons8.com/color/20/000000/xcode.png)  
   Required to run the iOS simulator for testing iOS builds. Available on the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835).
 
-**Android Studio** ![Android Studio](https://img.icons8.com/color/20/000000/android-studio--v3.png)  
-  Necessary for running the Android emulator and building Android APKs. Download from the [Android Developer website](https://developer.android.com/studio).
-
-**Database Software** (PostgreSQL) ![Database](https://img.icons8.com/color/20/000000/database.png)  
+- **Database Software** (PostgreSQL) ![Database](https://img.icons8.com/color/20/000000/database.png)  
   Choose a relational database for production, such as PostgreSQL or MySQL, and set it up to handle NutriPal’s data.
 1. **Install Dependencies**:
 
