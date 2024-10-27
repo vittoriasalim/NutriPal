@@ -3,10 +3,10 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addColumn(
-      { tableName: 'meals', schema: 'nutripal' }, // Adjust the schema if necessary
-      'image',
+      { tableName: 'ingredients', schema: 'nutripal' }, // Adjust the schema if necessary
+      'healthBenefits',
       {
-        type: Sequelize.TEXT,  // Using TEXT as storageInstructions can be a lengthy text
+        type: Sequelize.TEXT,  // Using TEXT as healthBenefits can be a lengthy description
         allowNull: true,       // Set allowNull based on your requirements
       }
     );
@@ -14,8 +14,8 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeColumn(
-      { tableName: 'meals', schema: 'nutripal' }, 
-      'image'
+      { tableName: 'ingredients', schema: 'nutripal' }, 
+      'healthBenefits'
     );
   }
 };

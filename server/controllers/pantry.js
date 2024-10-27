@@ -1,6 +1,10 @@
 const sequelize = require('../config/database'); // Adjust the path as necessary
 const { pantries, pantry_ingredients, ingredients } = require('../models/init-models')(sequelize);
+
+const geminiService = require('../services/geminiService');
+
 const { generateRecipeWithIngredients } = require('../services/geminiService'); // Function to call LLM
+
 
 // Helper function to ensure that a pantry exists for the given userId
 const ensurePantryExists = async (userId, transaction) => {
@@ -104,16 +108,35 @@ exports.addIngredientToPantry = async (req, res) => {
   
       // If the ingredient doesn't exist, create a new one with default values
       if (!ingredient) {
+
+        console.log(`Ingredient ${ingredientName} not found. Querying LLM for details...`);
+
+        const llmIngredientDetails = await geminiService.queryLLMForIngredient(ingredientName);
+
+        // Create the new ingredient in the database with the LLM details
         ingredient = await ingredients.create({
-          ingredientName,
-          description: '', // Default values for now
-          calorie: 0,
-          protein: 0,
-          fats: 0,
-          carbohydrate: 0,
-          amount: 0,
-          food_type: 'Meat', // You can change the default values as needed
+          ingredientName: llmIngredientDetails.ingredientName,
+          description: llmIngredientDetails.description || '', 
+          calorie: llmIngredientDetails.calorie || 0,
+          protein: llmIngredientDetails.protein || 0,
+          fats: llmIngredientDetails.fats || 0,
+          carbohydrate: llmIngredientDetails.carbohydrate || 0,
+          amount: llmIngredientDetails.price || 100.00, // Defaulting to 100g for nutritional values per 100g
+          food_type: llmIngredientDetails.food_type || 'Vegetable', // You can change the default values as needed
+          storageInstructions: llmIngredientDetails.storageInstructions || '',
+          healthBenefits: llmIngredientDetails.healthBenefits || '',
         });
+       
+        // ingredient = await ingredients.create({
+        //   ingredientName,
+        //   description: '', // Default values for now
+        //   calorie: 0,
+        //   protein: 0,
+        //   fats: 0,
+        //   carbohydrate: 0,
+        //   amount: 0,
+        //   food_type: 'Meat', // You can change the default values as needed
+        // });
       }
   
       // Now, add the ingredient to the user's pantry

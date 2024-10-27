@@ -47,6 +47,10 @@ module.exports = function(sequelize, DataTypes) {
     storageInstructions: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    healthBenefits: {
+      type: DataTypes.TEXT,
+      allowNull: true
     }
   }, {
     sequelize,

@@ -63,6 +63,60 @@ async function generateMealPlan(clientInfo) {
   return queryGeminiApi(prompt);
 }
 
+
+// Mock function to simulate querying the LLM API for ingredient details
+const queryLLMForIngredient = async (ingredientName) => {
+  try {
+    // The prompt sent to the LLM to retrieve ingredient details
+    const prompt = `
+      Please provide the nutritional details of the ingredient: ${ingredientName}.
+      I need:
+      - Calorie content per 100g.
+      - Protein content per 100g.
+      - Fat content per 100g.
+      - Carbohydrate content per 100g.
+      - Unit of measurement (e.g., grams, milliliters).
+      - Brief description of the ingredient.
+      - Storage instructions MAX (255 characters).
+      - The approximate price of 100g (or the typical unit).
+      - Food_type which can be Vegetable, Meat or Seafood
+      - Health Benefits information
+
+      Please return the response in strict JSON format with double quotes around property names and values. Use this structure:
+
+      {
+        "ingredientName": "${ingredientName}",
+        "calorie": 0,
+        "protein": 0,
+        "fats": 0,
+        "carbohydrate": 0,
+        "unit": "g", // Example unit
+        "price": 0,  // Example price per unit
+        "description": "",
+        "storageInstructions": "",
+        "food_type": "",
+        "healthBenefits": ""
+      }
+    `;
+
+    // Replace this with the actual LLM API call
+    const response = await queryGeminiApi(prompt); // Replace with actual LLM API call
+
+    // Check if the response starts with ```json and ends with ```
+    if (response.startsWith('```json') && response.endsWith('```')) {
+      // Remove the triple backticks from the start and end
+      return response.slice(7, -3);
+    }
+
+    // Return the recipes as is, if no backticks are found
+    return JSON.parse(response);
+    
+  } catch (error) {
+    console.error('Error querying LLM for ingredient:', error);
+    throw new Error('Failed to retrieve ingredient details.');
+  }
+};
+
 // Async function to generate recipes using LLM based on pantry ingredients
 async function generateRecipeWithIngredients(ingredients) {
   try {
@@ -168,9 +222,14 @@ async function generateRecipeWithIngredients(ingredients) {
 
 
 
+
 module.exports = {
   queryGeminiApi,
   queryRAGSystem,
   generateMealPlan,
+
+  queryLLMForIngredient,
+
   generateRecipeWithIngredients,
+
 };
