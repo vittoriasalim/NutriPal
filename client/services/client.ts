@@ -23,7 +23,7 @@ export const getClientProfile = async (userId: number): Promise<Client> => {
       console.log('Response received:', response);
       return response;
     } catch (error) {
-        console.error('Error fetching client profile:', error); // Log the error
+        console.log('Error fetching client profile:', error); // Log the error
         throw error;
     }
 };
@@ -34,7 +34,7 @@ export const getAllClients = async (): Promise<Client[]> => {
         console.log('Fetched all clients:', response);
         return response;
     } catch (error) {
-        console.error('Error fetching all clients:', error);
+        console.log('Error fetching all clients:', error);
         throw error; // Propagate the error for further handling
     }
 };
@@ -57,7 +57,7 @@ export const updateClientById = async (id: number, clientData: Partial<Client>):
         console.log('Client updated successfully:', response);
         return response; // Return the updated client data
     } catch (error) {
-        console.error('Error updating client profile:', error);
+        console.log('Error updating client profile:', error);
         throw error; // Propagate the error for further handling
     }
 };

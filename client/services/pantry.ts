@@ -6,7 +6,7 @@ export const addIngredientToPantry = async (userId: number, ingredientData: { in
     const response = await apiService.postData(`/pantry/${userId}/ingredient`, ingredientData);
     return response;
   } catch (error) {
-    console.error("Error adding ingredient to pantry:", error);
+    console.log("Error adding ingredient to pantry:", error);
     throw error;
   }
 };
@@ -17,7 +17,7 @@ export const getPantryForUser = async (userId: number) => {
     const response = await apiService.fetchData(`/pantry/${userId}`);
     return response;
   } catch (error) {
-    console.error("Error fetching pantry for user:", error);
+    console.log("Error fetching pantry for user:", error);
     throw error;
   }
 };
@@ -29,7 +29,7 @@ export const getPantryIngredient = async (userId: number, ingredientId: number) 
     console.log(response);
     return response;
   } catch (error) {
-    console.error("Error fetching specific pantry ingredient:", error);
+    console.log("Error fetching specific pantry ingredient:", error);
     throw error;
   }
 };
@@ -39,7 +39,7 @@ export const updatePantryIngredient = async (userId, ingredientId, updateData) =
     const response = await apiService.putData(`/pantry/${userId}/pantryingredient/${ingredientId}`, updateData);
     return response;
   } catch (error) {
-    console.error("Error updating pantry ingredient:", error);
+    console.log("Error updating pantry ingredient:", error);
     throw error;
   }
 };
@@ -50,7 +50,7 @@ export const removePantryIngredient = async (userId, ingredientId) => {
     const response = await apiService.deleteData(`/pantry/${userId}/pantryIngredient/${ingredientId}`);
     return response;
   } catch (error) {
-    console.error("Error removing ingredient from pantry:", error);
+    console.log("Error removing ingredient from pantry:", error);
     throw error;
   }
 };
@@ -60,7 +60,7 @@ export const deleteAllIngredients = async (userId, ingredientId) => {
     const response = await apiService.deleteData(`/pantry/${userId}/ingredient/${ingredientId}/all`);
     return response;
   } catch (error) {
-    console.error("Error deleting all ingredients:", error);
+    console.log("Error deleting all ingredients:", error);
     throw error;
   }
 };
@@ -72,7 +72,7 @@ export const generateRecipesWithPantry = async (userId: number) => {
     console.log(JSON.parse(response));
     return JSON.parse(response);  // Return the generated recipes from the backend
   } catch (error) {
-    console.error("Error generating recipes:", error);
+    console.log("Error generating recipes:", error);
     throw error;
   }
 };

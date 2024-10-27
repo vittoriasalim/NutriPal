@@ -16,6 +16,7 @@ export type RootStackParamList = {
     IngredientDetailScreen: { id: number }; // Example if you're passing `id`
     PantryRecipe: undefined;
     PantryRecipeDetail: { recipe: any }; // Updated name and type
+    PantryRecipeScreen:undefined;
   };
   
 

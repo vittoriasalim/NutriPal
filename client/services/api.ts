@@ -24,15 +24,15 @@ class ApiService {
       const axiosError = error as AxiosError;
       if (axiosError.response) {
         // Server responded with a status code outside 2xx
-        // console.error(`Error: ${axiosError.response.status} - ${axiosError.response.data}`);
+        // console.log(`Error: ${axiosError.response.status} - ${axiosError.response.data}`);
         console.log("error")
       } else if (axiosError.request) {
         // No response was received after the request was made
-        // console.error('No response received from server:', axiosError.request);
+        // console.log('No response received from server:', axiosError.request);
         console.log("error")
       } else {
         // Something happened while setting up the request
-        // console.error('Error setting up request:', axiosError.message);
+        // console.log('Error setting up request:', axiosError.message);
         console.log("error")
       }
     } else {
@@ -66,7 +66,7 @@ class ApiService {
       console.log(`Response from ${endpoint}:`, JSON.stringify(response.data, null, 2));
       return response.data;
     } catch (error: any) {
-      console.error('Error in postData:', error.message || error); // Log the error details
+      console.log('Error in postData:', error.message || error); // Log the error details
       return this.handleError(error);
     }
   }

@@ -32,7 +32,7 @@ const PantryRecipeScreen: React.FC = () => {
         Alert.alert('Error', 'No user data found.');
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.log('Error fetching data:', error);
       Alert.alert('Error', 'Failed to load user data.');
     }
   };
@@ -55,7 +55,7 @@ const PantryRecipeScreen: React.FC = () => {
         setRecipes(generatedRecipes);
       }
     } catch (error) {
-      console.error('Error retrieving recipes:', error);
+      console.log('Error retrieving recipes:', error);
       Alert.alert('Error', 'Failed to retrieve recipes.');
     } finally {
       setHasFetchedRecipes(true); // Mark as fetched

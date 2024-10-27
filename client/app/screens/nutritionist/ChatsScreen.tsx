@@ -28,7 +28,7 @@ const ChatsScreen = ({ clientId, nutritionistId }) => {
         // Clear the input field
         setInputText('');
       } catch (error) {
-        console.error('Error sending message:', error);
+        console.log('Error sending message:', error);
       }
     }
   };

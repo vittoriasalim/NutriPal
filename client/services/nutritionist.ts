@@ -16,7 +16,7 @@ export const getAllNutritionists = async (): Promise<Nutritionist[]> => {
         console.log('Fetched all nutritionists:', response);
         return response;
     } catch (error) {
-        console.error('Error fetching all nutritionists:', error);
+        console.log('Error fetching all nutritionists:', error);
         throw error; // Propagate the error for further handling
     }
 };

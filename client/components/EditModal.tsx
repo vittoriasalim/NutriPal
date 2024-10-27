@@ -48,7 +48,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onClose, ingredientId, o
         Alert.alert('Error', 'No user data found.');
       }
     } catch (error) {
-      console.error('Error fetching ingredient data:', error);
+      console.log('Error fetching ingredient data:', error);
       Alert.alert('Error', 'Failed to load ingredient data.');
     } finally {
       setLoading(false);
@@ -93,7 +93,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onClose, ingredientId, o
       }
       
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.log('Error deleting item:', error);
       Alert.alert('Error', 'Failed to delete the ingredient.');
     }
   };
@@ -109,7 +109,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onClose, ingredientId, o
       Alert.alert('Success', 'All ingredients removed successfully!');
       
     } catch (error) {
-      console.error('Error deleting all ingredients:', error);
+      console.log('Error deleting all ingredients:', error);
       Alert.alert('Error', 'Failed to delete all ingredients.');
     }
   };
