@@ -43,21 +43,16 @@ NutriPal leverages a **Retrieval-Augmented Generation (RAG)** framework, integra
 
 ## ⚙️ Configuration
 
-- **Node.js** ![Node.js](https://img.icons8.com/color/20/000000/nodejs.png)  
-  Recommended version: v14.x or higher. Node.js is required to run the backend server and manage dependencies.
+**Node.js** ![Node.js](https://img.icons8.com/color/20/000000/nodejs.png) Recommended version: v14.x or higher. Node.js is required to run the backend server and manage dependencies.
 
-- **npm** ![npm](https://img.icons8.com/color/20/000000/npm.png)  
-  Node Package Manager, which usually comes with Node.js. Use npm to manage project dependencies.
+**npm** ![npm](https://img.icons8.com/color/20/000000/npm.png) Node Package Manager, which usually comes with Node.js. Use npm to manage project dependencies.
 
-- **React Native CLI** or **Expo CLI** ![React Native](https://img.icons8.com/color/20/000000/react-native.png)  
-  React Native CLI for native builds or Expo CLI for a simplified setup. Choose based on your preference for building mobile applications.
+**React Native CLI** or **Expo CLI** ![React Native](https://img.icons8.com/color/20/000000/react-native.png) React Native CLI for native builds or Expo CLI for a simplified setup. Choose based on your preference for building mobile applications.
 
-- **Xcode** (macOS only) ![Xcode](https://img.icons8.com/color/20/000000/xcode.png)  
-  Required to run the iOS simulator for testing iOS builds. Available on the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835).
+**Xcode** (macOS only) ![Xcode](https://img.icons8.com/color/20/000000/xcode.png) Required to run the iOS simulator for testing iOS builds. Available on the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835).
 
-- **Database Software** (PostgreSQL) ![Database](https://img.icons8.com/color/20/000000/database.png)  
-  Choose a relational database for production, such as PostgreSQL or MySQL, and set it up to handle NutriPal’s data.
-1. **Install Dependencies**:
+**Database Software** (PostgreSQL) ![Database](https://img.icons8.com/color/20/000000/database.png) Choose a relational database for production, such as PostgreSQL or MySQL, and set it up to handle NutriPal’s data.
+1. **Install Dependencies**
 
    NutriPal has separate frontend (client) and backend (server) components, each requiring its own set of dependencies. Follow these steps to ensure all required packages are installed for both parts of the application:
 
@@ -90,7 +85,8 @@ NutriPal leverages a **Retrieval-Augmented Generation (RAG)** framework, integra
    ```bash
    npm install --workspaces
 
-2.	**Environment Variables**: Set up environment variables for sensitive data like API keys and database credentials.
+2.	**Environment Variables**
+Set up environment variables for sensitive data like API keys and database credentials.
 -  **Create a `.env` File** in the root directory of both the `client` and `server` (if necessary), create a file named `.env`. This file will hold all sensitive configuration details that should not be hardcoded into the codebase.
 - **Add Your Environment Variables** in the `.env` file, define the following variables. Update the placeholder values with actual credentials and settings:
 
@@ -110,7 +106,8 @@ NutriPal leverages a **Retrieval-Augmented Generation (RAG)** framework, integra
    PORT=            # Port on which the backend server should run (e.g., 3000)
 	```
 
-3.	**Database**: Configure PostgreSQL as the primary database. Ensure the database is up and running before proceeding to run server.
+3.	**Database** 
+Configure PostgreSQL as the primary database. Ensure the database is up and running before proceeding to run server.
 - **Install Database Software**: If you haven’t already, install PostgreSQL or MySQL:
      - **PostgreSQL**: [Download PostgreSQL](https://www.postgresql.org/download/)
 
@@ -139,11 +136,12 @@ npx sequelize-cli init
 ```bash
 npx sequelize-cli db:migrate
 ```
-3. **Running the Simulators:** To test NutriPal’s mobile app, set up the iOS and Android simulators with these steps. [iOS and Android Simulators](#ios-and-android-simulators)
+3. **Running the Simulators** 
+To test NutriPal’s mobile app, set up the iOS and Android simulators with these steps. [iOS and Android Simulators](#ios-and-android-simulators)
 
 
 
-4. **Run the App**: Instructions for running both frontend and backend servers.
+4. **Run the App**
 
    - **Frontend (Client)**:
      - Navigate to the client folder:
@@ -258,13 +256,11 @@ Database: Choose between PostgreSQL for a robust relational database setup.
 	npx sequelize-cli init
 ```
 
-
-
 ### 📂 MVC Design Pattern
 
 	•	Directory Structure:
 	•	The following structure is used for clarity and scalability:
-
+```bash
 ├── controllers
 ├── models
 ├── views
@@ -272,6 +268,7 @@ Database: Choose between PostgreSQL for a robust relational database setup.
 ├── config
 ├── services
 └── app.js
+```
 
 
 ### 🌿 Feature Branching Workflow
@@ -315,10 +312,9 @@ npm install eslint prettier --save-dev
 
 
 ### 🔐 Environment Variable Management
-
-	•	Secure Environment Variables:
-	•	Use .env files for development and production environments.
-	•	Integrate a package like dotenv to load environment variables:
+- Secure Environment Variables:
+- Use .env files for development and production environments.
+- Integrate a package like dotenv to load environment variables:
 ```bash
 npm install dotenv
 ```
