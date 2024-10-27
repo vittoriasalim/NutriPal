@@ -172,8 +172,8 @@ const PantryScreen: React.FC = () => {
       {/* Generate Recipes Button */}
       <TouchableOpacity 
         style={styles.generateButton} 
-        // onPress={() => navigation.navigate('PantryRecipeScreen', { fromPantryScreen: true })}>
-        onPress={() => navigation.navigate('PantryRecipeDetail', { recipe: fakeRecipe })}>
+        onPress={() => navigation.navigate('PantryRecipeScreen', { fromPantryScreen: true })}>
+        {/* onPress={() => navigation.navigate('PantryRecipeDetail', { recipe: fakeRecipe })}> */}
         <Text style={styles.generateButtonText}>Generate Recipes</Text>
       </TouchableOpacity>
 
