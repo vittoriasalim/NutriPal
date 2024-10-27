@@ -34,7 +34,7 @@ const EditEachIngredientModal: React.FC<EditEachIngredientModalProps> = ({
       setNewQuantity(''); // Initialize new quantity
       setNewExpiryDate(new Date()); // Initialize new expiry date
     } catch (error) {
-      console.error('Error fetching ingredient data:', error);
+      console.log('Error fetching ingredient data:', error);
       Alert.alert('Error', 'Failed to load ingredient data.');
     }
   };
@@ -60,7 +60,7 @@ const EditEachIngredientModal: React.FC<EditEachIngredientModalProps> = ({
       onClose(); // Close the modal
       onSuccess(); // Trigger the onSuccess callback to refresh the data
     } catch (error) {
-      console.error('Error updating ingredient:', error);
+      console.log('Error updating ingredient:', error);
       Alert.alert('Error', 'Failed to update the ingredient. Please try again.');
     } finally {
       setIsLoading(false); // Set loading state to false

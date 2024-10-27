@@ -54,25 +54,11 @@ function CustomTabBar({ state , descriptors, navigation }) {
               ? 'chart-bar'
               : route.name === "Add"
                 ? 'shopping-bag'
+              : route.name === "Pantry"
+                ? 'shopping-bag'
               : "user";
 
-        if (route.name === 'Pantry') {
-          return (
-            <TouchableOpacity
-              key={route.name}
-              accessibilityRole="button"
-              accessibilityState={isFocused ? { selected: true } : {}}
-              accessibilityLabel={options.tabBarAccessibilityLabel}
-              testID={options.tabBarTestID}
-              onPress={onPress}
-              onLongPress={onLongPress}
-              style={styles.customAddButton}
-            >
-              {/* Change the color dynamically based on focus */}
-              <FontAwesome5 name="shopping-bag" size={22} color={isFocused ? 'black' : 'white'} />
-            </TouchableOpacity>
-          );
-        }
+
 
         return (
           <TouchableOpacity

@@ -118,7 +118,7 @@ const HealthGoalsSelection = () => {
         console.log('No user data found');
       }
     } catch (error) {
-      console.error('Error retrieving user data:', error);
+      console.log('Error retrieving user data:', error);
     }
   };
 

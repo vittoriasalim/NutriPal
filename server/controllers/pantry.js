@@ -1,6 +1,10 @@
 const sequelize = require('../config/database'); // Adjust the path as necessary
 const { pantries, pantry_ingredients, ingredients } = require('../models/init-models')(sequelize);
+
 const geminiService = require('../services/geminiService');
+
+const { generateRecipeWithIngredients } = require('../services/geminiService'); // Function to call LLM
+
 
 // Helper function to ensure that a pantry exists for the given userId
 const ensurePantryExists = async (userId, transaction) => {
@@ -23,6 +27,32 @@ const ensurePantryExists = async (userId, transaction) => {
   
     return pantry; // Return the existing pantry
   };
+
+  // Helper function to get pantry ingredients for a user
+const getPantryIngredientsForUser = async (userId) => {
+  // Ensure a pantry exists for the user
+  const pantry = await ensurePantryExists(userId);
+
+  // Check if pantry is found or created successfully
+  if (!pantry || !pantry.id) {
+    throw new Error('Pantry not found or could not be created');
+  }
+
+  // Fetch all pantry ingredients for the pantryId
+  const pantryIngredients = await pantry_ingredients.findAll({
+    where: { pantryId: pantry.id },  // Use `pantryId` from pantry_ingredients table
+    include: [
+      {
+        model: ingredients,  // Join with ingredients table
+        as: 'ingredient',
+        attributes: ['id', 'ingredientName', 'description', 'food_type', 'storageInstructions', 'unit'],
+      },
+    ],
+  });
+
+  return pantryIngredients;
+};
+
 
 // Controller function to get pantry and ingredients for a user
 exports.getPantryForUser = async (req, res) => {
@@ -248,4 +278,32 @@ exports.removeAllIngredientsByType = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+// Controller function to generate recipes with available pantry ingredients
+exports.generateRecipesWithPantry = async (req, res) => {
+  try {
+    const { userId } = req.params; // Get the user ID from request params
+
+    // Fetch pantry ingredients for the user
+    const pantryIngredients = await getPantryIngredientsForUser(userId);
+
+    // If no ingredients are found in the pantry, return an empty response
+    if (!pantryIngredients || pantryIngredients.length === 0) {
+      return res.status(200).json({ message: 'No ingredients found in the pantry' });
+    }
+
+    // Extract ingredient names from the pantry data
+    const ingredientNames = pantryIngredients.map(item => item.ingredient.ingredientName);
+
+    // Call the LLM service function to generate recipes based on the ingredients
+    const generatedRecipes = await generateRecipeWithIngredients(ingredientNames);
+
+    // Return the generated recipes to the frontend
+    res.status(200).json(generatedRecipes);
+  } catch (error) {
+    console.error('Error generating recipes:', error);
+    res.status(500).json({ error: 'Server error while generating recipes' });
+  }
+};
+
 

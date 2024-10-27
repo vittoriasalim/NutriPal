@@ -20,4 +20,7 @@ router.delete('/:userId/pantryIngredient/:pantryIngredientId', pantryController.
 // Remove all instances of a specific ingredient in the pantry (identified by ingredientId)
 router.delete('/:userId/ingredient/:ingredientId/all', pantryController.removeAllIngredientsByType);
 
+// New route to generate recipes based on the user's pantry
+router.post('/:userId/generateRecipes', pantryController.generateRecipesWithPantry); // Add the new route for generating recipes
+
 module.exports = router;

@@ -80,7 +80,7 @@ const NutritionistMatch = () => {
         console.log('No health goals data found');
       }
     } catch (error) {
-      console.error('Error retrieving user data:', error);
+      console.log('Error retrieving user data:', error);
     }
   };
 
@@ -133,7 +133,7 @@ const NutritionistMatch = () => {
             sex: nutritionist_user_data.sex,
           } as NutritionistData; // Cast to Nutritionist type
         } catch (err) {
-          console.error('Error retrieving nutritionist user data:', err);
+          console.log('Error retrieving nutritionist user data:', err);
           return nutr; // Return the original nutritionist
         }
       }));
@@ -162,7 +162,7 @@ const NutritionistMatch = () => {
 
   const recommendNutritionists = (nutritionists, userGoals) => {
     if (!Array.isArray(nutritionists) || !Array.isArray(userGoals)) {
-      console.error('Invalid data for recommendations:', { nutritionists, userGoals });
+      console.log('Invalid data for recommendations:', { nutritionists, userGoals });
       return [];
     }
 

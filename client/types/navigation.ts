@@ -11,12 +11,14 @@ export type RootStackParamList = {
   };
 
   // types.ts or navigation/types.ts
-export type ProgressStackParamList = {
-  ProgressScreen: undefined;
-  NutritionManagementScreen: undefined;
-
-  // Add other screens as needed
-};
+  export type PantryStackParamList = {
+    PantryScreen: undefined;
+    IngredientDetailScreen: { id: number }; // Example if you're passing `id`
+    PantryRecipe: undefined;
+    PantryRecipeDetail: { recipe: any }; // Updated name and type
+    PantryRecipeScreen:undefined;
+  };
+  
 
 export type HealthStackParamList = {
   HealthProfileScreen: undefined; // No parameters needed

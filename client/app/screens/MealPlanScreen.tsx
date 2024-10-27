@@ -81,7 +81,7 @@ const MealPlanScreen = () => {
         console.log('No user data found');
       }
     } catch (error) {
-      console.error('Error retrieving user data:', error);
+      console.log('Error retrieving user data:', error);
     } finally {
       setLoading(false); // End loading when data fetching is done
     }

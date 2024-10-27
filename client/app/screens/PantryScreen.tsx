@@ -8,8 +8,12 @@ import { getPantryForUser } from '@/services/pantry'; // Import the pantry servi
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import { DataTable } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { IngredientStackParamList } from '@/types/navigation'; // Replace with your navigation types
+import { NavigationProp } from '@react-navigation/native';
 
 const PantryScreen: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<IngredientStackParamList>>(); // Hook to handle navigation
   const categories = ['All', 'Meat', 'Seafood', 'Vegetable'];
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [pantryData, setPantryData] = useState([]); // Store fetched pantry ingredients
@@ -17,6 +21,16 @@ const PantryScreen: React.FC = () => {
   const [userData, setUserData] = useState<any>(null); // To store user data from AsyncStorage
   const [loading, setLoading] = useState(true); // Loading state
   const screenHeight = Dimensions.get('window').height;
+
+  const fakeRecipe = {
+    title: "Beef and Tomato Stew with Lentils",
+    longDescription: "This hearty stew is packed with protein, iron, and fibre to promote muscle growth and satiety. The combination of beef, lentils, and tomatoes provides a rich source of nutrients and a satisfying meal for weight gain.",
+    calorie: 650,
+    protein: 45,
+    fat: 25,
+    fibre: 15
+  };
+  
 
   // Fetch user data from AsyncStorage
   const getUserData = async () => {
@@ -31,7 +45,7 @@ const PantryScreen: React.FC = () => {
         setLoading(false);
       }
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.log('Error fetching user data:', error);
       Alert.alert('Error', 'Failed to load user data.');
       setLoading(false);
     }
@@ -49,7 +63,7 @@ const PantryScreen: React.FC = () => {
         setPantryData(combinedData); // Store the combined pantry data
       }
     } catch (error) {
-      console.error('Error fetching pantry data:', error);
+      console.log('Error fetching pantry data:', error);
       Alert.alert('Error', 'Failed to load pantry data.');
     } finally {
       setLoading(false); // Stop loading regardless of success or failure
@@ -156,7 +170,10 @@ const PantryScreen: React.FC = () => {
       )}
 
       {/* Generate Recipes Button */}
-      <TouchableOpacity style={styles.generateButton}>
+      <TouchableOpacity 
+        style={styles.generateButton} 
+        onPress={() => navigation.navigate('PantryRecipeScreen', { fromPantryScreen: true })}>
+        {/* onPress={() => navigation.navigate('PantryRecipeDetail', { recipe: fakeRecipe })}> */}
         <Text style={styles.generateButtonText}>Generate Recipes</Text>
       </TouchableOpacity>
 
@@ -196,7 +213,6 @@ const styles = StyleSheet.create({
     position: 'absolute', // Make the button positioned absolutely
     right: 0, // Align it to the right edge
     top: 60, // Align vertically with the header
-    backgroundColor: '#f5f5f5',
     padding: 8,
     borderRadius: 50, // Rounded button
     justifyContent: 'center',

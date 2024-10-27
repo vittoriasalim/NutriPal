@@ -52,7 +52,7 @@ const AddIngredientModal: React.FC<AddIngredientModalProps> = ({ visible, onClos
       onClose();
       onSuccess();
     } catch (error) {
-      console.error('Error adding ingredient:', error);
+      console.log('Error adding ingredient:', error);
       Alert.alert('Error', 'Failed to add the ingredient. Please try again.');
     } finally {
       setIsLoading(false); // Set loading to false after completion

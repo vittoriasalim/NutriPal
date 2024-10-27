@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from 'expo-router';
+import PantryStackNavigator from './PantryStackNavigator';
+import { NavigationProp } from '@react-navigation/native';
+import { HealthStackParamList, MealStackParamList, PantryStackParamList } from '@/types/navigation';
 
 export default function Home() {
   // State to store user data
   const [userData, setUserData] = useState(null);
+  const navigation = useNavigation();
+  console.log(navigation);
+  const goToMealPlan = () => {
+
+
+    // Use getParent if HomeStackNavigator is part of a tab or another nested structure
+    navigation.navigate('Plans');
+  };
 
   // Function to retrieve user data from AsyncStorage
   const getUserData = async () => {
@@ -12,7 +24,7 @@ export default function Home() {
       const jsonValue = await AsyncStorage.getItem('user');
       if (jsonValue !== null) {
         const user = JSON.parse(jsonValue);  // Parse the JSON string into an object
-      
+
         setUserData(user);  // Set user data in state
       } else {
         console.log('No user data found');
@@ -59,7 +71,7 @@ export default function Home() {
           <Text style={styles.buttonText}>View Your Personal Meal Plan</Text>
         </View>
         <View style={styles.rightSection}>
-          <TouchableOpacity style={styles.viewNowButton}>
+          <TouchableOpacity style={styles.viewNowButton} onPress={goToMealPlan}>
             <Text style={styles.viewNowText}>View Now {'>'}</Text>
           </TouchableOpacity>
         </View>
@@ -71,7 +83,7 @@ export default function Home() {
           <Text style={styles.buttonText}>Track Your Weekly Progress</Text>
         </View>
         <View style={styles.rightSection}>
-          <TouchableOpacity style={styles.viewNowButton}>
+          <TouchableOpacity style={styles.viewNowButton} onPress={() => navigation.navigate("Progress")}>
             <Text style={styles.viewNowText}>View Now {'>'}</Text>
           </TouchableOpacity>
         </View>
@@ -83,7 +95,7 @@ export default function Home() {
           <Text style={styles.buttonText}>Get Recipe Recommendations</Text>
         </View>
         <View style={styles.rightSection}>
-          <TouchableOpacity style={styles.viewNowButton}>
+          <TouchableOpacity style={styles.viewNowButton} onPress={goToMealPlan}>
             <Text style={styles.viewNowText}>View Now {'>'}</Text>
           </TouchableOpacity>
         </View>
