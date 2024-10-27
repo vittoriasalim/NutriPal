@@ -64,3 +64,15 @@ export const deleteAllIngredients = async (userId, ingredientId) => {
     throw error;
   }
 };
+
+// Generate recipes based on the user's pantry ingredients
+export const generateRecipesWithPantry = async (userId: number) => {
+  try {
+    const response = await apiService.postData(`/pantry/${userId}/generateRecipes`, {});
+    console.log(JSON.parse(response));
+    return JSON.parse(response);  // Return the generated recipes from the backend
+  } catch (error) {
+    console.error("Error generating recipes:", error);
+    throw error;
+  }
+};
