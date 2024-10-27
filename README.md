@@ -43,15 +43,20 @@ NutriPal leverages a **Retrieval-Augmented Generation (RAG)** framework, integra
 
 ## ⚙️ Configuration
 
-**Node.js** ![Node.js](https://img.icons8.com/color/20/000000/nodejs.png) Recommended version: v14.x or higher. Node.js is required to run the backend server and manage dependencies.
+**Node.js** ![Node.js](https://img.icons8.com/color/20/000000/nodejs.png) 
+Recommended version: v14.x or higher. Node.js is required to run the backend server and manage dependencies.
 
-**npm** ![npm](https://img.icons8.com/color/20/000000/npm.png) Node Package Manager, which usually comes with Node.js. Use npm to manage project dependencies.
+**npm** ![npm](https://img.icons8.com/color/20/000000/npm.png) 
+Node Package Manager, which usually comes with Node.js. Use npm to manage project dependencies.
 
-**React Native CLI** or **Expo CLI** ![React Native](https://img.icons8.com/color/20/000000/react-native.png) React Native CLI for native builds or Expo CLI for a simplified setup. Choose based on your preference for building mobile applications.
+**React Native CLI** or **Expo CLI** ![React Native](https://img.icons8.com/color/20/000000/react-native.png) 
+React Native CLI for native builds or Expo CLI for a simplified setup. Choose based on your preference for building mobile applications.
 
-**Xcode** (macOS only) ![Xcode](https://img.icons8.com/color/20/000000/xcode.png) Required to run the iOS simulator for testing iOS builds. Available on the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835).
+**Xcode** (macOS only) ![Xcode](https://img.icons8.com/color/20/000000/xcode.png) 
+Required to run the iOS simulator for testing iOS builds. Available on the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835).
 
-**Database Software** (PostgreSQL) ![Database](https://img.icons8.com/color/20/000000/database.png) Choose a relational database for production, such as PostgreSQL or MySQL, and set it up to handle NutriPal’s data.
+**Database Software** (PostgreSQL) ![Database](https://img.icons8.com/color/20/000000/database.png) 
+Choose a relational database for production, such as PostgreSQL or MySQL, and set it up to handle NutriPal’s data.
 1. **Install Dependencies**
 
    NutriPal has separate frontend (client) and backend (server) components, each requiring its own set of dependencies. Follow these steps to ensure all required packages are installed for both parts of the application:
