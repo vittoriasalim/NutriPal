@@ -91,9 +91,10 @@ exports.addIngredientToPantry = async (req, res) => {
           protein: llmIngredientDetails.protein || 0,
           fats: llmIngredientDetails.fats || 0,
           carbohydrate: llmIngredientDetails.carbohydrate || 0,
-          amount: 100, // Defaulting to 100g for nutritional values per 100g
+          amount: llmIngredientDetails.price || 100.00, // Defaulting to 100g for nutritional values per 100g
           food_type: llmIngredientDetails.food_type || 'Vegetable', // You can change the default values as needed
           storageInstructions: llmIngredientDetails.storageInstructions || '',
+          healthBenefits: llmIngredientDetails.healthBenefits || '',
         });
        
         // ingredient = await ingredients.create({

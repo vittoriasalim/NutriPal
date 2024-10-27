@@ -79,6 +79,7 @@ const queryLLMForIngredient = async (ingredientName) => {
       - Storage instructions MAX (255 characters).
       - The approximate price of 100g (or the typical unit).
       - Food_type which can be Vegetable, Meat or Seafood
+      - Health Benefits information
 
       Please return the response in strict JSON format with double quotes around property names and values. Use this structure:
 
@@ -92,7 +93,8 @@ const queryLLMForIngredient = async (ingredientName) => {
         "price": 0,  // Example price per unit
         "description": "",
         "storageInstructions": "",
-        "food_type": ""
+        "food_type": "",
+        "healthBenefits": ""
       }
     `;
 
