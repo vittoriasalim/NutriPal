@@ -89,17 +89,6 @@ const PantryRecipeScreen: React.FC = () => {
         <Text style={styles.header}>Pantry Recipes</Text>
       </View>
 
-      {/* Heading for asking specific instructions */}
-      <Text style={styles.subHeading}>Ask for specific instructions here</Text>
-
-      {/* Input Field for Customizing Recipes */}
-      <TextInput
-        style={styles.input}
-        placeholder="Enter custom preferences for recipes..."
-        placeholderTextColor="#999"
-        value={customRecipeInput}
-        onChangeText={setCustomRecipeInput}
-      />
 
       {/* Recipe Categories Tab */}
       <PantryCategoryTab
