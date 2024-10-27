@@ -57,7 +57,8 @@ Required to run the iOS simulator for testing iOS builds. Available on the [Mac 
 
 **Database Software** (PostgreSQL) ![Database](https://img.icons8.com/color/20/000000/database.png) 
 Choose a relational database for production, such as PostgreSQL or MySQL, and set it up to handle NutriPal’s data.
-1. **Install Dependencies**
+
+### **Install Dependencies**
 
    NutriPal has separate frontend (client) and backend (server) components, each requiring its own set of dependencies. Follow these steps to ensure all required packages are installed for both parts of the application:
 
@@ -90,7 +91,7 @@ Choose a relational database for production, such as PostgreSQL or MySQL, and se
    ```bash
    npm install --workspaces
 
-2.	**Environment Variables**
+### **Environment Variables**
 
 	Set up environment variables for sensitive data like API keys and database credentials.
 -  **Create a `.env` File** in the root directory of both the `client` and `server` (if necessary), create a file named `.env`. This file will hold all sensitive configuration details that should not be hardcoded into the codebase.
@@ -112,7 +113,7 @@ Choose a relational database for production, such as PostgreSQL or MySQL, and se
    PORT=            # Port on which the backend server should run (e.g., 3000)
 	```
 
-3.	**Database** 
+### **Database** 
 
 	Configure PostgreSQL as the primary database. Ensure the database is up and running before proceeding to run server.
 - **Install Database Software**: If you haven’t already, install PostgreSQL or MySQL:
@@ -143,12 +144,12 @@ npx sequelize-cli init
 ```bash
 npx sequelize-cli db:migrate
 ```
-4. **Running the Simulators** 
+### **Running the Simulators** 
 	To test NutriPal’s mobile app, set up the iOS and Android simulators with these steps. [iOS and Android Simulators](#ios-and-android-simulators)
 
 
 
-5. **Run the App**
+### **Run the App**
 
    - **Frontend (Client)**:
      - Navigate to the client folder:
