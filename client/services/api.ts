@@ -52,17 +52,25 @@ class ApiService {
   }
 
   // Example: Post data to an endpoint
+  // Example: Post data to an endpoint
   async postData<T>(endpoint: string, data: any): Promise<T> {
     try {
-      console.log(`Sending request to ${endpoint} with data:`, data);
-      const response: ApiResponse<T> = await this.api.post(endpoint, data);
-      console.log('Received response:', response);
+      console.log(`Sending request to ${endpoint} with data:`, JSON.stringify(data, null, 2));
+
+      const response: ApiResponse<T> = await this.api.post(endpoint, data, {
+        headers: {
+          'Content-Type': 'application/json', // Ensure the server interprets the data as JSON
+        },
+      });
+
+      console.log(`Response from ${endpoint}:`, JSON.stringify(response.data, null, 2));
       return response.data;
-    } catch (error) {
-      console.error('Error in postData:', error); // Log the error details
+    } catch (error: any) {
+      console.error('Error in postData:', error.message || error); // Log the error details
       return this.handleError(error);
     }
   }
+  
 
   // Example: Update data at an endpoint (PUT)
   async putData<T>(endpoint: string, data: any): Promise<T> {

@@ -37,7 +37,7 @@ const ChatScreen = () => {
         // Clear the input field
         setInputText('');
       } catch (error) {
-        console.error('Error sending message:', error);
+        console.log('Error sending message:', error);
       }
     }
   };
@@ -67,7 +67,7 @@ const ChatScreen = () => {
           // You can set the nutritionist state here if needed
           // setNutritionists(response.data);
         } catch (err) {
-          console.error('Error fetching nutritionist:', err);
+          console.log('Error fetching nutritionist:', err);
         }
       };
    

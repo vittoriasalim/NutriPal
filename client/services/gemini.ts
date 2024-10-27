@@ -8,10 +8,10 @@ export interface QueryData {
   // The expected response structure from the Gemini API
   export interface GeminiResponse {
     result: string;  // The generated response from the Gemini API
-    modelVersion: string;  // Information about the model version used
+  
   }
 
-export const postToGeminiApi = async (queryData: QueryData): Promise<GeminiResponse> => {
+export const postToGeminiApi = async (queryData: string): Promise<GeminiResponse> => {
     try {
       // Make a POST request via apiService
       const response = await apiService.postData<GeminiResponse>('/gemini/query', queryData);
@@ -19,6 +19,22 @@ export const postToGeminiApi = async (queryData: QueryData): Promise<GeminiRespo
     } catch (error) {
       // Handle error, for example logging
       console.error('Error posting data to Gemini API:', error);
+      throw error;
+    }
+  };
+
+
+  export const postToGeminiApiRAG = async ( queryData: string , userId: number): Promise<GeminiResponse> => {
+    try {
+      // Ensure queryData is valid JSON
+      const formattedData = { query: queryData};
+      console.log("Sending formatted queryData:", formattedData);
+  
+      const response = await apiService.postData<GeminiResponse>(`/gemini/query/${userId}`, formattedData);
+      console.log("Response from Gemini API:", response);
+      return response;
+    } catch (error) {
+      console.log("Error in postToGeminiApiRAG:", error.message || error);
       throw error;
     }
   };

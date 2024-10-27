@@ -17,16 +17,16 @@ async function queryGeminiApi(query) {
 async function queryRAGSystem(userQuery, userInfo,clientInfo) {
   // Step 2: Modify the prompt by including user-specific information
   const prompt = `
-    User Info: ${userInfo}  // Example: Include the user's name
-    Client Info: ${clientInfo || 'N/A'}
-    Query: ${userQuery}
-    Answer:
+    Return response in json format. ${userQuery}. According the following information ${JSON.stringify(userInfo, null, 2)}  and ${clientInfo ? JSON.stringify(clientInfo, null, 2) : 'N/A'} 
   `;
+  console.log(prompt);
 
   // Step 3: Generate an answer using the modified prompt
-  const finalAnswer = await generateAnswer(prompt);
+  const finalAnswer = await queryGeminiApi(prompt);
+  console.log(finalAnswer);
   return finalAnswer;
 }
+
 
 async function generateMealPlan(clientInfo) {
   const { weight, height, healthGoals, dietaryPreferences } = clientInfo;
@@ -65,5 +65,6 @@ async function generateMealPlan(clientInfo) {
 
 module.exports = {
   queryGeminiApi,
+  queryRAGSystem,
   generateMealPlan,
 };
