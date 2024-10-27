@@ -5,19 +5,19 @@ NutriPal is an AI-powered mobile application designed to help users achieve a ba
 ---
 
 ## 📋 Table of Contents
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Configuration](#configuration)
-- [Deployment Instructions](#deployment-instructions)
-- [Advanced Tools and Setup](#advanced-tools-and-setup)
-  - [Object-Relational Model](#object-relational-model)
-  - [Migration Tool](#migration-tool)
-  - [MVC Design Pattern](#mvc-design-pattern)
-  - [Feature Branching Workflow](#feature-branching-workflow)
-  - [Frontend and Backend Frameworks](#frontend-and-backend-frameworks)
-  - [iOS and Android Simulators](#ios-and-android-simulators)
-  - [Code Quality and Linting](#code-quality-and-linting)
-  - [Environment Variable Management](#environment-variable-management)
+- [Overview](#-overview)
+- [Tech Stack](#️-tech-stack)
+- [Configuration](#-configuration)
+- [Deployment Instructions](#-deployment-instructions)
+- [Advanced Tools and Setup](#-advanced-tools-and-setup)
+  - [Object-Relational Model](#-object-relational-model)
+  - [Migration Tool](#-migration-tool)
+  - [MVC Design Pattern](#-mvc-design-pattern)
+  - [Feature Branching Workflow](#-feature-branching-workflow)
+  - [Frontend and Backend Frameworks](#-frontend-and-backend-frameworks)
+  - [iOS and Android Simulators](#-ios-and-android-simulators)
+  - [Code Quality and Linting](#-code-quality-and-linting)
+  - [Environment Variable Management](#-environment-variable-management)
 
 ---
 
