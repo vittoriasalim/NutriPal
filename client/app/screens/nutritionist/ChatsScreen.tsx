@@ -47,7 +47,7 @@ const ChatsScreen = ({ clientId, nutritionistId }) => {
       const fetchMessages = async (nutriID, clientID) => {
         try {
           const response = await getConversation(nutriID, clientID);
-          console.log(response);
+         
           setMessages(response);
         } catch (err) {
           throw err;

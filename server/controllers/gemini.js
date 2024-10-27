@@ -19,6 +19,7 @@ exports.queryGemini = async (req, res) => {
 exports.retrieveAndGenerate = async (req, res) => {
     const userQuery = req.body.query;
     const userId = req.params.id;
+    console.log(userQuery);
   
     try {
       const userInfo = await users.findByPk(userId);
@@ -31,7 +32,7 @@ exports.retrieveAndGenerate = async (req, res) => {
         return res.status(404).json({ error: 'Client info not found' });
       }
   
-      const geminiResponse = await geminiService.queryGeminiApi(userQuery);
+      const geminiResponse = await geminiService.queryRAGSystem(userQuery,userInfo,clientInfo);
       console.log(geminiResponse);
       res.status(200).json({ result: geminiResponse });
     } catch (error) {

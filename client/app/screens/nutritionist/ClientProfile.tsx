@@ -5,6 +5,8 @@ import ProfileCard from '@/components/nutritionist/ProfileCard';
 import ProfileInfo from '@/components/ProfileInfo';
 import { getClientByUserId } from '@/services/clients';
 import { getDailyNutritionFortnightly } from '@/services/daily_nutrition';
+import { postToGeminiApiRAG } from '@/services/gemini';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Import the icon library
 
 const ClientProfile = ({ userData }) => {
   const [isModalVisible, setModalVisible] = useState(false); // State to handle modal visibility
@@ -22,10 +24,55 @@ const ClientProfile = ({ userData }) => {
     }
   };
 
+
   const getClientReport = async (clientId) => {
     try {
       const reportData = await getDailyNutritionFortnightly(clientId);
-      setReport(reportData); // Set report data
+     
+     
+      await generateClientReport(reportData);
+    } catch (error) {
+      throw error;
+    }
+  };
+  const generateClientReport = async (reportData) => {
+    const prompt = `Generate response in JSON format a health report in for a client based on the following weekly dietary data and user information. 
+    Include total calorie intake, total carbohydrates, total fats, and total proteins for each day. 
+    Also, calculate average intake values across the week, highlight days with zero intake, and provide recommendations 
+    for balanced nutrient distribution.
+    Data: ${JSON.stringify(reportData)}
+    Output in this format: {
+    "weeklyAverageIntake": {
+      "totalCalorie": ...
+        "totalProtein": ..
+        "totalFats": ..
+        "totalCarbohydrate": ...
+      },
+      "recommendations": {
+        "calorieIntake": string,
+        "macronutrientDistribution": string
+      },
+      "notes": [
+
+      ]
+    }`;
+    
+
+      
+
+    try {
+      console.log("client report");
+      const clientReport = await postToGeminiApiRAG(prompt,userData.id);
+      const cleanedJsonString = clientReport.result
+      .replace(/```json/g, '') // Removes ```json at the start
+      .replace(/```/g, '')      // Removes ``` at the end
+      .replace(/\\"/g, '"');     // Replaces escaped quotes with regular quotes
+      console.log(cleanedJsonString);
+      const jsonObject = JSON.parse(cleanedJsonString);
+
+      console.log(JSON.stringify(jsonObject, null, 2));
+      
+      setReport(jsonObject); // Set report data
     } catch (error) {
       throw error;
     }
@@ -46,104 +93,146 @@ const ClientProfile = ({ userData }) => {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-
+ 
+  
   const renderHealthReport = () => {
     if (!report) {
       return <Text style={styles2.loadingText}>Loading health report...</Text>;
     }
   
-    return report.map((entry, index) => (
-      <View key={index} style={styles2.reportEntry}>
-        <Text style={styles2.reportDay}>
-          {entry.day} ({entry.date})
-        </Text>
-        <View style={styles2.reportMetrics}>
-          <View style={styles2.metricRow}>
-            <Text style={styles2.label}>🔥 Calories</Text>
-            <Text style={[styles2.metricValue, entry.totalCalorie === 0 && styles2.emptyValue]}>
-              {entry.totalCalorie} (kcal)
-            </Text>
+    return (
+      <View style={styles2.container}>
+        {/* Weekly Average Intake Section */}
+        <View style={styles2.card}>
+          <Text style={styles2.sectionTitle}>
+            <Icon name="calendar" size={20} color="#555" /> Weekly Average Intake
+          </Text>
+          <View style={styles2.row}>
+            <Icon name="fire" size={18} color="#E25822" style={styles2.icon} />
+            <Text style={styles2.detailText}>Total Calorie: {report.weeklyAverageIntake.totalCalorie}</Text>
           </View>
-          <View style={styles2.metricRow}>
-            <Text style={styles2.label}>🥩 Protein</Text>
-            <Text style={[styles2.metricValue, entry.totalProtein === 0 && styles2.emptyValue]}>
-              {entry.totalProtein} (g)
-            </Text>
+          <View style={styles2.row}>
+            <Icon name="cutlery" size={18} color="#2C98F0" style={styles2.icon} />
+            <Text style={styles2.detailText}>Total Protein: {report.weeklyAverageIntake.totalProtein}</Text>
           </View>
-          <View style={styles2.metricRow}>
-            <Text style={styles2.label}>🍞 Carbs</Text>
-            <Text style={[styles2.metricValue, entry.totalCarbohydrate === 0 && styles2.emptyValue]}>
-              {entry.totalCarbohydrate} (g)
-            </Text>
+          <View style={styles2.row}>
+            <Icon name="tint" size={18} color="#A64CA6" style={styles2.icon} />
+            <Text style={styles2.detailText}>Total Fats: {report.weeklyAverageIntake.totalFats}</Text>
           </View>
-          <View style={styles2.metricRow}>
-            <Text style={styles2.label}>🧈 Fats</Text>
-            <Text style={[styles2.metricValue, entry.totalFats === 0 && styles2.emptyValue]}>
-              {entry.totalFats} (g)
-            </Text>
+          <View style={styles2.row}>
+            <Icon name="leaf" size={18} color="#28A745" style={styles2.icon} />
+            <Text style={styles2.detailText}>Total Carbohydrate: {report.weeklyAverageIntake.totalCarbohydrate}</Text>
           </View>
         </View>
+  
+        {/* Recommendations Section */}
+        <View style={styles2.card}>
+          <Text style={styles2.sectionTitle}>
+            <Icon name="thumbs-up" size={20} color="#555" /> Recommendations
+          </Text>
+          
+          {/* Calorie Intake */}
+          <View style={styles2.subCard}>
+            <Text style={styles2.subTitle}><Icon name="balance-scale" size={16} color="#E25822" /> Calorie Intake</Text>
+            <Text style={styles2.subDetailText}>{report.recommendations.calorieIntake}</Text>
+          </View>
+  
+          {/* Macronutrient Distribution */}
+          <View style={styles2.subCard}>
+            <Text style={styles2.subTitle}><Icon name="pie-chart" size={16} color="#2C98F0" /> Macronutrient Distribution</Text>
+            <Text style={styles2.subDetailText}>{report.recommendations.macronutrientDistribution}</Text>
+          </View>
+        </View>
+  
+        {/* Notes Section */}
+        <View style={styles2.card}>
+          <Text style={styles2.sectionTitle}><Icon name="sticky-note" size={20} color="#555" /> Notes</Text>
+          {report.notes.length > 0 ? (
+            report.notes.map((note, index) => (
+              <Text key={index} style={styles2.noteText}><Icon name="circle" size={8} color="#555" />  {note}</Text>
+            ))
+          ) : (
+            <Text style={styles2.detailText}>No additional notes.</Text>
+          )}
+        </View>
       </View>
-    ));
+    );
   };
+  
   const styles2 = StyleSheet.create({
     loadingText: {
       fontSize: 18,
-      
       color: '#888',
       textAlign: 'center',
       marginTop: 20,
-      fontFamily:"Poppins-Regular"
+      fontFamily: "Poppins-Regular"
     },
-    reportEntry: {
-
+    container: {
+     
+     
+      flex: 1,
+    },
+    card: {
+      backgroundColor: '#fff',
+      borderRadius: 8,
       padding: 15,
-      marginBottom: 15,
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: '#ddd',
+      marginVertical: 10,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
-      elevation: 3,
+      elevation: 2,
     },
-    reportDay: {
+    sectionTitle: {
       fontSize: 18,
       fontWeight: 'bold',
-      fontFamily:'Poppins-SemiBold',
+      color: '#333',
       marginBottom: 10,
-      color: '#2c3e50',
+      fontFamily: "Poppins-Bold",
     },
-    reportMetrics: {
-      flexDirection: 'column',
-      marginTop: 5,
-    },
-    metricRow: {
+    row: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       alignItems: 'center',
       marginVertical: 4,
     },
-    label: {
-      fontSize: 16,
-      fontWeight: '600',
-      fontFamily:'Poppins-Regular',
-      color: '#34495e',
+    icon: {
+      marginRight: 8,
     },
-    metricValue: {
+    detailText: {
+      fontSize: 16,
+      color: '#555',
+      fontFamily: "Poppins-Regular",
+    },
+    subCard: {
+    
+      borderRadius: 6,
+      paddingVertical:20,
+
+      marginVertical: 6,
+    },
+    subTitle: {
       fontSize: 16,
       fontWeight: '600',
+      color: '#444',
+      fontFamily: "Poppins-Regular",
+      marginBottom: 4,
+    },
+    subDetailText: {
+      fontSize: 15,
+      color: '#666',
+      fontFamily: "Poppins-Regular",
+    },
+    noteText: {
+      fontSize: 15,
+      color: '#666',
+      fontFamily: "Poppins-Regular",
      
-      color: '#2c3e50',
-      textAlign: 'right',
-    },
-    emptyValue: {
-      color: '#ccc',
+      marginVertical: 10,
     },
   });
+  
 
-
+  
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.container2}>
