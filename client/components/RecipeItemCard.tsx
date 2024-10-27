@@ -1,7 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native'; // Import navigation hook
 import { IngredientStackParamList } from '@/types/navigation'; // Replace with your navigation types
+
+// Import the images for the categories
+import weightGainImage from '@/assets/images/gain.png';
+import weightLossImage from '@/assets/images/loss.png';
+import maintainImage from '@/assets/images/maintain.png';
 
 const RecipeItemCard = ({
   title,
@@ -15,9 +20,6 @@ const RecipeItemCard = ({
   recipe: any; // Recipe object to pass to the detail screen
 }) => {
   const navigation = useNavigation<NavigationProp<IngredientStackParamList>>(); // Hook to handle navigation
-
-  // Log the props to confirm they are received correctly
-  console.log(title, description, category);
 
   // Background colors based on category
   const getBackgroundColor = (category: string) => {
@@ -33,6 +35,20 @@ const RecipeItemCard = ({
     }
   };
 
+  // Get the correct image based on the category
+  const getImageForCategory = (category: string) => {
+    switch (category) {
+      case 'Weight Gain':
+        return weightGainImage;
+      case 'Maintain':
+        return maintainImage;
+      case 'Weight Loss':
+        return weightLossImage;
+      default:
+        return null; // You can add a default image if needed
+    }
+  };
+
   // Handle the card press event
   const handlePress = () => {
     navigation.navigate('PantryRecipeDetail', { recipe }); // Navigate to the detail screen and pass the recipe
@@ -40,15 +56,16 @@ const RecipeItemCard = ({
 
   return (
     <View style={[styles.container, { backgroundColor: getBackgroundColor(category) }]}>
-     {title &&recipe&& description ? (
-      <TouchableOpacity style={{ flex: 1 }} onPress={handlePress}>
-        <View style={styles.card}>
-          <View style={styles.imagePlaceholder}></View>
-          <Text style={styles.itemName}>{title}</Text>
-          <Text style={styles.itemDescription}>{description}</Text>
-        </View>
-      </TouchableOpacity>
-    ) : null}
+      {title && recipe && description ? (
+        <TouchableOpacity style={{ flex: 1 }} onPress={handlePress}>
+          <View style={styles.card}>
+            {/* Image based on the category */}
+            <Image source={getImageForCategory(category)} style={styles.recipeImage} />
+            <Text style={styles.itemName}>{title}</Text>
+            <Text style={styles.itemDescription}>{description}</Text>
+          </View>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };
@@ -65,12 +82,12 @@ const styles = StyleSheet.create({
     padding: 15,
     justifyContent: 'center',
   },
-  imagePlaceholder: {
+  recipeImage: {
     width: '100%',
-    height: 130, // Placeholder space for an image
-    backgroundColor: '#FFF',
+    height: 130, // Adjust the height for the image
     borderRadius: 10,
     marginBottom: 10,
+    resizeMode: 'cover', // Cover the space without distortion
   },
   itemName: {
     fontSize: 16,

@@ -90,9 +90,9 @@ const IngredientDetailScreen: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <Text>Loading...</Text>; // Display a loading indicator while fetching data
-  }
+  // if (loading) {
+  //   return <Text>Loading...</Text>; // Display a loading indicator while fetching data
+  // }
 
   if (!ingredientData.length) {
     return <Text>No ingredient data found.</Text>; // Show if no data found
@@ -100,7 +100,7 @@ const IngredientDetailScreen: React.FC = () => {
 
   // Extract data from the fetched ingredient data
   const { ingredient } = ingredientData[0]; // Get the main ingredient information
-  const { ingredientName, food_type, storageInstructions, unit, description, price } = ingredient;
+  const { ingredientName, food_type, storageInstructions, unit, description, amount, healthBenefits } = ingredient;
 
   // Combine quantities and find the earliest expiry date
   const totalQuantity = ingredientData.reduce((sum, currentItem) => sum + currentItem.quantity, 0);
@@ -142,7 +142,7 @@ const IngredientDetailScreen: React.FC = () => {
           </View>
           <View style={styles.detailBlock}>
             <Text style={styles.detailLabel}>Price</Text>
-            <Text style={styles.detailPrice}>${price} / kg</Text>
+            <Text style={styles.detailPrice}>${amount} / g</Text>
           </View>
         </View>
 
@@ -155,7 +155,7 @@ const IngredientDetailScreen: React.FC = () => {
         </View>
 
         {/* Health Benefits Section */}
-        <View style={styles.healthBenefitsContainer}>
+        {/* <View style={styles.healthBenefitsContainer}>
           <Text style={styles.healthBenefitsLabel}>Health Benefits</Text>
           <FlatList
             data={healthBenefits}
@@ -168,6 +168,14 @@ const IngredientDetailScreen: React.FC = () => {
               </View>
             )}
           />
+        </View> */}
+
+        {/* Storage Instructions Section */}
+        <View style={styles.storageInstructionsContainer}>
+          <Text style={styles.storageInstructionsLabel}>Health Benefits</Text>
+          <Text style={styles.storageInstructionsText}>
+            {healthBenefits || 'No health benefits added for this ingredient.'}
+          </Text>
         </View>
 
         {/* Storage Instructions Section */}
