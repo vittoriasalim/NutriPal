@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState,useCallback, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, Alert } from 'react-native';
 import PantryCategoryTab from '@/components/PantryCategoryTab';
 import RecipeItemCard from '@/components/RecipeItemCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { generateRecipesWithPantry } from '@/services/pantry';
-
+import { useFocusEffect } from '@react-navigation/native';
+import { store } from 'expo-router/build/global-state/router-store';
 const PantryRecipeScreen: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute();
   
   const [customRecipeInput, setCustomRecipeInput] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Maintain');
-  const [recipes, setRecipes] = useState({}); // Object to hold categorized recipes
+  const [recipes, setRecipes] = useState(null); // Object to hold categorized recipes
   const [userId, setUserId] = useState<number | null>(null);
   const [hasFetchedRecipes, setHasFetchedRecipes] = useState(false);
 
@@ -40,12 +41,15 @@ const PantryRecipeScreen: React.FC = () => {
   const retrieveRecipes = async (userId: number) => {
     try {
       const storedRecipes = await AsyncStorage.getItem('recipes');
-      
       if (storedRecipes) {
         // Load recipes from local storage
-        setRecipes(JSON.parse(storedRecipes));
+        const recipes = JSON.parse(storedRecipes);
+   
+        // Set the parsed data to state
+        setRecipes(recipes);
+  
       } else {
-        // Fetch from backend and store in local storage
+        // // Fetch from backend and store in local storage
         const generatedRecipes = await generateRecipesWithPantry(userId);
         await AsyncStorage.setItem('recipes', JSON.stringify(generatedRecipes));
         setRecipes(generatedRecipes);
@@ -58,15 +62,24 @@ const PantryRecipeScreen: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchRecipes();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      // Fetch user data and report every time the screen comes into focus
+      fetchRecipes();
+      console.log("is recipes storedd: ");
+      console.log(recipes);
+      return () => {
+        // Clean-up logic if needed
+      };
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Pantry Recipes</Text>
+       
       </View>
 
       {/* Heading for asking specific instructions */}
@@ -100,6 +113,9 @@ const PantryRecipeScreen: React.FC = () => {
                 category={selectedCategory} // Pass category to change background color
                 recipe={recipe}
               />
+
+           
+  
             ))
           ) : (
             <Text style={styles.noRecipesText}>No recipes found for this category.</Text>

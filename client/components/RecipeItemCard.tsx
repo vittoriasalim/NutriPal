@@ -1,18 +1,23 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Import navigation hook
+import { useNavigation, NavigationProp } from '@react-navigation/native'; // Import navigation hook
 import { IngredientStackParamList } from '@/types/navigation'; // Replace with your navigation types
-import { NavigationProp } from '@react-navigation/native';
 
-interface RecipeItemCardProps {
+const RecipeItemCard = ({
+  title,
+  description,
+  category,
+  recipe
+}: {
   title: string;
   description: string;
-  category: 'Weight Gain' | 'Maintain' | 'Weight Loss'; // Pass category to change background color
+  category: string;
   recipe: any; // Recipe object to pass to the detail screen
-}
-
-const RecipeItemCard: React.FC<RecipeItemCardProps> = ({ title, description, category, recipe }) => {
+}) => {
   const navigation = useNavigation<NavigationProp<IngredientStackParamList>>(); // Hook to handle navigation
+
+  // Log the props to confirm they are received correctly
+  console.log(title, description, category);
 
   // Background colors based on category
   const getBackgroundColor = (category: string) => {
@@ -35,16 +40,15 @@ const RecipeItemCard: React.FC<RecipeItemCardProps> = ({ title, description, cat
 
   return (
     <View style={[styles.container, { backgroundColor: getBackgroundColor(category) }]}>
-      <TouchableOpacity style={{ flex: 1 }} onPress={handlePress}> {/* Add onPress to navigate */}
+     {title &&recipe&& description ? (
+      <TouchableOpacity style={{ flex: 1 }} onPress={handlePress}>
         <View style={styles.card}>
-          {/* Placeholder for image at the top */}
           <View style={styles.imagePlaceholder}></View>
-          
-          {/* Title and description */}
           <Text style={styles.itemName}>{title}</Text>
           <Text style={styles.itemDescription}>{description}</Text>
         </View>
       </TouchableOpacity>
+    ) : null}
     </View>
   );
 };
