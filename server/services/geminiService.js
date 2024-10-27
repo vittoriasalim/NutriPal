@@ -94,15 +94,11 @@ async function generateRecipeWithIngredients(ingredients) {
               { name: 'Tomatoes', quantity: '500g', icon: '🍅' }, // Example value
               { name: 'Cabbage', quantity: '300g', icon: '🥬' }, // Example value
               { name: 'Taco', quantity: '300g', icon: '🌮' }, // Example value
-              { name: 'Slice Bread', quantity: '300g', icon: '🍞' }, // Example value
-              { name: 'Carrot', quantity: '300g', icon: '🥕' }, // Example value
             ],
             steps: [
               'Preheat the grill to medium-high heat.', // Example value
               'Season the lamb with salt, pepper, and spices.', // Example value
               'Grill the lamb for 5-7 minutes on each side.', // Example value
-              'Let the lamb rest for 5 minutes before serving.', // Example value
-              'Serve with a side of fresh vegetables.' // Example value
             ]
           }
         ],
@@ -115,8 +111,6 @@ async function generateRecipeWithIngredients(ingredients) {
             fat: 15,      // Example value
             fibre: 6,     // Example value
             ingredients: [
-              { name: 'Tomatoes', quantity: '500g', icon: '🍅' }, // Example value
-              { name: 'Cabbage', quantity: '300g', icon: '🥬' }, // Example value
               { name: 'Taco', quantity: '300g', icon: '🌮' }, // Example value
               { name: 'Slice Bread', quantity: '300g', icon: '🍞' }, // Example value
               { name: 'Carrot', quantity: '300g', icon: '🥕' }, // Example value
@@ -124,9 +118,6 @@ async function generateRecipeWithIngredients(ingredients) {
             steps: [
               'Preheat the grill to medium-high heat.', // Example value
               'Season the lamb with salt, pepper, and spices.', // Example value
-              'Grill the lamb for 5-7 minutes on each side.', // Example value
-              'Let the lamb rest for 5 minutes before serving.', // Example value
-              'Serve with a side of fresh vegetables.' // Example value
             ]
           }
         ],
@@ -141,16 +132,11 @@ async function generateRecipeWithIngredients(ingredients) {
             ingredients: [
               { name: 'Tomatoes', quantity: '500g', icon: '🍅' }, // Example value
               { name: 'Cabbage', quantity: '300g', icon: '🥬' }, // Example value
-              { name: 'Taco', quantity: '300g', icon: '🌮' }, // Example value
-              { name: 'Slice Bread', quantity: '300g', icon: '🍞' }, // Example value
-              { name: 'Carrot', quantity: '300g', icon: '🥕' }, // Example value
             ],
             steps: [
               'Preheat the grill to medium-high heat.', // Example value
               'Season the lamb with salt, pepper, and spices.', // Example value
               'Grill the lamb for 5-7 minutes on each side.', // Example value
-              'Let the lamb rest for 5 minutes before serving.', // Example value
-              'Serve with a side of fresh vegetables.' // Example value
             ]
           }
         ]
