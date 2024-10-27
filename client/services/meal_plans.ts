@@ -8,7 +8,7 @@ export const getMealPlan = async (id) => {
         console.log(response);
         return response.result; // Assuming the response structure has a result field
     } catch (error) {
-        console.error('Error fetching meal plan:', error);
+        console.log('Error fetching meal plan:', error);
         throw error; // Handle the error appropriately in your app
     }
 };
@@ -21,7 +21,7 @@ export const getLatestWeeklyMealPlan = async (userId) => {
         console.log('Fetched latest weekly meal plan:', response);
         return response; // Assuming the response structure has a result field
     } catch (error) {
-        console.error('Error fetching latest weekly meal plan:', error);
+        console.log('Error fetching latest weekly meal plan:', error);
         throw error; // Handle the error appropriately in your app
     }
 };

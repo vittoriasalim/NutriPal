@@ -19,7 +19,7 @@ const HealthProfile = () => {
         setHealthGoals(goals);
       }
     } catch (error) {
-      console.error('Error retrieving health goals:', error);
+      console.log('Error retrieving health goals:', error);
     } finally {
       setLoading(false);
     }

@@ -18,7 +18,7 @@ export const postToGeminiApi = async (queryData: string): Promise<GeminiResponse
       return response;
     } catch (error) {
       // Handle error, for example logging
-      console.error('Error posting data to Gemini API:', error);
+      console.log('Error posting data to Gemini API:', error);
       throw error;
     }
   };

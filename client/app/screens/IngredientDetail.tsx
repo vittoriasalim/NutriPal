@@ -49,7 +49,7 @@ const IngredientDetailScreen: React.FC = () => {
         setLoading(false);
       }
     } catch (error) {
-      console.error('Error fetching ingredient data:', error);
+      console.log('Error fetching ingredient data:', error);
       Alert.alert('Error', 'Failed to load ingredient data.');
       setLoading(false);
     }

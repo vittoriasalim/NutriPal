@@ -45,7 +45,7 @@ const PantryScreen: React.FC = () => {
         setLoading(false);
       }
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.log('Error fetching user data:', error);
       Alert.alert('Error', 'Failed to load user data.');
       setLoading(false);
     }
@@ -63,7 +63,7 @@ const PantryScreen: React.FC = () => {
         setPantryData(combinedData); // Store the combined pantry data
       }
     } catch (error) {
-      console.error('Error fetching pantry data:', error);
+      console.log('Error fetching pantry data:', error);
       Alert.alert('Error', 'Failed to load pantry data.');
     } finally {
       setLoading(false); // Stop loading regardless of success or failure

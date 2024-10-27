@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error('Error checking login status:', error);
+        console.log('Error checking login status:', error);
       } finally {
         setLoading(false); // Finished checking, so loading is complete
       }

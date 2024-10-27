@@ -4,8 +4,9 @@ import PantryScreen from './PantryScreen';
 import IngredientDetail from './IngredientDetail'; // Your new detail screen
 import PantryRecipe from './PantryRecipe';
 import PantryRecipeDetail from './PantryRecipeDetail';
+import { PantryStackParamList } from '@/types/navigation';
 
-const PantryStack = createNativeStackNavigator();
+const PantryStack = createNativeStackNavigator<PantryStackParamList>();
 
 const PantryStackNavigator = () => {
   return (
