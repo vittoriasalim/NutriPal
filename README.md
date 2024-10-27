@@ -91,7 +91,8 @@ Choose a relational database for production, such as PostgreSQL or MySQL, and se
    npm install --workspaces
 
 2.	**Environment Variables**
-Set up environment variables for sensitive data like API keys and database credentials.
+
+	Set up environment variables for sensitive data like API keys and database credentials.
 -  **Create a `.env` File** in the root directory of both the `client` and `server` (if necessary), create a file named `.env`. This file will hold all sensitive configuration details that should not be hardcoded into the codebase.
 - **Add Your Environment Variables** in the `.env` file, define the following variables. Update the placeholder values with actual credentials and settings:
 
@@ -112,7 +113,8 @@ Set up environment variables for sensitive data like API keys and database crede
 	```
 
 3.	**Database** 
-Configure PostgreSQL as the primary database. Ensure the database is up and running before proceeding to run server.
+
+	Configure PostgreSQL as the primary database. Ensure the database is up and running before proceeding to run server.
 - **Install Database Software**: If you haven’t already, install PostgreSQL or MySQL:
      - **PostgreSQL**: [Download PostgreSQL](https://www.postgresql.org/download/)
 
@@ -141,12 +143,12 @@ npx sequelize-cli init
 ```bash
 npx sequelize-cli db:migrate
 ```
-3. **Running the Simulators** 
-To test NutriPal’s mobile app, set up the iOS and Android simulators with these steps. [iOS and Android Simulators](#ios-and-android-simulators)
+4. **Running the Simulators** 
+	To test NutriPal’s mobile app, set up the iOS and Android simulators with these steps. [iOS and Android Simulators](#ios-and-android-simulators)
 
 
 
-4. **Run the App**
+5. **Run the App**
 
    - **Frontend (Client)**:
      - Navigate to the client folder:
