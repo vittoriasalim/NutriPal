@@ -105,8 +105,8 @@ const MealTabs = ({dailyNutritionId}) => {
         </TouchableOpacity>
 
       </View>
-      {meals.map((mealData) => (
-        <FoodCard
+      {meals.map((mealData,index) => (
+        <FoodCard key={index}
           meal={mealData.meal}
         />
       ))}

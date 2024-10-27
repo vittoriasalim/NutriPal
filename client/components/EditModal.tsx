@@ -129,7 +129,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onClose, ingredientId, o
   );
 
   if (loading) {
-    return <Text>Loading...</Text>; // Show loading text while data is being fetched
+    return <Text></Text>; // Show loading text while data is being fetched
   }
 
   return (

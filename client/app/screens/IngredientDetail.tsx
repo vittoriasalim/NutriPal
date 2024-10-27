@@ -43,15 +43,15 @@ const IngredientDetailScreen: React.FC = () => {
         } else {
           Alert.alert('Error', 'No ingredient data found.');
         }
-        setLoading(false);
+       
       } else {
         Alert.alert('Error', 'No user data found.');
-        setLoading(false);
+       
       }
     } catch (error) {
       console.log('Error fetching ingredient data:', error);
       Alert.alert('Error', 'Failed to load ingredient data.');
-      setLoading(false);
+     
     }
   };
 
@@ -90,9 +90,6 @@ const IngredientDetailScreen: React.FC = () => {
     }
   };
 
-  // if (loading) {
-  //   return <Text>Loading...</Text>; // Display a loading indicator while fetching data
-  // }
 
   if (!ingredientData.length) {
     return <Text>No ingredient data found.</Text>; // Show if no data found
@@ -217,14 +214,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   ingredientDetailContainer: {
+    marginTop: 30,
     borderRadius: 12,
     padding: 20,
-    elevation: 4, // Add shadow for Android
-    shadowColor: '#000', // Add shadow for iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    elevation: 10, // Increase elevation for a stronger shadow on Android
+    shadowColor: '#000', // Shadow color for iOS
+    shadowOffset: { width: 0, height: 1 }, // Adjust shadow offset for more depth
+    shadowOpacity: 0.2, // Increase opacity for a darker shadow on iOS
+    shadowRadius: 9, // Increase radius for a softer shadow edge on iOS
     backgroundColor: '#efefef',
+    minHeight: '70%',
   },
   imageRow: {
     flexDirection: 'row',
@@ -247,7 +246,8 @@ const styles = StyleSheet.create({
     right: 0,
     top: 60,
     padding: 10,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#e0e0e0', // Slightly darker gray
+    borderRadius: 10,
   },
   expiryText: {
     fontSize: 16,

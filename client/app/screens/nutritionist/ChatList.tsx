@@ -146,7 +146,7 @@ const ChatList = () => {
       {/* Chat List */}
       <FlatList
         data={filteredMessages}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
         renderItem={renderItem}
         style={styles.list}
       />
