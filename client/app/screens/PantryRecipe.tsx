@@ -1,23 +1,33 @@
-import React, { useState,useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, Alert } from 'react-native';
 import PantryCategoryTab from '@/components/PantryCategoryTab';
 import RecipeItemCard from '@/components/RecipeItemCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { generateRecipesWithPantry } from '@/services/pantry';
-import { useFocusEffect } from '@react-navigation/native';
-import { store } from 'expo-router/build/global-state/router-store';
+
 const PantryRecipeScreen: React.FC = () => {
-  const navigation = useNavigation();
   const route = useRoute();
-  
+  const navigation = useNavigation();
+  const { fromPantryScreen } = route.params || {}; // Check if navigation came from PantryScreen
+
   const [customRecipeInput, setCustomRecipeInput] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Maintain');
-  const [recipes, setRecipes] = useState(null); // Object to hold categorized recipes
+  const [recipes, setRecipes] = useState(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [hasFetchedRecipes, setHasFetchedRecipes] = useState(false);
 
   const recipeCategories = ['Weight Gain', 'Maintain', 'Weight Loss'];
+
+  // Function to clear previous recipes from AsyncStorage
+  const clearStoredRecipes = async () => {
+    try {
+      await AsyncStorage.removeItem('recipes');
+      console.log('Previous recipes cleared from storage.');
+    } catch (error) {
+      console.log('Error clearing stored recipes:', error);
+    }
+  };
 
   // Fetch user data and recipes from storage or backend
   const fetchRecipes = async () => {
@@ -40,20 +50,19 @@ const PantryRecipeScreen: React.FC = () => {
   // Retrieve recipes from the backend or local storage
   const retrieveRecipes = async (userId: number) => {
     try {
-      const storedRecipes = await AsyncStorage.getItem('recipes');
-      if (storedRecipes) {
-        // Load recipes from local storage
-        const recipes = JSON.parse(storedRecipes);
-   
-        // Set the parsed data to state
-        setRecipes(recipes);
-  
-      } else {
-        // // Fetch from backend and store in local storage
-        const generatedRecipes = await generateRecipesWithPantry(userId);
-        await AsyncStorage.setItem('recipes', JSON.stringify(generatedRecipes));
-        setRecipes(generatedRecipes);
+      if (fromPantryScreen) {
+        // Clear stored recipes and regenerate if coming from PantryScreen
+        await clearStoredRecipes();
       }
+
+      // Fetch from backend and store in local storage
+      const generatedRecipes = await generateRecipesWithPantry(userId);
+      await AsyncStorage.setItem('recipes', JSON.stringify(generatedRecipes));
+      setRecipes(generatedRecipes);
+
+      // Reset fromPantryScreen to false
+      navigation.setParams({ fromPantryScreen: false });
+
     } catch (error) {
       console.log('Error retrieving recipes:', error);
       Alert.alert('Error', 'Failed to retrieve recipes.');
@@ -64,14 +73,13 @@ const PantryRecipeScreen: React.FC = () => {
 
   useFocusEffect(
     useCallback(() => {
-      // Fetch user data and report every time the screen comes into focus
+      // Fetch user data and regenerate recipes if coming from PantryScreen
       fetchRecipes();
-      console.log("is recipes storedd: ");
-      console.log(recipes);
+      console.log("Fetching new recipes...");
       return () => {
         // Clean-up logic if needed
       };
-    }, [])
+    }, [fromPantryScreen]) // Only regenerate if coming from PantryScreen
   );
 
   return (
@@ -79,7 +87,6 @@ const PantryRecipeScreen: React.FC = () => {
       {/* Header */}
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Pantry Recipes</Text>
-       
       </View>
 
       {/* Heading for asking specific instructions */}
@@ -98,24 +105,21 @@ const PantryRecipeScreen: React.FC = () => {
       <PantryCategoryTab
         categories={recipeCategories}
         selectedCategory={selectedCategory}
-        onCategorySelect={setSelectedCategory} // Pass the selected category handler
+        onCategorySelect={setSelectedCategory}
       />
 
       {/* Recipe List */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.recipeContainer}>
-          {hasFetchedRecipes && recipes[selectedCategory] ? (
+          {hasFetchedRecipes && recipes && recipes[selectedCategory] ? (
             recipes[selectedCategory].map((recipe: any, index: number) => (
               <RecipeItemCard
                 key={index}
                 title={recipe.title}
                 description={recipe.shortDescription}
-                category={selectedCategory} // Pass category to change background color
+                category={selectedCategory}
                 recipe={recipe}
               />
-
-           
-  
             ))
           ) : (
             <Text style={styles.noRecipesText}>No recipes found for this category.</Text>
