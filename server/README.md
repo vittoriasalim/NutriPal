@@ -1,3 +1,4 @@
+```
 /server
 │
 ├── /config             # Configuration files like database connection
@@ -44,7 +45,7 @@
 ├── .gitignore          # Files and directories to ignore in git
 ├── package.json        # Project metadata and dependencies
 └── server.js           # Entry point of the application
-
+```
 # Create Migration File
 npx sequelize-cli migration:generate --name migration_name
 
